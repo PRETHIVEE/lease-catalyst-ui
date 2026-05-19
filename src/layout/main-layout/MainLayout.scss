@@ -1,0 +1,33 @@
+.main-layout {
+  --sidebar-width-collapsed: 4.5rem;
+  --sidebar-width-expanded: 17.5rem;
+  --header-height: 4rem;
+  --layout-bg: #f5f7f9;
+  --layout-surface: #ffffff;
+  --layout-border: #e0e0e0;
+  --layout-text: #333333;
+  --layout-text-muted: #666666;
+  --layout-text-subtle: #999999;
+  --layout-brand: var(--main-theme, #1f9d5b);
+
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--layout-bg);
+}
+
+.main-layout__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.main-layout__main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.5rem;
+}

@@ -1,0 +1,284 @@
+.sidebar {
+  flex-shrink: 0;
+  width: var(--sidebar-width-collapsed);
+  height: 100vh;
+  position: relative;
+  z-index: 40;
+  transition: width 0.3s ease-in-out;
+
+  &--pinned {
+    width: var(--sidebar-width-expanded);
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: var(--sidebar-width-collapsed);
+    background-color: var(--layout-surface, #ffffff);
+    border-right: 0.0625rem solid var(--layout-border, #e0e0e0);
+    overflow: hidden;
+    transition:
+      width 0.3s ease-in-out,
+      box-shadow 0.3s ease-in-out;
+  }
+
+  // Hover overlay: panel grows over content; shell width stays fixed in flex
+  &--hover &__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width-expanded);
+    box-shadow: 0.25rem 0 1rem rgba(0, 0, 0, 0.08);
+    z-index: 50;
+  }
+
+  &--pinned &__panel {
+    width: 100%;
+    border-right: none;
+  }
+
+  &--pin-closing:not(&--pinned) &__panel {
+    width: var(--sidebar-width-collapsed);
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem 0.75rem;
+  }
+
+  &--expanded &__inner,
+  &--hover &__inner,
+  &--pinned &__inner {
+    min-width: var(--sidebar-width-expanded);
+  }
+
+  // Keep icons in the visible rail while labels fade during unpin
+  &--pin-closing:not(&--pinned) &__inner {
+    min-width: unset;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0 0.5rem 1rem;
+    min-height: 2.5rem;
+  }
+
+  &__brand-icon {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--layout-brand);
+  }
+
+  &__brand-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--layout-text);
+    white-space: nowrap;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.25s ease,
+      max-width 0.3s ease;
+  }
+
+  &--expanded &__brand-text {
+    opacity: 1;
+    max-width: 12rem;
+  }
+
+  &__create-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--layout-brand);
+    color: #ffffff;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+
+  &__create-label {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.25s ease,
+      max-width 0.3s ease;
+  }
+
+  &--expanded &__create-label {
+    opacity: 1;
+    max-width: 10rem;
+  }
+
+  &__nav {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0.125rem;
+
+    &::-webkit-scrollbar {
+      width: 0.25rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--layout-border);
+      border-radius: 0.25rem;
+    }
+  }
+
+  &__group {
+    & + & {
+      margin-top: 0.5rem;
+    }
+  }
+
+  &__group-title {
+    padding: 0.5rem 0.75rem 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--layout-text-subtle);
+    white-space: nowrap;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.2s ease,
+      max-height 0.3s ease;
+  }
+
+  &--expanded &__group-title {
+    opacity: 1;
+    max-height: 2rem;
+  }
+
+  &__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    margin-bottom: 0.125rem;
+    border-radius: 0.375rem;
+    color: var(--layout-text-muted);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    line-height: 1.25;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+
+    &:hover {
+      background-color: rgba(31, 157, 91, 0.08);
+      color: var(--layout-brand);
+    }
+
+    &--active {
+      background-color: rgba(31, 157, 91, 0.12);
+      color: var(--layout-brand);
+      font-weight: 500;
+    }
+  }
+
+  &__link-icon-wrap {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__link-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__link-label {
+    white-space: nowrap;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.25s ease,
+      max-width 0.3s ease;
+  }
+
+  &--expanded &__link-label {
+    opacity: 1;
+    max-width: 12rem;
+  }
+
+  &__notification-dot {
+    position: absolute;
+    top: -0.125rem;
+    right: -0.125rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #e53e3e;
+    border: 0.125rem solid #ffffff;
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 0.0625rem solid var(--layout-border);
+  }
+
+  &:not(.sidebar--expanded) &__link,
+  &--pin-closing:not(&--pinned) &__link {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  &:not(.sidebar--expanded) &__create-btn,
+  &--pin-closing:not(&--pinned) &__create-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+  }
+
+  &:not(.sidebar--expanded) &__brand,
+  &--pin-closing:not(&--pinned) &__brand {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  &--pin-closing:not(&--pinned) &__brand-text,
+  &--pin-closing:not(&--pinned) &__create-label,
+  &--pin-closing:not(&--pinned) &__link-label,
+  &--pin-closing:not(&--pinned) &__group-title {
+    opacity: 0;
+    max-width: 0;
+    max-height: 0;
+  }
+}
