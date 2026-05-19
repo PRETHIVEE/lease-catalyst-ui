@@ -21,7 +21,10 @@ function SidebarNavLink({ item }: { item: NavItem }) {
       <span className="sidebar__link-icon-wrap">
         <item.icon className="sidebar__link-icon" aria-hidden />
         {item.hasNotification && (
-          <span className="sidebar__notification-dot" aria-label="New updates" />
+          <span
+            className="sidebar__notification-dot"
+            aria-label="New updates"
+          />
         )}
       </span>
       <span className="sidebar__link-label">{item.label}</span>
@@ -36,8 +39,7 @@ export default function Sidebar() {
     isSidebarHovered,
     setSidebarHovered,
   } = useLayoutStore();
-  const isExpanded =
-    isSidebarPinned || isSidebarHovered || isSidebarPinClosing;
+  const isExpanded = isSidebarPinned || isSidebarHovered || isSidebarPinClosing;
   const isHoverOverlay = isSidebarHovered && !isSidebarPinned;
 
   return (
@@ -47,7 +49,7 @@ export default function Sidebar() {
         isSidebarPinned && "sidebar--pinned",
         isSidebarPinClosing && "sidebar--pin-closing",
         isHoverOverlay && "sidebar--hover",
-        isExpanded && "sidebar--expanded",
+        isExpanded && "sidebar--expanded"
       )}
       aria-label="Main navigation"
     >
@@ -62,10 +64,10 @@ export default function Sidebar() {
             <span className="sidebar__brand-text">Lease Catalyst</span>
           </div>
 
-          <button type="button" className="sidebar__create-btn">
+          {/* <button type="button" className="sidebar__create-btn">
             <Plus className="size-5 shrink-0" aria-hidden />
             <span className="sidebar__create-label">Create New +</span>
-          </button>
+          </button> */}
 
           <nav className="sidebar__nav">
             {sidebarNavGroups.map((group) => (
@@ -83,11 +85,11 @@ export default function Sidebar() {
             ))}
           </nav>
 
-          <div className="sidebar__footer">
+          {/* <div className="sidebar__footer">
             {sidebarFooterItems.map((item) => (
               <SidebarNavLink key={item.path} item={item} />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </aside>

@@ -266,7 +266,6 @@ code {
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -321,6 +320,7 @@ code {
   --secondary-foreground: black;
 
   --main-theme: #1f9d5b;
+  /* --main-theme: #42a541; */
   --main-dark1: #23303a;
 
   --muted: #f3f4f6;

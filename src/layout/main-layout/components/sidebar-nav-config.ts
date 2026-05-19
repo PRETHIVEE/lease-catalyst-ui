@@ -49,24 +49,28 @@ export const sidebarNavGroups: NavGroup[] = [
     items: [
       { label: "Revenues", path: "/revenues", icon: Home },
       { label: "Expenses", path: "/expenses", icon: Calculator },
-      { label: "Owner Financials", path: "/owner-financials", icon: UserCircle },
+      {
+        label: "Owner Financials",
+        path: "/owner-financials",
+        icon: UserCircle,
+      },
       { label: "Reconciliation", path: "/reconciliation", icon: ClipboardList },
       { label: "Reports", path: "/reports", icon: BarChart3 },
     ],
   },
-  {
-    title: "Property Services",
-    items: [
-      { label: "Documents", path: "/documents", icon: FolderOpen },
-      {
-        label: "Maintenance",
-        path: "/maintenance",
-        icon: Wrench,
-        hasNotification: true,
-      },
-      { label: "Inspections", path: "/inspections", icon: Search },
-    ],
-  },
+  // {
+  //   title: "Property Services",
+  //   items: [
+  //     { label: "Documents", path: "/documents", icon: FolderOpen },
+  //     {
+  //       label: "Maintenance",
+  //       path: "/maintenance",
+  //       icon: Wrench,
+  //       hasNotification: true,
+  //     },
+  //     { label: "Inspections", path: "/inspections", icon: Search },
+  //   ],
+  // },
 ];
 
 export const sidebarFooterItems: NavItem[] = [
