@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
-import { Bell, HelpCircle, Menu, Search } from "lucide-react";
+import { Bell, HelpCircle, PanelLeft, Search } from "lucide-react";
 import { useLayoutStore } from "../store/layoutStore";
 
 type IconButtonProps = {
@@ -45,7 +45,7 @@ export default function Header() {
             isSidebarPinned && "text-main-theme bg-[rgba(31,157,91,0.1)]"
           )}
         >
-          <Menu className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
+          <PanelLeft className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
         </HeaderIconButton>
 
         <HeaderIconButton label="Help">

@@ -1,12 +1,11 @@
+// import leaseCatalystLogoIcon from "@/assets/logos/leaseCatalystLogoIcon.svg";
+// import leaseCatalystLogoText from "@/assets/logos/leaseCatalystLogoText.svg";
+import leaseCatalystLogo2 from "@/assets/logos/lease-catalyst-logo-icon.png";
+import leaseCatalystLogoText2 from "@/assets/logos/lease-catalyst-logo-text.png";
 import { cn } from "@/lib/utils";
-import { Cloud, Plus } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
-import {
-  sidebarFooterItems,
-  sidebarNavGroups,
-  type NavItem,
-} from "./sidebar-nav-config";
+import { sidebarNavGroups, type NavItem } from "./sidebar-nav-config";
 import "./Sidebar.scss";
 
 function SidebarNavLink({ item }: { item: NavItem }) {
@@ -60,14 +59,29 @@ export default function Sidebar() {
       >
         <div className="sidebar__inner">
           <div className="sidebar__brand">
-            <Cloud className="sidebar__brand-icon" aria-hidden />
-            <span className="sidebar__brand-text">Lease Catalyst</span>
+            {/* <img
+              src={leaseCatalystLogoIcon}
+              alt="Lease Catalyst"
+              className="sidebar__brand-icon"
+            />
+            <img
+              src={leaseCatalystLogoText}
+              alt=""
+              className="sidebar__brand-text"
+              aria-hidden
+            /> */}
+            <img
+              src={leaseCatalystLogo2}
+              alt="Lease Catalyst"
+              className="sidebar__brand-icon"
+            />
+            <img
+              src={leaseCatalystLogoText2}
+              alt=""
+              className="sidebar__brand-text"
+              aria-hidden
+            />
           </div>
-
-          {/* <button type="button" className="sidebar__create-btn">
-            <Plus className="size-5 shrink-0" aria-hidden />
-            <span className="sidebar__create-label">Create New +</span>
-          </button> */}
 
           <nav className="sidebar__nav">
             {sidebarNavGroups.map((group) => (
@@ -84,12 +98,6 @@ export default function Sidebar() {
               </div>
             ))}
           </nav>
-
-          {/* <div className="sidebar__footer">
-            {sidebarFooterItems.map((item) => (
-              <SidebarNavLink key={item.path} item={item} />
-            ))}
-          </div> */}
         </div>
       </div>
     </aside>

@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
+  Blocks,
+  BriefcaseBusiness,
   Building2,
   Calculator,
   ClipboardList,
@@ -8,6 +10,8 @@ import {
   FileText,
   FolderOpen,
   Home,
+  Languages,
+  LayoutDashboard,
   PlayCircle,
   Search,
   UserCircle,
@@ -29,48 +33,48 @@ export type NavGroup = {
 
 export const sidebarNavGroups: NavGroup[] = [
   {
-    items: [{ label: "Dashboard", path: "/dashboard", icon: BarChart3 }],
+    items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
   },
   {
     title: "Property Operations",
     items: [
-      { label: "Portfolio", path: "/portfolio", icon: Building2 },
+      { label: "Projects", path: "/portfolio", icon: Building2 },
       {
-        label: "Listings & Applications",
-        path: "/listings",
+        label: "Data Category",
+        path: "/data-category",
         icon: FileText,
         hasNotification: true,
       },
-      { label: "Renters", path: "/renters", icon: Users },
+      { label: "Reporting Dashboard", path: "/reports", icon: BarChart3 },
+      { label: "Lease Data Validation", path: "/renters", icon: Users },
+      { label: "Document Management", path: "/documents", icon: FolderOpen },
     ],
   },
   {
     title: "Financials",
     items: [
-      { label: "Revenues", path: "/revenues", icon: Home },
-      { label: "Expenses", path: "/expenses", icon: Calculator },
+      // { label: "Revenues", path: "/revenues", icon: Home },
+      { label: "Portfolio Reporting", path: "/expenses", icon: Calculator },
       {
-        label: "Owner Financials",
+        label: "CAM / OPEX Reconcilation",
         path: "/owner-financials",
-        icon: UserCircle,
+        icon: ClipboardList,
       },
-      { label: "Reconciliation", path: "/reconciliation", icon: ClipboardList },
-      { label: "Reports", path: "/reports", icon: BarChart3 },
+      {
+        label: "Portfolio Analytics",
+        path: "/portfolio",
+        icon: BriefcaseBusiness,
+      },
     ],
   },
-  // {
-  //   title: "Property Services",
-  //   items: [
-  //     { label: "Documents", path: "/documents", icon: FolderOpen },
-  //     {
-  //       label: "Maintenance",
-  //       path: "/maintenance",
-  //       icon: Wrench,
-  //       hasNotification: true,
-  //     },
-  //     { label: "Inspections", path: "/inspections", icon: Search },
-  //   ],
-  // },
+  {
+    title: "Translation Services",
+    items: [{ label: "Translate", path: "/translate", icon: Languages }],
+  },
+  {
+    title: "Integrations",
+    items: [{ label: "App Integrations", path: "/integrations", icon: Blocks }],
+  },
 ];
 
 export const sidebarFooterItems: NavItem[] = [

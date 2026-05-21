@@ -2,7 +2,7 @@
   --sidebar-width-collapsed: 4.25rem;
   --sidebar-width-expanded: 15.5rem;
   // --header-height: 4rem;
-  --layout-bg: #f5f7f9;
+  --layout-bg: #f6f8fb;
   --layout-surface: #ffffff;
   --layout-border: #e0e0e0;
   --layout-text: #333333;
@@ -29,5 +29,78 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 1.5rem;
+  // padding: 1.5rem;
+}
+
+.app-datagrid-container {
+  // border: 1px solid;
+  .MuiDataGrid-root {
+    // border: 1px solid red;
+    border-radius: 0.65rem;
+    .MuiDataGrid-virtualScroller {
+      border-radius: 0.25rem;
+    }
+    .MuiDataGrid-columnHeader {
+      background-color: #ebf0f6;
+      color: #000;
+
+      &:not(.MuiDataGrid-columnHeader ~ .MuiDataGrid-columnHeader) {
+        padding-inline-start: 16px;
+      }
+
+      .MuiSvgIcon-root {
+        // color: var(--font-color-light);
+      }
+      .MuiDataGrid-columnHeaderTitle {
+        font-size: 0.81rem;
+        font-weight: 500;
+      }
+    }
+
+    .MuiDataGrid-columnHeaders {
+      .MuiDataGrid-scrollbarFiller {
+        background-color: #ebf0f6;
+      }
+      .MuiDataGrid-filler {
+        background-color: #ebf0f6;
+      }
+    }
+
+    .MuiDataGrid-cell {
+      font-size: 0.8rem;
+      color: #3c3c3c;
+    }
+
+    .actionBtn {
+      height: 1.75rem;
+    }
+
+    .MuiDataGrid-row {
+      .MuiDataGrid-cell:not(.MuiDataGrid-cell ~ .MuiDataGrid-cell) {
+        padding-inline-start: 16px;
+      }
+    }
+
+    .MuiDataGrid-toolbar {
+      min-height: 44px;
+    }
+
+    // Footer
+    .MuiDataGrid-footerContainer {
+      overflow: hidden;
+      // border: 1px solid green;
+      min-height: 2.75rem;
+      // padding: 0 8px;
+    }
+    .MuiTablePagination-toolbar {
+      overflow: hidden;
+
+      min-height: 2.75rem;
+      // padding: 0 8px;
+    }
+    .MuiTablePagination-root {
+      // border: 1px solid;
+      overflow: hidden;
+    }
+  }
 }

@@ -1,21 +1,55 @@
+import { CheckCircle2, Clock3, FileText, List, XCircle } from "lucide-react";
+
+import WidgetCard from "./components/WidgetCard";
+import JobsTable from "./components/JobsTable";
+
 const Dashboard = () => {
   return (
-    <div>
-      <p className="my-4">Dashboard Page</p>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magnam
-        repudiandae quibusdam sit dolorem quo sunt nemo, facilis a ipsa ex
-        similique quisquam nostrum asperiores provident incidunt. Laborum,
-        blanditiis obcaecati pariatur sint maxime tempora quis hic autem aliquid
-        laudantium nemo nostrum dolores porro illo est magnam maiores rem harum
-        consequatur amet ad, vero debitis! Ut autem nam beatae minus eius
-        aspernatur, aperiam consequatur deleniti quo atque dolore, architecto et
-        consequuntur dolores officiis facere dignissimos rerum delectus aliquam
-        exercitationem neque. Laudantium ipsum amet voluptate quam earum. Vel
-        neque magni aut, quaerat iusto inventore ipsam voluptatibus, consectetur
-        consequatur id praesentium asperiores labore nihil!
-      </p>
-      <p className="my-4">Dashboard Page</p>
+    <div className="p-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <WidgetCard
+          value={42}
+          variant="info"
+          label="New"
+          subDescription="Awaiting intake"
+          icon={FileText}
+        />
+        <WidgetCard
+          value={18}
+          variant="warning"
+          label="Running"
+          subDescription="In progress"
+          icon={Clock3}
+        />
+        <WidgetCard
+          value={7}
+          variant="error"
+          label="Failed"
+          subDescription="Needs review"
+          icon={XCircle}
+        />
+        <WidgetCard
+          value={855}
+          variant="success"
+          label="Completed"
+          subDescription="Abstracted"
+          icon={CheckCircle2}
+        />
+        <WidgetCard
+          value={922}
+          variant="neutral"
+          label="Total"
+          subDescription="All leases"
+          icon={List}
+        />
+      </section>
+
+      <section
+        className="mt-4 shadow-sm rounded-lg"
+        style={{ overflow: "hidden" }}
+      >
+        <JobsTable />
+      </section>
     </div>
   );
 };
