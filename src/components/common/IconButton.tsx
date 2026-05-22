@@ -23,7 +23,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         disabled={disabled}
         onClick={onClick}
         className={cn(
-          "cursor-pointer shrink-0 rounded-md p-1 text-[#3c3c3c] transition-colors hover:bg-slate-100 hover:text-[#374151] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40",
+          "cursor-pointer shrink-0 rounded-xs p-1 text-[#3c3c3c] transition-colors hover:bg-slate-100 hover:text-[#374151] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40",
           className
         )}
         {...props}

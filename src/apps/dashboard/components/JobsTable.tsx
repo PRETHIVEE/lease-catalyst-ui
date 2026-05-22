@@ -131,7 +131,7 @@ export default function JobsTable() {
     {
       field: "action",
       headerName: "Actions",
-      minWidth: 280,
+      minWidth: 100,
       // flex: 1,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;

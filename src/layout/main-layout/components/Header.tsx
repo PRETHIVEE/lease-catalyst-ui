@@ -33,6 +33,7 @@ function HeaderIconButton({
 
 export default function Header() {
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
+  const userName = localStorage.getItem("name") || "";
 
   return (
     // <header className="flex h-[var(--header-height,2rem)] shrink-0 items-center justify-between border-b border-[#e0e0e0] bg-white px-[1.25rem]">
@@ -71,9 +72,10 @@ export default function Header() {
           className="ml-[0.5rem] flex h-[2rem] items-center gap-[0.5rem] rounded-full border border-[#e0e0e0]  py-[0.25rem] pl-[1rem] pr-[0.25rem] text-[0.78rem]"
           aria-label="User menu"
         >
-          <span>Mike</span>
-          <span className="flex size-[1.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
-            M
+          <span className="capitalize">{userName}</span>
+
+          <span className="capitalize flex size-[1.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
+            {userName[0]}
           </span>
         </button>
       </div>

@@ -89,13 +89,17 @@
     .MuiDataGrid-footerContainer {
       overflow: hidden;
       // border: 1px solid green;
-      min-height: 2.75rem;
+      min-height: 2.5rem;
       // padding: 0 8px;
+
+      .MuiTablePagination-displayedRows {
+        font-size: 0.8rem;
+      }
     }
     .MuiTablePagination-toolbar {
       overflow: hidden;
 
-      min-height: 2.75rem;
+      min-height: 2.5rem;
       // padding: 0 8px;
     }
     .MuiTablePagination-root {
