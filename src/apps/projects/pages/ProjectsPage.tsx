@@ -61,7 +61,8 @@ const ProjectsPage = () => {
       headerName: "Actions",
       minWidth: 100,
       renderCell: (params: GridRenderCellParams) => {
-        const { output_status } = params.row;
+        console.log("dsgsdfsdfsdf", params?.row?.id);
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -75,7 +76,7 @@ const ProjectsPage = () => {
             >
               <DropdownMenuItem
                 onSelect={() => {
-                  navigate("/projects/project-details");
+                  navigate(`/projects/project-details?id=${params?.row?.id}`);
                 }}
               >
                 <Eye aria-hidden className="mr-1.5" />
