@@ -10,6 +10,7 @@ import { Building2, FileScan, FileText, Pencil, Play } from "lucide-react";
 
 import PropertyDocumentsTable from "./PropertyDocumentsTable";
 import type { PropertyItem } from "./types";
+import { useNavigate } from "react-router-dom";
 
 type PropertyCardProps = {
   property: PropertyItem;
@@ -51,6 +52,8 @@ const PropertyCard = ({ property }: any) => {
     status = "unknown",
     documents = sampleDataDocs,
   } = property;
+
+  const navigate = useNavigate();
 
   return (
     <AccordionItem
@@ -101,7 +104,9 @@ const PropertyCard = ({ property }: any) => {
             size="sm"
             variant="outline"
             className="border-main-theme text-main-theme hover:bg-[#f0fdf4]"
-            onClick={() => {}}
+            onClick={() => {
+              navigate("/projects/project-details/document-qc?jobId=235843");
+            }}
           >
             <FileScan aria-hidden />
             View DQC

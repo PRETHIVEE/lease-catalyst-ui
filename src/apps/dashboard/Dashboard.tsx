@@ -1,12 +1,11 @@
 import { CheckCircle2, Clock3, FileText, List, XCircle } from "lucide-react";
-
 import WidgetCard from "./components/WidgetCard";
 import JobsTable from "./components/JobsTable";
 
 const Dashboard = () => {
   return (
     <div className="p-4">
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-5 xl:grid-cols-5">
         <WidgetCard
           value={42}
           variant="info"

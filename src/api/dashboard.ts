@@ -42,9 +42,9 @@ const DashboardAPI = {
   //   return AxiosInstance.post(`/attributes/custom-attributes`, payload);
   // },
 
-  // getDqcResult: (jobId: string) => {
-  //   return AxiosInstance.get(`/workflow/jobs/dqc-result?job_id=${jobId}`);
-  // },
+  getDqcResult: (jobId: string) => {
+    return AxiosInstance.get(`/workflow/jobs/dqc-result?job_id=${jobId}`);
+  },
 };
 
 export default DashboardAPI;

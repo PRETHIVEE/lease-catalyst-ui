@@ -8,6 +8,7 @@ import DataCategory from "@/apps/data-category/DataCategory";
 import Test from "@/apps/TestPage/Test";
 import ProjectsPage from "@/apps/projects/pages/ProjectsPage";
 import ProjectDetails from "@/apps/projects/pages/ProjectDetails/ProjectDetails";
+import DocumentQC from "@/apps/dqc/DocumentQC";
 
 export default function AppRouter() {
   return (
@@ -29,10 +30,15 @@ export default function AppRouter() {
         >
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/document-qc" element={<DocumentQC />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route
             path="/projects/project-details"
             element={<ProjectDetails />}
+          />
+          <Route
+            path="/projects/project-details/document-qc"
+            element={<DocumentQC />}
           />
           <Route path="/data-category" element={<DataCategory />} />
           <Route path="/integrations" element={<CommingSoon />} />

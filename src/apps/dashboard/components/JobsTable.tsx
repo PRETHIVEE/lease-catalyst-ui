@@ -17,8 +17,10 @@ import {
 } from "@mui/x-data-grid";
 import { Download, Pencil, Ellipsis, FileSearch } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function JobsTable() {
+  const navigate = useNavigate();
   const userEmail = localStorage.getItem("user_email") || "";
   const [loading, setLoading] = useState(true);
   const [Rows, setRows] = useState<any[]>([]);
@@ -157,7 +159,11 @@ export default function JobsTable() {
                 <Download aria-hidden className="mr-1.5" />
                 Download
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate(`/dashboard/document-qc?jobId=${params.row.job_id}`);
+                }}
+              >
                 <FileSearch aria-hidden className="mr-1.5" />
                 View DQC
               </DropdownMenuItem>

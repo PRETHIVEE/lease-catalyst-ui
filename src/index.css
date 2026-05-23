@@ -305,6 +305,8 @@ code {
   --color-table-body-text: var(--table-body-text-color);
   --color-table-row-hover: var(--table-row-hover-color);
   --color-table-row-selected: var(--table-row-selected-color);
+
+  --shadow-card: var(--card-shadow);
 }
 
 :root {
@@ -360,6 +362,7 @@ code {
   --status-chip-expired-bg: #f3f4f6;
   --status-chip-expired-fg: #4b5563;
   --status-chip-expired-border: #d1d5db;
+  --card-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
 }
 
 .dark {

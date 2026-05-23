@@ -33,12 +33,7 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
   } = props;
 
   return (
-    <article
-      className={cn(
-        "rounded-xl border border-slate-300 bg-white p-4",
-        className
-      )}
-    >
+    <article className={cn("rounded-md shadow-card bg-white p-4", className)}>
       <div className="flex items-start justify-between gap-3">
         <div
           aria-hidden
