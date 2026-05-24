@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProjectsAPI from "@/api/projects";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import DataGridTitle from "@/components/common/DataGridTitle";
@@ -19,6 +20,7 @@ import {
 import { Ellipsis, Eye, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CreateProject from "../components/CreateProject/CreateProject";
 
 const BreadcrumbsData = [
   { label: "Home", url: "/home" },
@@ -30,6 +32,7 @@ const ProjectsPage = () => {
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("user_id") || "";
+  const [openCreateProject, setOpenCreateProject] = useState(false);
 
   const Columns: GridColDef[] = [
     {
@@ -94,7 +97,6 @@ const ProjectsPage = () => {
   ];
 
   useEffect(() => {
-    setLoading(true);
     ProjectsAPI.getProjects(Number(userId))
       .then((response) => {
         if (response.statusText === "OK") {
@@ -111,6 +113,10 @@ const ProjectsPage = () => {
       });
   }, [userId]);
 
+  const handleCloseProjectModal = () => {
+    setOpenCreateProject(false);
+  };
+
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
@@ -119,7 +125,11 @@ const ProjectsPage = () => {
         <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
           Projects
         </h5>
-        <Button size="sm" variant="primary">
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={() => setOpenCreateProject(true)}
+        >
           <Plus strokeWidth={3} /> Create Project
         </Button>
       </div>
@@ -147,6 +157,11 @@ const ProjectsPage = () => {
           sx={{}}
         />
       </Box>
+
+      <CreateProject
+        open={openCreateProject}
+        onClose={handleCloseProjectModal}
+      />
     </div>
   );
 };
