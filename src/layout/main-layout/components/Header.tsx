@@ -1,6 +1,14 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
-import { Bell, HelpCircle, PanelLeft, Search } from "lucide-react";
+import { Bell, HelpCircle, LogOut, PanelLeft, Search, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
 
 type IconButtonProps = {
@@ -32,8 +40,14 @@ function HeaderIconButton({
 }
 
 export default function Header() {
+  const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("name") || "";
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
     // <header className="flex h-[var(--header-height,2rem)] shrink-0 items-center justify-between border-b border-[#e0e0e0] bg-white px-[1.25rem]">
@@ -67,17 +81,35 @@ export default function Header() {
           />
         </HeaderIconButton>
 
-        <button
-          type="button"
-          className="ml-[0.5rem] flex h-[2rem] items-center gap-[0.5rem] rounded-full border border-[#e0e0e0]  py-[0.25rem] pl-[1rem] pr-[0.25rem] text-[0.78rem]"
-          aria-label="User menu"
-        >
-          <span className="capitalize">{userName}</span>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="ml-[0.5rem] flex h-[2rem] cursor-pointer items-center gap-[0.5rem] rounded-full border border-[#e0e0e0] py-[0.25rem] pl-[1rem] pr-[0.25rem] text-[0.78rem] outline-none"
+              aria-label="User menu"
+            >
+              <span className="capitalize">{userName}</span>
 
-          <span className="capitalize flex size-[1.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
-            {userName[0]}
-          </span>
-        </button>
+              <span className="capitalize flex size-[1.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
+                {userName[0]}
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="min-w-[10rem] border border-[#e0e0e0] bg-white p-1 shadow-md"
+          >
+            <DropdownMenuItem onSelect={() => {}}>
+              <User aria-hidden />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
+            <DropdownMenuItem variant="destructive" onSelect={handleLogout}>
+              <LogOut aria-hidden />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

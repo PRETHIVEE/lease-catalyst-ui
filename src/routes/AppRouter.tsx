@@ -4,6 +4,7 @@ import MainLayout from "@/layout/main-layout/MainLayout";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "@/apps/auth/login/Login";
+import AuthLayout from "@/layout/auth-layout/AuthLayout";
 import DataCategory from "@/apps/data-category/DataCategory";
 import Test from "@/apps/TestPage/Test";
 import ProjectsPage from "@/apps/projects/pages/ProjectsPage";
@@ -17,9 +18,9 @@ export default function AppRouter() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         {/* Auth layout - no sidebar */}
-        {/* <Route element={<AuthLayout />}> */}
-        <Route path="/login" element={<Login />} />
-        {/* </Route> */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
         {/* <Route element={<MainLayout />}> */}
         <Route
           element={
