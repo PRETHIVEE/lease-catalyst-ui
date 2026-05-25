@@ -1,0 +1,25 @@
+.form-container {
+  // Border radius for both TextField and Autocomplete
+  .MuiInputBase-input {
+    font-size: 0.86rem;
+  }
+
+  // Border radius for both TextField and Autocomplete
+  .MuiOutlinedInput-root {
+    border-radius: 0.5rem !important;
+
+    fieldset {
+      border-radius: 0.5rem !important;
+    }
+  }
+
+  // Dropdown option items font size for Autocomplete
+  .MuiAutocomplete-option {
+    font-size: 0.88rem !important;
+  }
+  // Helper Text
+  .MuiFormHelperText-root {
+    margin-inline: 0.25rem;
+  }
+}
+

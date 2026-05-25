@@ -13,3 +13,16 @@ dayjs.extend(timezone);
 export const formatDateTime = (isoString: string): string => {
   return dayjs.utc(isoString).local().format("YYYY-MM-DD hh:mm A");
 };
+
+export const trimLeadingSpace = (inputValue: string) => {
+  // Get the input value from parameter
+  // Check if the first character is a space
+  if (inputValue.charAt(0) === " ") {
+    // Remove the space at the beginning
+    const newValue = inputValue.trimStart();
+    return newValue;
+  } else {
+    // If the first character is not a space, update the state normally
+    return inputValue;
+  }
+};

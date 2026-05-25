@@ -12,7 +12,7 @@ const DashboardAPI = {
 
   getWorkflow: (payload: any) => {
     return AxiosInstance.get(
-      `/workflow/jobs/by-user_name?user_name=${payload}`
+      `/workflow/jobs/by-user_name?user_name=${payload}`,
     );
   },
 
@@ -24,9 +24,9 @@ const DashboardAPI = {
   //   return AxiosInstance.get(`/attributes`);
   // },
 
-  // getAttributeCategories: () => {
-  //   return AxiosInstance.get(`/attributes/categories`);
-  // },
+  getAttributeCategories: () => {
+    return AxiosInstance.get(`/attributes/categories`);
+  },
 
   // getOutputPath: (job_id: string) => {
   //   return AxiosInstance.get(`/workflow/jobs/output-path?job_id=${job_id}`);

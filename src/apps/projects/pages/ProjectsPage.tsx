@@ -21,18 +21,49 @@ import { Ellipsis, Eye, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateProject from "../components/CreateProject/CreateProject";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import DashboardAPI from "@/api/dashboard";
+import { useSnackbarStore } from "@/store/snackbar-store";
 
 const BreadcrumbsData = [
   { label: "Home", url: "/home" },
   { label: "Projects", url: "/projects" },
 ];
 
+interface DataCategory {
+  attribute: string;
+  description: string;
+  status: string;
+}
+
 const ProjectsPage = () => {
   const navigate = useNavigate();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const userId = localStorage.getItem("user_id") || "";
+  const userEmail = localStorage.getItem("user_email") || "";
   const [openCreateProject, setOpenCreateProject] = useState(false);
+  const [dataCategoryList, setDataCategoryList] = useState<DataCategory[]>([]);
+  const { showSnackbar } = useSnackbarStore();
+
+  const validationSchema = Yup.object({
+    projectName: Yup.string().required("Project Name is required"),
+    template: Yup.object().required("Data Category is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      projectName: "",
+      template: null,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+      onCreateProject(values);
+    },
+  });
 
   const Columns: GridColDef[] = [
     {
@@ -96,7 +127,33 @@ const ProjectsPage = () => {
     },
   ];
 
-  useEffect(() => {
+  const handleCloseProjectModal = () => {
+    setOpenCreateProject(false);
+    formik.resetForm();
+  };
+
+  const getDataCategoryList = () => {
+    DashboardAPI.getAttributeCategories()
+      .then(({ status, data }) => {
+        if (status !== 200) throw new Error();
+
+        const merged = [
+          ...(Array.isArray(data?.custom) ? data.custom : []),
+          ...(Array.isArray(data?.default) ? data.default : []),
+        ];
+
+        setDataCategoryList(
+          merged.map(({ attribute, description, status = "" }) => ({
+            attribute,
+            description,
+            status,
+          })),
+        );
+      })
+      .catch(() => setDataCategoryList([]));
+  };
+
+  const getProjectList = () => {
     ProjectsAPI.getProjects(Number(userId))
       .then((response) => {
         if (response.statusText === "OK") {
@@ -111,10 +168,40 @@ const ProjectsPage = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (userId) {
+      getProjectList();
+      getDataCategoryList();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const handleCloseProjectModal = () => {
-    setOpenCreateProject(false);
+  const onCreateProject = (data: any) => {
+    setIsSubmitting(true);
+    const requestBody = {
+      project_name: data.projectName,
+      category: data.template?.attribute,
+      property_count: 0,
+      user_id: Number(userId),
+      user_name: userEmail,
+    };
+
+    ProjectsAPI.CreateProject(requestBody)
+      .then((response) => {
+        if (response.statusText === "Created") {
+          getProjectList();
+          showSnackbar("Project created!");
+        }
+      })
+      .catch(() => {
+        showSnackbar("Failed to create project.", "error");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        handleCloseProjectModal();
+      });
   };
 
   return (
@@ -161,6 +248,9 @@ const ProjectsPage = () => {
       <CreateProject
         open={openCreateProject}
         onClose={handleCloseProjectModal}
+        formik={formik}
+        dataCategoryOptions={dataCategoryList}
+        isSubmitting={isSubmitting}
       />
     </div>
   );
