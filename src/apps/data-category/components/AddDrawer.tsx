@@ -126,7 +126,7 @@ const AddDrawer = (props: AddDrawerProps) => {
               }
               disabled={!canSave}
             >
-              Save
+              Add
             </Button>
           </DialogFooterWrapper>
         </DrawerFooter>

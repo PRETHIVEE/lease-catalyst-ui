@@ -47,10 +47,7 @@ export default function AppRouter() {
           <Route path="/reports" element={<ReportingDashboard />} />
           <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/data-category" element={<DataCategory />} />
-          <Route
-            path="/data-category/modify"
-            element={<ModifyDataCategory />}
-          />
+          <Route path="/data-category/view" element={<ModifyDataCategory />} />
           <Route path="/test" element={<Test />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>

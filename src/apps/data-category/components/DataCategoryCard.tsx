@@ -1,5 +1,6 @@
 import {
   Download,
+  Eye,
   Grid2x2,
   Grid2x2Plus,
   MoreVertical,
@@ -63,17 +64,27 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
               align="end"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
-              <DropdownMenuItem onSelect={() => {}}>
-                <Download aria-hidden className="mr-1.5" />
-                Download
-              </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => {
-                  navigate(`/data-category/modify`);
+                  navigate(`/data-category/view?mode=view&dc=${title}`);
+                }}
+              >
+                <Eye aria-hidden className="mr-1.5" />
+                View
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate(`/data-category/view?mode=modify&dc=${title}`);
                 }}
               >
                 <Pencil aria-hidden className="mr-1.5" />
                 Modify
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onSelect={() => {}}>
+                <Download aria-hidden className="mr-1.5" />
+                Download
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

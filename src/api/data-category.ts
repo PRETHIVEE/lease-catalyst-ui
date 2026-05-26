@@ -41,9 +41,9 @@ const DataCategoryAPI = {
   //   );
   // },
 
-  // createDataCategory: (payload: any) => {
-  //   return AxiosInstance.post(`/attributes/custom-attributes`, payload);
-  // },
+  createDataCategory: (payload: any) => {
+    return AxiosInstance.post(`/attributes/custom-attributes`, payload);
+  },
 
   // getDqcResult: (jobId: string) => {
   //   return AxiosInstance.get(`/workflow/jobs/dqc-result?job_id=${jobId}`);
