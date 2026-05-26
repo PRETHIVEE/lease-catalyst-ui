@@ -162,7 +162,7 @@ const Login = () => {
           }}
         />
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 my-[-0.75rem]">
           <FormControlLabel
             control={
               <Checkbox
