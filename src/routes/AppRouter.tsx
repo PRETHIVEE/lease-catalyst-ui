@@ -10,6 +10,8 @@ import Test from "@/apps/TestPage/Test";
 import ProjectsPage from "@/apps/projects/pages/ProjectsPage";
 import ProjectDetails from "@/apps/projects/pages/ProjectDetails/ProjectDetails";
 import DocumentQC from "@/apps/dqc/DocumentQC";
+import ReportingDashboard from "@/apps/reporting-dashboard/ReportingDashboard";
+import IntegrationsPage from "@/apps/Integrations/Pages/IntegrationsPage";
 
 export default function AppRouter() {
   return (
@@ -41,9 +43,11 @@ export default function AppRouter() {
             path="/projects/project-details/document-qc"
             element={<DocumentQC />}
           />
+          <Route path="/reports" element={<ReportingDashboard />} />
+          <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/data-category" element={<DataCategory />} />
-          <Route path="/integrations" element={<CommingSoon />} />
           <Route path="/test" element={<Test />} />
+          <Route path="*" element={<CommingSoon />} />
         </Route>
       </Routes>
     </BrowserRouter>

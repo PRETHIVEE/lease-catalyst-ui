@@ -27,7 +27,7 @@ import DashboardAPI from "@/api/dashboard";
 import { useSnackbarStore } from "@/store/snackbar-store";
 
 const BreadcrumbsData = [
-  { label: "Home", url: "/home" },
+  { label: "Home", url: "/dashboard" },
   { label: "Projects", url: "/projects" },
 ];
 
@@ -147,7 +147,7 @@ const ProjectsPage = () => {
             attribute,
             description,
             status,
-          })),
+          }))
         );
       })
       .catch(() => setDataCategoryList([]));

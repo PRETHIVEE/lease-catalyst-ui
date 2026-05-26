@@ -20,7 +20,7 @@ import { formatDateTime } from "@/utils/utils";
 import NoDataFound from "@/components/common/NoDataFound";
 
 const BreadcrumbsData = [
-  { label: "Home", url: "/home" },
+  { label: "Home", url: "/dashboard" },
   { label: "Projects", url: "/projects" },
   { label: "Projects Details", url: "/" },
 ];
@@ -141,7 +141,7 @@ const ProjectDetails = () => {
       const propertyId = property.property_id?.toLowerCase() ?? "";
       const leaseId = property.lease_id?.toLowerCase() ?? "";
       const tenantMatch = (property.tenant_names ?? []).some((name: string) =>
-        name.toLowerCase().includes(query),
+        name.toLowerCase().includes(query)
       );
 
       return (
