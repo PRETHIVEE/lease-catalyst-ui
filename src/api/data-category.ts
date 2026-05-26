@@ -19,9 +19,9 @@ const DataCategoryAPI = {
   //   );
   // },
 
-  // getDataCategory: (dcName: string) => {
-  //   return AxiosInstance.get(`/attributes/search?category=${dcName}`);
-  // },
+  getDataCategory: (dcName: string) => {
+    return AxiosInstance.get(`/attributes/search?category=${dcName}`);
+  },
 
   // getAttributes: () => {
   //   return AxiosInstance.get(`/attributes`);

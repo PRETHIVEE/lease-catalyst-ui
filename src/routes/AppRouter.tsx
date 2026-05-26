@@ -5,13 +5,14 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "@/apps/auth/login/Login";
 import AuthLayout from "@/layout/auth-layout/AuthLayout";
-import DataCategory from "@/apps/data-category/DataCategory";
 import Test from "@/apps/TestPage/Test";
 import ProjectsPage from "@/apps/projects/pages/ProjectsPage";
 import ProjectDetails from "@/apps/projects/pages/ProjectDetails/ProjectDetails";
 import DocumentQC from "@/apps/dqc/DocumentQC";
 import ReportingDashboard from "@/apps/reporting-dashboard/ReportingDashboard";
 import IntegrationsPage from "@/apps/Integrations/Pages/IntegrationsPage";
+import DataCategory from "@/apps/data-category/pages/DataCategory";
+import ModifyDataCategory from "@/apps/data-category/pages/ModifyDataCategory";
 
 export default function AppRouter() {
   return (
@@ -46,6 +47,10 @@ export default function AppRouter() {
           <Route path="/reports" element={<ReportingDashboard />} />
           <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/data-category" element={<DataCategory />} />
+          <Route
+            path="/data-category/modify"
+            element={<ModifyDataCategory />}
+          />
           <Route path="/test" element={<Test />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>

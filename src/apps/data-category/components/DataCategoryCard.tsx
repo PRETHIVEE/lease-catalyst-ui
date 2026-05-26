@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 export type DataCategoryCardProps = {
   title: string;
@@ -31,6 +32,8 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
     isCustomCatgory = false,
     status,
   } = props;
+
+  const navigate = useNavigate();
 
   return (
     <article className={cn("rounded-md shadow-card bg-white p-4", className)}>
@@ -64,7 +67,11 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
                 <Download aria-hidden className="mr-1.5" />
                 Download
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate(`/data-category/modify`);
+                }}
+              >
                 <Pencil aria-hidden className="mr-1.5" />
                 Modify
               </DropdownMenuItem>
