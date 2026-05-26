@@ -1,7 +1,10 @@
 import DataCategoryAPI from "@/api/data-category";
-import { useEffect, useState } from "react";
-import { transformAttributes } from "../components/datatransfomer";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
+import AddDrawer, { type AddDrawerPayload } from "../components/AddDrawer";
+import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { transformAttributes } from "../components/datatransfomer";
 
 const BreadcrumbsData = [
   { label: "Home", url: "/dashboard" },
@@ -9,24 +12,404 @@ const BreadcrumbsData = [
   { label: "Modify Data Category", url: "/" },
 ];
 
+type CategoryAttribute = {
+  attributeName: string;
+  attributeDescription: string;
+  isSelected: boolean;
+  isNew: boolean;
+};
+
+type CategorySubGroup = {
+  subGroupName: string;
+  isSelected: boolean;
+  isNew: boolean;
+  attributes: CategoryAttribute[];
+};
+
+type CategoryGroup = {
+  groupName: string;
+  isSelected: boolean;
+  isNew: boolean;
+  subGroups: CategorySubGroup[];
+};
+
+type DrawerMode = "group" | "subgroup" | "attribute" | null;
+
+type RawCategoryItem = {
+  groupName: string;
+  isSelected: string | boolean;
+  isNew: boolean;
+  subGroups: {
+    subGroupName: string;
+    isSelected: string | boolean;
+    isNew: boolean;
+    attributes: {
+      attributeName: string;
+      attributeDescription: string;
+      isSelected: string | boolean;
+      isNew: boolean;
+    }[];
+  }[];
+};
+
+const parseSelected = (value: string | boolean) =>
+  value === true || value === "true";
+
+const normalizeCategoryData = (data: RawCategoryItem[]): CategoryGroup[] =>
+  data.map((group) => ({
+    groupName: group.groupName,
+    isSelected: parseSelected(group.isSelected),
+    isNew: group.isNew,
+    subGroups: group.subGroups.map((subGroup) => ({
+      subGroupName: subGroup.subGroupName,
+      isSelected: parseSelected(subGroup.isSelected),
+      isNew: subGroup.isNew,
+      attributes: subGroup.attributes.map((attribute) => ({
+        attributeName: attribute.attributeName,
+        attributeDescription: attribute.attributeDescription,
+        isSelected: parseSelected(attribute.isSelected),
+        isNew: attribute.isNew,
+      })),
+    })),
+  }));
+
+const GreenCheckbox = ({
+  checked,
+  indeterminate = false,
+  onChange,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate?: boolean;
+  onChange: (checked: boolean) => void;
+  ariaLabel: string;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
+
+  return (
+    <input
+      ref={inputRef}
+      type="checkbox"
+      checked={checked}
+      aria-label={ariaLabel}
+      onChange={(event) => onChange(event.target.checked)}
+      className="size-4 shrink-0 cursor-pointer rounded accent-main-theme"
+    />
+  );
+};
+
+const AddAction = ({
+  label,
+  onClick,
+  className,
+}: {
+  label: string;
+  onClick: () => void;
+  className?: string;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={cn(
+      "mt-3 inline-flex items-center gap-1.5 text-[0.82rem] font-medium text-main-theme transition-colors hover:text-main-theme/80",
+      className
+    )}
+  >
+    <Plus className="size-3.5" aria-hidden />
+    {label}
+  </button>
+);
+
+const EditableName = ({
+  value,
+  isNew,
+  onChange,
+  className,
+}: {
+  value: string;
+  isNew: boolean;
+  onChange: (value: string) => void;
+  className?: string;
+}) => {
+  // Inline editing is intentionally disabled.
+  // Names are edited/created via the Drawer flow instead.
+  void isNew;
+  void onChange;
+  return (
+    <span className={cn("text-font-color-primary", className)}>{value}</span>
+  );
+};
+
+const getGroupSelectionState = (group: CategoryGroup) => {
+  const allItems = group.subGroups.flatMap((subGroup) => subGroup.attributes);
+  const selectedCount = allItems.filter((item) => item.isSelected).length;
+
+  return {
+    checked: selectedCount > 0 && selectedCount === allItems.length,
+    indeterminate: selectedCount > 0 && selectedCount < allItems.length,
+  };
+};
+
+const getSubGroupSelectionState = (subGroup: CategorySubGroup) => {
+  const selectedCount = subGroup.attributes.filter(
+    (item) => item.isSelected
+  ).length;
+
+  return {
+    checked: selectedCount > 0 && selectedCount === subGroup.attributes.length,
+    indeterminate:
+      selectedCount > 0 && selectedCount < subGroup.attributes.length,
+  };
+};
+
 const ModifyDataCategory = () => {
-  const [data, setData] = useState<any>(null);
-  const [templateData, setTemplateData] = useState<any[]>([]);
+  const [categories, setCategories] = useState<CategoryGroup[]>(() =>
+    normalizeCategoryData(templateDataSample)
+  );
+  const [drawerMode, setDrawerMode] = useState<DrawerMode>(null);
+  const [drawerGroupIndex, setDrawerGroupIndex] = useState<number | null>(null);
+  const [drawerSubGroupIndex, setDrawerSubGroupIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     DataCategoryAPI.getDataCategory("Mobius Standard Abstraction").then(
       (response) => {
         if (response.status === 200) {
-          const data = response.data[0];
-          const transformedData = transformAttributes(data?.attributes);
-          setData(data);
-          setTemplateData(transformedData);
+          const category = response.data[0];
+          const transformedData = transformAttributes(category?.attributes);
+          if (transformedData.length > 0) {
+            setCategories(normalizeCategoryData(transformedData));
+          }
         }
       }
     );
   }, []);
 
-  console.log("data", data, "templateData", templateData);
+  const updateGroup = (
+    groupIndex: number,
+    updater: (group: CategoryGroup) => CategoryGroup
+  ) => {
+    setCategories((prev) =>
+      prev.map((group, index) =>
+        index === groupIndex ? updater(group) : group
+      )
+    );
+  };
+
+  const toggleGroup = (groupIndex: number, checked: boolean) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      isSelected: checked,
+      subGroups: group.subGroups.map((subGroup) => ({
+        ...subGroup,
+        isSelected: checked,
+        attributes: subGroup.attributes.map((attribute) => ({
+          ...attribute,
+          isSelected: checked,
+        })),
+      })),
+    }));
+  };
+
+  const toggleSubGroup = (
+    groupIndex: number,
+    subGroupIndex: number,
+    checked: boolean
+  ) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: group.subGroups.map((subGroup, index) =>
+        index === subGroupIndex
+          ? {
+              ...subGroup,
+              isSelected: checked,
+              attributes: subGroup.attributes.map((attribute) => ({
+                ...attribute,
+                isSelected: checked,
+              })),
+            }
+          : subGroup
+      ),
+    }));
+  };
+
+  const toggleAttribute = (
+    groupIndex: number,
+    subGroupIndex: number,
+    attributeIndex: number,
+    checked: boolean
+  ) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: group.subGroups.map((subGroup, sgIndex) =>
+        sgIndex === subGroupIndex
+          ? {
+              ...subGroup,
+              attributes: subGroup.attributes.map((attribute, attrIndex) =>
+                attrIndex === attributeIndex
+                  ? { ...attribute, isSelected: checked }
+                  : attribute
+              ),
+            }
+          : subGroup
+      ),
+    }));
+  };
+
+  const addGroup = (groupName: string) => {
+    setCategories((prev) => [
+      ...prev,
+      {
+        groupName: groupName || "New Group",
+        isSelected: false,
+        isNew: true,
+        subGroups: [],
+      },
+    ]);
+  };
+
+  const addSubGroup = (groupIndex: number, subGroupName: string) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: [
+        ...group.subGroups,
+        {
+          subGroupName: subGroupName || "New Subgroup",
+          isSelected: false,
+          isNew: true,
+          attributes: [],
+        },
+      ],
+    }));
+  };
+
+  const addAttribute = (
+    groupIndex: number,
+    subGroupIndex: number,
+    attributeName: string,
+    attributeDescription: string
+  ) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: group.subGroups.map((subGroup, index) =>
+        index === subGroupIndex
+          ? {
+              ...subGroup,
+              attributes: [
+                ...subGroup.attributes,
+                {
+                  attributeName: attributeName || "New Attribute",
+                  attributeDescription: attributeDescription || "",
+                  isSelected: false,
+                  isNew: true,
+                },
+              ],
+            }
+          : subGroup
+      ),
+    }));
+  };
+
+  const updateGroupName = (groupIndex: number, groupName: string) => {
+    updateGroup(groupIndex, (group) => ({ ...group, groupName }));
+  };
+
+  const updateSubGroupName = (
+    groupIndex: number,
+    subGroupIndex: number,
+    subGroupName: string
+  ) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: group.subGroups.map((subGroup, index) =>
+        index === subGroupIndex ? { ...subGroup, subGroupName } : subGroup
+      ),
+    }));
+  };
+
+  const updateAttributeName = (
+    groupIndex: number,
+    subGroupIndex: number,
+    attributeIndex: number,
+    attributeName: string
+  ) => {
+    updateGroup(groupIndex, (group) => ({
+      ...group,
+      subGroups: group.subGroups.map((subGroup, sgIndex) =>
+        sgIndex === subGroupIndex
+          ? {
+              ...subGroup,
+              attributes: subGroup.attributes.map((attribute, attrIndex) =>
+                attrIndex === attributeIndex
+                  ? { ...attribute, attributeName }
+                  : attribute
+              ),
+            }
+          : subGroup
+      ),
+    }));
+  };
+
+  const openDrawerForGroup = () => {
+    setDrawerMode("group");
+    setDrawerGroupIndex(null);
+    setDrawerSubGroupIndex(null);
+  };
+
+  const openDrawerForSubGroup = (groupIndex: number) => {
+    setDrawerMode("subgroup");
+    setDrawerGroupIndex(groupIndex);
+    setDrawerSubGroupIndex(null);
+  };
+
+  const openDrawerForAttribute = (
+    groupIndex: number,
+    subGroupIndex: number
+  ) => {
+    setDrawerMode("attribute");
+    setDrawerGroupIndex(groupIndex);
+    setDrawerSubGroupIndex(subGroupIndex);
+  };
+
+  const closeDrawer = () => {
+    setDrawerMode(null);
+    setDrawerGroupIndex(null);
+    setDrawerSubGroupIndex(null);
+  };
+
+  const handleDrawerSave = (payload: AddDrawerPayload) => {
+    if (!drawerMode) return;
+
+    if (drawerMode === "group") {
+      addGroup(payload.name.trim());
+    } else if (
+      drawerMode === "subgroup" &&
+      typeof drawerGroupIndex === "number"
+    ) {
+      addSubGroup(drawerGroupIndex, payload.name.trim());
+    } else if (
+      drawerMode === "attribute" &&
+      typeof drawerGroupIndex === "number" &&
+      typeof drawerSubGroupIndex === "number"
+    ) {
+      addAttribute(
+        drawerGroupIndex,
+        drawerSubGroupIndex,
+        payload.name.trim(),
+        payload.attributeDescription ?? ""
+      );
+    }
+
+    closeDrawer();
+  };
+
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
@@ -34,19 +417,124 @@ const ModifyDataCategory = () => {
         Modify Data Category
       </h5>
 
-      <div
-        style={{
-          border: "1px dashed black",
-          display: "flex",
-          justifyContent: "center",
-        }}
-        className="p-2"
-      >
-        <div
-          style={{ border: "1px solid red", width: "1000px" }}
-          className="p-2"
-        ></div>
+      <div className="mx-auto mt-4 max-w-[1000px] space-y-4">
+        {categories.map((group, groupIndex) => {
+          const groupSelection = getGroupSelectionState(group);
+
+          return (
+            <section
+              key={`${group.groupName}-${groupIndex}`}
+              className="overflow-hidden rounded-md bg-white shadow-card"
+            >
+              <div className="flex items-center gap-2.5 bg-[#f0fdf4] px-4 py-3">
+                <GreenCheckbox
+                  checked={groupSelection.checked}
+                  indeterminate={groupSelection.indeterminate}
+                  ariaLabel={`Select ${group.groupName}`}
+                  onChange={(checked) => toggleGroup(groupIndex, checked)}
+                />
+                <EditableName
+                  value={group.groupName}
+                  isNew={group.isNew}
+                  onChange={(value) => updateGroupName(groupIndex, value)}
+                  className="text-[0.92rem] font-semibold"
+                />
+              </div>
+
+              <div className="space-y-6 px-4 py-4">
+                {group.subGroups.map((subGroup, subGroupIndex) => {
+                  const subGroupSelection = getSubGroupSelectionState(subGroup);
+
+                  return (
+                    <div key={`${subGroup.subGroupName}-${subGroupIndex}`}>
+                      <div className="mb-3 flex items-center gap-2.5">
+                        <GreenCheckbox
+                          checked={subGroupSelection.checked}
+                          indeterminate={subGroupSelection.indeterminate}
+                          ariaLabel={`Select ${subGroup.subGroupName}`}
+                          onChange={(checked) =>
+                            toggleSubGroup(groupIndex, subGroupIndex, checked)
+                          }
+                        />
+                        <EditableName
+                          value={subGroup.subGroupName}
+                          isNew={subGroup.isNew}
+                          onChange={(value) =>
+                            updateSubGroupName(groupIndex, subGroupIndex, value)
+                          }
+                          className="text-[0.86rem] font-semibold"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                        {subGroup.attributes.map(
+                          (attribute, attributeIndex) => (
+                            <label
+                              key={`${attribute.attributeName}-${attributeIndex}`}
+                              className="flex items-start gap-2.5 text-left"
+                            >
+                              <GreenCheckbox
+                                checked={attribute.isSelected}
+                                ariaLabel={`Select ${attribute.attributeName}`}
+                                onChange={(checked) =>
+                                  toggleAttribute(
+                                    groupIndex,
+                                    subGroupIndex,
+                                    attributeIndex,
+                                    checked
+                                  )
+                                }
+                              />
+                              <EditableName
+                                value={attribute.attributeName}
+                                isNew={attribute.isNew}
+                                onChange={(value) =>
+                                  updateAttributeName(
+                                    groupIndex,
+                                    subGroupIndex,
+                                    attributeIndex,
+                                    value
+                                  )
+                                }
+                                className="text-[0.82rem] text-[#00000090]"
+                              />
+                            </label>
+                          )
+                        )}
+                      </div>
+
+                      <AddAction
+                        label="Add attribute"
+                        onClick={() =>
+                          openDrawerForAttribute(groupIndex, subGroupIndex)
+                        }
+                      />
+                    </div>
+                  );
+                })}
+
+                <AddAction
+                  label="Add subgroup"
+                  onClick={() => openDrawerForSubGroup(groupIndex)}
+                  className="mt-0"
+                />
+              </div>
+            </section>
+          );
+        })}
+
+        <AddAction
+          label="Add group"
+          onClick={openDrawerForGroup}
+          className="mt-2"
+        />
       </div>
+      <AddDrawer
+        open={drawerMode !== null}
+        mode={drawerMode}
+        onClose={closeDrawer}
+        onSave={handleDrawerSave}
+      />
     </div>
   );
 };
