@@ -19,7 +19,7 @@ import {
 } from "@mui/x-data-grid";
 import { Ellipsis, Eye, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreateProject from "../components/CreateProject/CreateProject";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -70,6 +70,16 @@ const ProjectsPage = () => {
       field: "project_name",
       headerName: "Project Name",
       width: 220,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Link
+            className="hover:underline"
+            to={`/projects/project-details?id=${params?.row?.id}`}
+          >
+            {params?.row?.project_name}
+          </Link>
+        );
+      },
     },
     {
       field: "category",

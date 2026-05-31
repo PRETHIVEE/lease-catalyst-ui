@@ -1,43 +1,54 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BreadCrumbs from "@/components/common/BreadCrumbs";
-import { Accordion } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building, Building2, Grid3x3, Plus, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { Building, Building2, Ellipsis, Eye, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import PropertyCard from "../../components/PropertyCard/PropertyCard";
 import { Button } from "@/components/ui/button";
 import ProjectsAPI from "@/api/projects";
-import { useSearchParams } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
-import CreateProperty from "../../components/CreateProperty/CreateProperty";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSnackbarStore } from "@/store/snackbar-store";
 import { formatDateTime } from "@/utils/utils";
-import NoDataFound from "@/components/common/NoDataFound";
-
-const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
-  { label: "Projects", url: "/projects" },
-  { label: "Projects Details", url: "/" },
-];
+import {
+  DataGrid,
+  type GridColDef,
+  type GridRenderCellParams,
+} from "@mui/x-data-grid";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import IconButton from "@/components/common/IconButton";
+import Box from "@mui/material/Box";
+import CreateProperty from "../../components/CreateProperty/CreateProperty";
 
 const ProjectDetails = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { showSnackbar } = useSnackbarStore();
   const projectId = searchParams.get("id");
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("properties");
-  const [searchQuery, setSearchQuery] = useState("");
   const [propertiesData, setPropertiesData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openCreateProperty, setOpenCreateProperty] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userEmail = localStorage.getItem("user_email") || "";
   const userId = localStorage.getItem("user_id") || "";
+
+  const BreadcrumbsData = [
+    { label: "Home", url: "/dashboard" },
+    { label: "Projects", url: "/projects" },
+    {
+      label: `Projects (${projectDetails?.project_name || "..."})`,
+      url: "/",
+    },
+  ];
 
   const validationSchema = Yup.object({
     projectName: Yup.string().required("Project Name is required"),
@@ -132,35 +143,89 @@ const ProjectDetails = () => {
     formik.setFieldValue("projectName", projectDetails?.project_name || "");
   };
 
-  const filteredProperties = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return propertiesData;
+  const Columns: GridColDef[] = [
+    {
+      field: "property_name",
+      headerName: "Property Name",
+      width: 220,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Link
+            className="hover:underline"
+            to={`/projects/project-details/property-details?projectId=${projectId}&propertyId=${params?.row?.id}`}
+          >
+            {params?.row?.property_name}
+          </Link>
+        );
+      },
+    },
+    {
+      field: "property_id",
+      headerName: "Property Id",
+      width: 180,
+    },
 
-    return propertiesData.filter((property) => {
-      const propertyName = property.property_name?.toLowerCase() ?? "";
-      const propertyId = property.property_id?.toLowerCase() ?? "";
-      const leaseId = property.lease_id?.toLowerCase() ?? "";
-      const tenantMatch = (property.tenant_names ?? []).some((name: string) =>
-        name.toLowerCase().includes(query)
-      );
+    {
+      field: "lease_id",
+      headerName: "Lease Id",
+      width: 140,
+    },
 
-      return (
-        propertyName.includes(query) ||
-        propertyId.includes(query) ||
-        leaseId.includes(query) ||
-        tenantMatch
-      );
-    });
-  }, [searchQuery, propertiesData]);
+    {
+      field: "tenant_names",
+      headerName: "Tenant Name",
+      width: 174,
+      renderCell: (params: GridRenderCellParams) => {
+        return <div>{params?.row?.tenant_names?.join(", ")}</div>;
+      },
+    },
+
+    {
+      field: "action",
+      headerName: "Actions",
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams) => {
+        console.log("dsgsdfsdfsdf", params?.row?.id);
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <IconButton aria-label={`action options`} className="ml-2 mt-1.5">
+                <Ellipsis className="size-4" aria-hidden />
+              </IconButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
+            >
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate(`/projects/project-details?id=${params?.row?.id}`);
+                }}
+              >
+                <Eye aria-hidden className="mr-1.5" />
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => {}}>
+                <Trash2 aria-hidden className="mr-1.5" />
+                Delete Property
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+  console.log("propertiesData", propertiesData);
 
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
 
       <div>
-        <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
+        {/* <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
           Project Details
-        </h5>
+        </h5> */}
 
         <div className="mt-1.5">
           <Tabs
@@ -168,20 +233,21 @@ const ProjectDetails = () => {
             onValueChange={setActiveTab}
             className="gap-0"
           >
-            <TabsList>
-              <TabsTrigger value="project">
-                <Building2 aria-hidden />
-                Project
-              </TabsTrigger>
-              <TabsTrigger value="properties">
-                <Building aria-hidden />
-                Properties
-              </TabsTrigger>
-              <TabsTrigger value="attributes">
-                <Grid3x3 aria-hidden />
-                Atrributes
-              </TabsTrigger>
-            </TabsList>
+            <div className="flex justify-between items-center gap-16">
+              <TabsList>
+                <TabsTrigger value="project">
+                  <Building2 aria-hidden />
+                  Project Details
+                </TabsTrigger>
+                <TabsTrigger value="properties">
+                  <Building aria-hidden />
+                  Properties
+                </TabsTrigger>
+              </TabsList>
+              <Button variant="primary" onClick={() => handleCreate()}>
+                <Plus strokeWidth={2} /> Add Property
+              </Button>
+            </div>
 
             {activeTab === "project" && (
               <div className="mt-4 bg-white p-4 rounded-sm shadow-card text-[0.85rem]">
@@ -211,55 +277,34 @@ const ProjectDetails = () => {
                 </p>
               </div>
             )}
-
-            {activeTab === "properties" && (
-              <div className="mt-2">
-                <div className="flex justify-end items-center gap-2">
-                  <div className="relative w-full max-w-xs">
-                    <Search
-                      className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
-                      aria-hidden
-                    />
-                    <Input
-                      type="search"
-                      placeholder="Search properties..."
-                      value={searchQuery}
-                      onChange={(event) => setSearchQuery(event.target.value)}
-                      className="h-8 pl-8 text-xs"
-                      aria-label="Search properties"
-                    />
-                  </div>
-
-                  <Button variant="primary" onClick={() => handleCreate()}>
-                    <Plus strokeWidth={2} /> Add Property
-                  </Button>
-                </div>
-
-                {isLoading ? (
-                  <div>
-                    <Skeleton className="h-[5.5rem] bg-[#e8f4e5] w-full my-4" />
-                    <Skeleton className="h-[5.5rem] bg-[#e8f4e5] w-full my-4" />
-                  </div>
-                ) : (
-                  <Accordion
-                    type="multiple"
-                    defaultValue={[propertiesData[0]?.id]}
-                    className="mt-3 gap-3"
-                  >
-                    {filteredProperties.length > 0 ? (
-                      filteredProperties.map((property) => (
-                        <PropertyCard key={property.id} property={property} />
-                      ))
-                    ) : searchQuery?.length > 0 ? (
-                      <NoDataFound message="No properties match your search." />
-                    ) : (
-                      <NoDataFound message="No properties available." />
-                    )}
-                  </Accordion>
-                )}
-              </div>
-            )}
           </Tabs>
+
+          {activeTab === "properties" && (
+            <>
+              <Box
+                className="app-datagrid-container mt-4"
+                sx={{ height: "77vh", width: "100%" }}
+              >
+                <DataGrid
+                  density="compact"
+                  rows={propertiesData}
+                  columns={Columns}
+                  loading={isLoading}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[10]}
+                  disableRowSelectionOnClick
+                  showToolbar
+                  sx={{}}
+                />
+              </Box>
+            </>
+          )}
         </div>
       </div>
 

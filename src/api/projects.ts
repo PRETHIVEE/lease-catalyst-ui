@@ -18,8 +18,16 @@ const ProjectsAPI = {
     return AxiosInstance.get(`/projects/project/${projectId}`);
   },
 
+  getPropertyById: (propertyId: number) => {
+    return AxiosInstance.get(`/projects/property/${propertyId}`);
+  },
+
   getPropertyList: (projectId: number) => {
     return AxiosInstance.get(`/projects/properties?project_id=${projectId}`);
+  },
+
+  getPropertyFiles: (propertyId: number) => {
+    return AxiosInstance.get(`/projects/properties/files?id=${propertyId}`);
   },
 };
 

@@ -13,6 +13,7 @@ import ReportingDashboard from "@/apps/reporting-dashboard/ReportingDashboard";
 import IntegrationsPage from "@/apps/Integrations/Pages/IntegrationsPage";
 import DataCategory from "@/apps/data-category/pages/DataCategory";
 import ModifyDataCategory from "@/apps/data-category/pages/ModifyDataCategory";
+import PropertyDetails from "@/apps/projects/pages/PropertyDetails/PropertyDetails";
 
 export default function AppRouter() {
   return (
@@ -39,6 +40,10 @@ export default function AppRouter() {
           <Route
             path="/projects/project-details"
             element={<ProjectDetails />}
+          />
+          <Route
+            path="/projects/project-details/property-details"
+            element={<PropertyDetails />}
           />
           <Route
             path="/projects/project-details/document-qc"

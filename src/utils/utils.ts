@@ -11,7 +11,7 @@ dayjs.extend(timezone);
  * Output: "2026-05-14  10:40 PM"
  */
 export const formatDateTime = (isoString: string): string => {
-  return dayjs.utc(isoString).local().format("YYYY-MM-DD hh:mm A");
+  return dayjs.utc(isoString).local().format("YYYY-MM-DD  hh:mm A");
 };
 
 export const trimLeadingSpace = (inputValue: string) => {
@@ -25,4 +25,9 @@ export const trimLeadingSpace = (inputValue: string) => {
     // If the first character is not a space, update the state normally
     return inputValue;
   }
+};
+
+export const getFileExtension = (filename: string) => {
+  if (!filename || !filename.includes(".")) return "";
+  return filename.slice(filename.lastIndexOf(".") + 1).toLowerCase();
 };
