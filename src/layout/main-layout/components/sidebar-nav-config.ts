@@ -9,14 +9,10 @@ import {
   Cloud,
   FileText,
   FolderOpen,
-  Home,
   Languages,
   LayoutDashboard,
   PlayCircle,
-  Search,
-  UserCircle,
   Users,
-  Wrench,
 } from "lucide-react";
 
 export type NavItem = {

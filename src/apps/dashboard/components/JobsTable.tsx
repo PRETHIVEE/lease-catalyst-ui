@@ -15,7 +15,7 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Download, Pencil, Ellipsis, FileSearch } from "lucide-react";
+import { Download, Ellipsis, FileSearch } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,12 +24,6 @@ export default function JobsTable() {
   const userEmail = localStorage.getItem("user_email") || "";
   const [loading, setLoading] = useState(true);
   const [Rows, setRows] = useState<any[]>([]);
-  const [statistics, setStatistics] = useState({
-    total: 0,
-    running: 0,
-    failed: 0,
-    completed: 0,
-  });
 
   const getWorkFlow = () => {
     setLoading(true);
@@ -38,41 +32,6 @@ export default function JobsTable() {
         if (response.status === 200) {
           const { data } = response;
           setRows(data || []);
-
-          const stat = data.reduce(
-            (
-              acc: {
-                total: number;
-                running: number;
-                failed: number;
-                completed: number;
-              },
-              row: { output_status: string }
-            ) => {
-              const { output_status } = row;
-              switch (output_status) {
-                case "Completed":
-                  acc.completed += 1;
-                  break;
-                case "Aborted":
-                case "Error":
-                case "Terminated":
-                  acc.failed += 1;
-                  break;
-                case "pending":
-                  acc.running += 1;
-                  break;
-                case "In Progress":
-                  acc.running += 1;
-                  break;
-                default:
-                  break;
-              }
-              return acc;
-            },
-            { total: data.length, running: 0, failed: 0, completed: 0 }
-          );
-          setStatistics(stat);
         } else {
           setRows([]);
         }

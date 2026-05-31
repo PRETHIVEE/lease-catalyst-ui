@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { BadgeQuestionMark, Info, MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import IconButton from "@/components/common/IconButton";

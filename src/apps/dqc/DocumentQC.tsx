@@ -4,21 +4,26 @@ import BreadCrumbs from "@/components/common/BreadCrumbs";
 import { useSearchParams } from "react-router-dom";
 import DashboardAPI from "@/api/dashboard";
 import { useEffect, useState } from "react";
-import NoDataFound from "@/components/common/NoDataFound";
-
 const BreadcrumbsData = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Document QC", url: "/dashboard/document-qc" },
 ];
 
-function transformData(inputData) {
+type DqcEntry = {
+  answer: string;
+  "supporting evidence": string;
+  "confidence score": string | number;
+  notes: string;
+};
+
+function transformData(inputData: Record<string, DqcEntry>) {
   return Object.entries(inputData).map(([key, value], index) => ({
     id: index + 1,
     evaluationPoint: key,
-    dataCaptured: value["answer"],
+    dataCaptured: value.answer,
     supportingEvidence: value["supporting evidence"],
     confidentScore: value["confidence score"],
-    notes: value["notes"],
+    notes: value.notes,
   }));
 }
 

@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import {
-  AlertTriangle,
   BadgeCheck,
   Ban,
   CircleX,

@@ -21,7 +21,14 @@ const PropertyField = ({
   </div>
 );
 
-const PropertyInfo = ({ property }) => {
+type PropertyInfoData = {
+  project_name?: string;
+  property_name?: string;
+  property_id?: string;
+  lease_id?: string;
+};
+
+const PropertyInfo = ({ property }: { property: PropertyInfoData | null }) => {
   return (
     <div className="rounded-sm bg-white shadow-card">
       <div className="flex w-full min-w-0 items-center gap-4 px-4 py-3">
@@ -37,22 +44,22 @@ const PropertyInfo = ({ property }) => {
         <div className="flex  w-full">
           <PropertyField
             label="Project Name"
-            value={property?.project_name}
+            value={property?.project_name ?? ""}
             width={"17%"}
           />
           <PropertyField
             label="Property Name"
-            value={property?.property_name}
+            value={property?.property_name ?? ""}
             width={"17%"}
           />
           <PropertyField
             label="Property Id"
-            value={property?.property_id}
+            value={property?.property_id ?? ""}
             width={"13%"}
           />
           <PropertyField
             label="Lease Id"
-            value={property?.lease_id}
+            value={property?.lease_id ?? ""}
             width={"13%"}
           />
 

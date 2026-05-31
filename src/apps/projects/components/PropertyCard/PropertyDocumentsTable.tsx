@@ -1,10 +1,6 @@
 import IconButton from "@/components/common/IconButton";
 import Box from "@mui/material/Box";
-import {
-  DataGrid,
-  type GridColDef,
-  type GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,8 +29,7 @@ const columns: GridColDef<PropertyDocument>[] = [
     field: "action",
     headerName: "Actions",
     minWidth: 100,
-    renderCell: (params: GridRenderCellParams) => {
-      const { output_status } = params.row;
+    renderCell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

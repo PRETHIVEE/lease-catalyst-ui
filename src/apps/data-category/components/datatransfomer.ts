@@ -1,9 +1,13 @@
-export function convertLeaseData(data: any) {
+type LeaseAttribute = Record<string, string>;
+
+export function convertLeaseData(
+  data: Record<string, Record<string, LeaseAttribute[]>>
+) {
   return Object.entries(data).map(([groupName, subGroups]) => ({
     groupName,
     subGroups: Object.entries(subGroups).map(([subGroupName, attributes]) => ({
       subGroupName,
-      attributes: attributes.map((attr) => {
+      attributes: attributes.map((attr: LeaseAttribute) => {
         const [attributeName, attributeDescription] = Object.entries(attr)[0];
         return { attributeName, attributeDescription };
       }),

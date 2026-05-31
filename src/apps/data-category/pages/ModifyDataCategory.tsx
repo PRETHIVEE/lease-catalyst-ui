@@ -196,6 +196,8 @@ const ModifyDataCategory = () => {
   );
 
   useEffect(() => {
+    if (!DataCategory) return;
+
     DataCategoryAPI.getDataCategory(DataCategory).then((response) => {
       if (response.status === 200) {
         const category = response.data[0];
@@ -206,7 +208,7 @@ const ModifyDataCategory = () => {
         }
       }
     });
-  }, []);
+  }, [DataCategory]);
 
   const updateGroup = (
     groupIndex: number,
@@ -427,24 +429,25 @@ const ModifyDataCategory = () => {
   };
   const userEmail = localStorage.getItem("user_email") || "";
 
-  function convertStructure(data) {
-    return data.reduce((result, group) => {
+  function convertStructure(data: CategoryGroup[]) {
+    return data.reduce<
+      Record<string, Record<string, Array<Record<string, string>>>>
+    >((result, group) => {
       if (!group.isSelected) return result;
 
-      result[group.groupName] = group.subGroups.reduce(
-        (subResult, subGroup) => {
-          if (!subGroup.isSelected) return subResult;
+      result[group.groupName] = group.subGroups.reduce<
+        Record<string, Array<Record<string, string>>>
+      >((subResult, subGroup) => {
+        if (!subGroup.isSelected) return subResult;
 
-          subResult[subGroup.subGroupName] = subGroup.attributes
-            .filter((attr) => attr.isSelected)
-            .map((attr) => ({
-              [attr.attributeName]: attr.attributeDescription,
-            }));
+        subResult[subGroup.subGroupName] = subGroup.attributes
+          .filter((attr) => attr.isSelected)
+          .map((attr) => ({
+            [attr.attributeName]: attr.attributeDescription,
+          }));
 
-          return subResult;
-        },
-        {}
-      );
+        return subResult;
+      }, {});
 
       return result;
     }, {});

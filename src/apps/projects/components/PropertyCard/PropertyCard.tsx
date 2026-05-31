@@ -9,11 +9,19 @@ import { Button } from "@/components/ui/button";
 import { Building2, FileScan, FileText, Pencil, Play } from "lucide-react";
 
 import PropertyDocumentsTable from "./PropertyDocumentsTable";
-import type { PropertyItem } from "./types";
+import type { PropertyDocument } from "./types";
 import { useNavigate } from "react-router-dom";
 
 type PropertyCardProps = {
-  property: PropertyItem;
+  property: {
+    id: string;
+    property_name: string;
+    property_id: string;
+    lease_id: string;
+    tenant_names: string[];
+    status?: string;
+    documents?: PropertyDocument[];
+  };
 };
 
 const fieldLabelClass = "text-[0.76rem] font-normal text-[#00000070]";
@@ -27,22 +35,24 @@ const PropertyField = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const sampleDataDocs = [
+const sampleDataDocs: PropertyDocument[] = [
   {
     id: "doc-1",
     fileName: "sample_test_2024.pdf",
     fileType: "PDF",
+    type: "PDF",
     lastUpdated: "2023-10-12",
   },
   {
     id: "doc-2",
     fileName: "sample test Certificate.pdf",
     fileType: "PDF",
+    type: "PDF",
     lastUpdated: "2023-09-28",
   },
 ];
 
-const PropertyCard = ({ property }: any) => {
+const PropertyCard = ({ property }: PropertyCardProps) => {
   const {
     id,
     property_name,
