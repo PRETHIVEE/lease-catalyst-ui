@@ -74,7 +74,7 @@ const ProjectsPage = () => {
         return (
           <Link
             className="hover:underline"
-            to={`/projects/project-details?id=${params?.row?.id}`}
+            to={`/projects/project-details?projectId=${params?.row?.id}`}
           >
             {params?.row?.project_name}
           </Link>
@@ -120,7 +120,9 @@ const ProjectsPage = () => {
             >
               <DropdownMenuItem
                 onSelect={() => {
-                  navigate(`/projects/project-details?id=${params?.row?.id}`);
+                  navigate(
+                    `/projects/project-details?projectId=${params?.row?.id}`
+                  );
                 }}
               >
                 <Eye aria-hidden className="mr-1.5" />

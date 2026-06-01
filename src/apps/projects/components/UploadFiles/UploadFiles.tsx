@@ -11,17 +11,30 @@ import CustomDialogTitle from "@/components/common/CustomDialogTitle";
 import InputLabel from "@/components/common/InputLabel";
 import DialogFooterWrapper from "@/components/common/DialogFooterWrapper";
 import { Button } from "@/components/ui/button";
-import { Loader, SendHorizontal, X } from "lucide-react";
+import { CloudUpload, Loader, SendHorizontal, X } from "lucide-react";
+import UploadArea from "@/components/common/UploadArea";
+import type { Dispatch, SetStateAction } from "react";
 
 interface UploadFilesProps {
   open: boolean;
   onClose: () => void;
+  handleUpload: () => void;
   isSubmitting: boolean;
   propertyName: string;
+  uploadDocuments: File[];
+  setUploadDocuments: Dispatch<SetStateAction<File[]>>;
 }
 
 const UploadFiles = (props: UploadFilesProps) => {
-  const { open, onClose, isSubmitting, propertyName } = props;
+  const {
+    open,
+    onClose,
+    isSubmitting,
+    propertyName,
+    uploadDocuments,
+    setUploadDocuments,
+    handleUpload,
+  } = props;
   return (
     <Drawer open={open} onOpenChange={onClose}>
       <DrawerContent>
@@ -43,32 +56,14 @@ const UploadFiles = (props: UploadFilesProps) => {
             />
           </div>
 
-          {/*<div className="mt-2.5">
-            <InputLabel htmlFor="data-category" label="Data Category" />
-            <Autocomplete
-              id="data-category"
-              fullWidth
-              disablePortal
-              disableClearable
-              options={dataCategoryOptions}
-              getOptionLabel={(o) => o?.attribute}
-              getOptionDisabled={(o) => o?.status === "pending"}
-              value={formik?.values?.template}
-              onChange={(_e, newValue) => {
-                formik?.setFieldValue("template", newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  size="small"
-                  error={
-                    formik.touched.template && Boolean(formik.errors.template)
-                  }
-                  helperText={formik.touched.template && formik.errors.template}
-                />
-              )}
+          <div className="mt-2.5">
+            <UploadArea
+              uploadDocuments={uploadDocuments}
+              setUploadDocuments={setUploadDocuments}
+              // supportedFormats={["xls", "xlsx", "pdf"]}
+              supportedFormats={["pdf"]}
             />
-          </div> */}
+          </div>
         </DrawerContentArea>
 
         <DrawerFooter>
@@ -84,18 +79,18 @@ const UploadFiles = (props: UploadFilesProps) => {
             </Button>
             <Button
               variant="primary"
-              // onClick={() => formik.handleSubmit()}
-              disabled={isSubmitting}
+              onClick={() => handleUpload()}
+              disabled={isSubmitting || uploadDocuments.length === 0}
             >
               {isSubmitting ? (
                 <>
                   <Loader />
-                  Creating
+                  Uploading
                 </>
               ) : (
                 <>
-                  <SendHorizontal />
-                  Create
+                  <CloudUpload />
+                  Upload
                 </>
               )}
             </Button>

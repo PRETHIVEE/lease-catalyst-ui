@@ -29,6 +29,13 @@ const ProjectsAPI = {
   getPropertyFiles: (propertyId: number) => {
     return AxiosInstance.get(`/projects/properties/files?id=${propertyId}`);
   },
+
+  uploadPropertyFiles: (propertyId: number, formData: FormData) => {
+    return AxiosInstance.post(
+      `/projects/properties/upload?id=${propertyId}`,
+      formData
+    );
+  },
 };
 
 export default ProjectsAPI;

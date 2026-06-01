@@ -32,16 +32,20 @@ import IconButton from "@/components/common/IconButton";
 import Box from "@mui/material/Box";
 import { Button } from "@/components/ui/button";
 import UploadFiles from "../../components/UploadFiles/UploadFiles";
+import { useSnackbarStore } from "@/store/snackbar-store";
 
 const PropertyDetails = () => {
   const [searchParams] = useSearchParams();
+  const { showSnackbar } = useSnackbarStore();
   const { projectId, propertyId } = Object.fromEntries(searchParams as any);
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("property");
   const [documents, setDocumnets] = useState<any[]>([]);
+  const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isDocumentLoading, setIsDocumentLoading] = useState(true);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const BreadcrumbsData = [
     { label: "Home", url: "/dashboard" },
@@ -74,10 +78,14 @@ const PropertyDetails = () => {
         // Handle error
       });
 
+    fetchPropertyFiles();
+  };
+
+  const fetchPropertyFiles = () => {
+    setIsDocumentLoading(true);
     ProjectsAPI.getPropertyFiles(Number(propertyId))
       .then((response) => {
         setDocumnets(response?.data?.files || []);
-        // setPropertyDetails(response?.data);
       })
       .catch(() => {
         // Handle error
@@ -90,6 +98,34 @@ const PropertyDetails = () => {
   useEffect(() => {
     getPropertyInfo();
   }, []);
+
+  const handleUpload = () => {
+    if (uploadDocuments.length === 0) return;
+
+    const formData = new FormData();
+    uploadDocuments.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    setIsUploading(true);
+    ProjectsAPI.uploadPropertyFiles(Number(propertyId), formData)
+      .then(() => {
+        showSnackbar("Files Uploaded! ");
+        fetchPropertyFiles();
+        handleUploadClose();
+      })
+      .catch(() => {
+        showSnackbar("error uploading files.", "error");
+      })
+      .finally(() => {
+        setIsUploading(false);
+      });
+  };
+
+  const handleUploadClose = () => {
+    setUploadDocuments([]);
+    setIsOpenUpload(false);
+  };
 
   const DocumentColumns: GridColDef[] = [
     {
@@ -288,9 +324,14 @@ const PropertyDetails = () => {
 
       <UploadFiles
         open={isOpenUpload}
-        onClose={() => setIsOpenUpload(false)}
-        isSubmitting={false}
+        onClose={() => {
+          handleUploadClose();
+        }}
+        isSubmitting={isUploading}
         propertyName={propertyDetails?.property_name || ""}
+        uploadDocuments={uploadDocuments}
+        setUploadDocuments={setUploadDocuments}
+        handleUpload={handleUpload}
       />
     </div>
   );

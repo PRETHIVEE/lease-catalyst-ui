@@ -31,7 +31,7 @@ const ProjectDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { showSnackbar } = useSnackbarStore();
-  const projectId = searchParams.get("id");
+  const projectId = searchParams.get("projectId");
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("properties");
   const [propertiesData, setPropertiesData] = useState<any[]>([]);

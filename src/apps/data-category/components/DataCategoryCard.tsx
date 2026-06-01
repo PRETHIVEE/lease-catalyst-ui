@@ -79,7 +79,7 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
                 }}
               >
                 <Pencil aria-hidden className="mr-1.5" />
-                Modify
+                Copy & Modify
               </DropdownMenuItem>
 
               <DropdownMenuItem onSelect={() => {}}>
