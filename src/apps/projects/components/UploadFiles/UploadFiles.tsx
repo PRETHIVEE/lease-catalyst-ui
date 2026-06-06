@@ -11,7 +11,7 @@ import CustomDialogTitle from "@/components/common/CustomDialogTitle";
 import InputLabel from "@/components/common/InputLabel";
 import DialogFooterWrapper from "@/components/common/DialogFooterWrapper";
 import { Button } from "@/components/ui/button";
-import { CloudUpload, Loader, SendHorizontal, X } from "lucide-react";
+import { CloudUpload, Loader, X } from "lucide-react";
 import UploadArea from "@/components/common/UploadArea";
 import type { Dispatch, SetStateAction } from "react";
 

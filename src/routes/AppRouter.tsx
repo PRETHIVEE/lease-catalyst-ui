@@ -14,6 +14,9 @@ import IntegrationsPage from "@/apps/Integrations/Pages/IntegrationsPage";
 import DataCategory from "@/apps/data-category/pages/DataCategory";
 import ModifyDataCategory from "@/apps/data-category/pages/ModifyDataCategory";
 import PropertyDetails from "@/apps/projects/pages/PropertyDetails/PropertyDetails";
+import TranslationHome from "@/apps/translation/pages/TranslationHome";
+import TranslationReview from "@/apps/translation/pages/TranslationReview";
+import EventsPage from "@/apps/events/Pages/EventsPage";
 
 export default function AppRouter() {
   return (
@@ -53,6 +56,12 @@ export default function AppRouter() {
           <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/data-category" element={<DataCategory />} />
           <Route path="/data-category/view" element={<ModifyDataCategory />} />
+          <Route path="/lease-translate" element={<TranslationHome />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route
+            path="/lease-translate/review"
+            element={<TranslationReview />}
+          />
           <Route path="/test" element={<Test />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>

@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://34.200.125.158:8002";
-
 // Create instance
 const AxiosInstance = axios.create({
-  baseURL: BASE_URL, // replace with your actual base URL
+  baseURL: import.meta.env.VITE_APP_API_URL, // replace with your actual base URL
 });
 
 // Request Interceptor
@@ -16,7 +14,7 @@ AxiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default AxiosInstance;

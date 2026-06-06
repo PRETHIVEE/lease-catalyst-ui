@@ -30,11 +30,19 @@ const ProjectsAPI = {
     return AxiosInstance.get(`/projects/properties/files?id=${propertyId}`);
   },
 
+  deletePropertyFile: (fileId: number) => {
+    return AxiosInstance.delete(`/projects/properties/file?file_id=${fileId}`);
+  },
+
   uploadPropertyFiles: (propertyId: number, formData: FormData) => {
     return AxiosInstance.post(
       `/projects/properties/upload?id=${propertyId}`,
       formData
     );
+  },
+
+  triggerJob: (payload: any) => {
+    return AxiosInstance.post(`/workflow/trigger-job`, payload);
   },
 };
 

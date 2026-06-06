@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   Building2,
   Calculator,
+  Calendar,
   ClipboardList,
   Cloud,
   FileText,
@@ -41,6 +42,7 @@ export const sidebarNavGroups: NavGroup[] = [
         icon: FileText,
         hasNotification: true,
       },
+      { label: "Events", path: "/events", icon: Calendar },
       { label: "Reporting Dashboard", path: "/reports", icon: BarChart3 },
       { label: "Lease Data Validation", path: "/renters", icon: Users },
       { label: "Document Management", path: "/documents", icon: FolderOpen },
@@ -65,7 +67,7 @@ export const sidebarNavGroups: NavGroup[] = [
   },
   {
     title: "Translation Services",
-    items: [{ label: "Translate", path: "/translate", icon: Languages }],
+    items: [{ label: "Translate", path: "/lease-translate", icon: Languages }],
   },
   {
     title: "Integrations",

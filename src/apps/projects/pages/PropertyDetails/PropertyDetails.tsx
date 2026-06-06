@@ -10,17 +10,19 @@ import {
   Ellipsis,
   Eye,
   FolderOpen,
+  Loader,
   Play,
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ProjectsAPI from "@/api/projects";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDateTime, getFileExtension } from "@/utils/utils";
 import {
   DataGrid,
   type GridColDef,
   type GridRenderCellParams,
+  type GridRowSelectionModel,
 } from "@mui/x-data-grid";
 import {
   DropdownMenu,
@@ -35,6 +37,7 @@ import UploadFiles from "../../components/UploadFiles/UploadFiles";
 import { useSnackbarStore } from "@/store/snackbar-store";
 
 const PropertyDetails = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { showSnackbar } = useSnackbarStore();
   const { projectId, propertyId } = Object.fromEntries(searchParams as any);
@@ -42,17 +45,24 @@ const PropertyDetails = () => {
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("property");
   const [documents, setDocumnets] = useState<any[]>([]);
+  const [rowSelectionModel, setRowSelectionModel] =
+    useState<GridRowSelectionModel>({
+      type: "include",
+      ids: new Set([]), // Pass initial selected row IDs inside this Set if needed
+    });
+
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isDocumentLoading, setIsDocumentLoading] = useState(true);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isJobSubmitting, setIsJobSubmitting] = useState(false);
 
   const BreadcrumbsData = [
     { label: "Home", url: "/dashboard" },
     { label: "Projects", url: "/projects" },
     {
       label: `Projects (${projectDetails?.project_name || "..."})`,
-      url: `/projects/project-details?id=${projectId}`,
+      url: `/projects/project-details?projectId=${projectId}`,
     },
     {
       label: `Property (${propertyDetails?.property_name || "..."})`,
@@ -183,7 +193,10 @@ const PropertyDetails = () => {
                 Download
               </DropdownMenuItem>
 
-              <DropdownMenuItem variant="destructive">
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={() => handleDeleteFile(params?.row?.file_id)}
+              >
                 <Trash2 aria-hidden className="mr-1.5" />
                 Delete
               </DropdownMenuItem>
@@ -193,6 +206,54 @@ const PropertyDetails = () => {
       },
     },
   ];
+
+  const handleDeleteFile = (file_id: number) => {
+    setIsDocumentLoading(true);
+    ProjectsAPI.deletePropertyFile(file_id)
+      .then((response) => {
+        if (response?.data) {
+          setDocumnets((prev) => {
+            return prev?.filter((i) => i?.file_id !== file_id);
+          });
+        }
+      })
+      .catch(() => {
+        showSnackbar("error deleting files.", "error");
+      })
+      .finally(() => {
+        setIsDocumentLoading(false);
+      });
+  };
+
+  const handleRunJob = () => {
+    const selectedFileIds = Array.from(rowSelectionModel.ids);
+    if (selectedFileIds?.length === 0) {
+      showSnackbar("Select files to run a Job", "error");
+      return;
+    }
+    setIsJobSubmitting(true);
+    const payload = {
+      selected_file_ids: selectedFileIds,
+      property_id: Number(propertyId),
+    };
+    ProjectsAPI.triggerJob(payload)
+      .then((response) => {
+        if (response?.status === 200) {
+          showSnackbar(response?.data?.message);
+          setRowSelectionModel({
+            type: "include",
+            ids: new Set([]),
+          });
+          navigate("/dashboard");
+        }
+      })
+      .catch(() => {
+        showSnackbar("Error running the job", "error");
+      })
+      .finally(() => {
+        setIsJobSubmitting(false);
+      });
+  };
 
   return (
     <div className="px-4 py-2">
@@ -276,8 +337,21 @@ const PropertyDetails = () => {
                 >
                   <CloudUpload /> Upload Files
                 </Button>
-                <Button variant="primary" size="sm">
-                  <Play /> Run Job
+                <Button
+                  disabled={isJobSubmitting}
+                  variant="primary"
+                  size="sm"
+                  onClick={handleRunJob}
+                >
+                  {isJobSubmitting ? (
+                    <>
+                      <Loader /> Running
+                    </>
+                  ) : (
+                    <>
+                      <Play /> Run Job
+                    </>
+                  )}
                 </Button>
               </div>
               <Box
@@ -286,10 +360,15 @@ const PropertyDetails = () => {
               >
                 <DataGrid
                   density="compact"
+                  disableRowSelectionExcludeModel
                   rows={documents}
                   columns={DocumentColumns}
                   loading={isDocumentLoading}
                   checkboxSelection
+                  rowSelectionModel={rowSelectionModel}
+                  onRowSelectionModelChange={(newSelectionModel) => {
+                    setRowSelectionModel(newSelectionModel);
+                  }}
                   getRowId={(i) => i?.file_id}
                   initialState={{
                     pagination: {
