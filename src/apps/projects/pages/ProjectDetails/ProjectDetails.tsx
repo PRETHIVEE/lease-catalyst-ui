@@ -2,12 +2,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building, Building2, Ellipsis, Eye, Plus, Trash2 } from "lucide-react";
+import {
+  Building,
+  Building2,
+  Ellipsis,
+  Eye,
+  Plus,
+  ShieldUser,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import ProjectsAPI from "@/api/projects";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSnackbarStore } from "@/store/snackbar-store";
@@ -29,11 +42,13 @@ import CreateProperty from "../../components/CreateProperty/CreateProperty";
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const defaultTab = location?.state?.tab || "project";
   const [searchParams] = useSearchParams();
   const { showSnackbar } = useSnackbarStore();
   const projectId = searchParams.get("projectId");
   const [projectDetails, setProjectDetails] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState("properties");
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [propertiesData, setPropertiesData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openCreateProperty, setOpenCreateProperty] = useState(false);
@@ -217,6 +232,7 @@ const ProjectDetails = () => {
   ];
 
   console.log("propertiesData", propertiesData);
+  console.log("location", location);
 
   return (
     <div className="px-4 py-2">
@@ -242,6 +258,10 @@ const ProjectDetails = () => {
                 <TabsTrigger value="properties">
                   <Building aria-hidden />
                   Properties
+                </TabsTrigger>
+                <TabsTrigger value="user-access">
+                  <ShieldUser aria-hidden />
+                  User Access
                 </TabsTrigger>
               </TabsList>
               <Button variant="primary" onClick={() => handleCreate()}>

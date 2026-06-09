@@ -17,18 +17,20 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Ellipsis, Eye, Plus, ShieldUser } from "lucide-react";
+import { Ellipsis, Eye, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import CreateProject from "../components/CreateProject/CreateProject";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DashboardAPI from "@/api/dashboard";
 import { useSnackbarStore } from "@/store/snackbar-store";
+import UsersAPI from "@/api/users";
+import CreateUser from "../components/CreateUser/CreateUser";
 
 const BreadcrumbsData = [
   { label: "Home", url: "/dashboard" },
-  { label: "Projects", url: "/projects" },
+  { label: "Users", url: "/users" },
 ];
 
 interface DataCategory {
@@ -37,38 +39,45 @@ interface DataCategory {
   status: string;
 }
 
-const ProjectsPage = () => {
+const UsersPage = () => {
   const navigate = useNavigate();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId = localStorage.getItem("user_id") || "";
   const userEmail = localStorage.getItem("user_email") || "";
-  const [openCreateProject, setOpenCreateProject] = useState(false);
+  const [openCreateUser, setopenCreateUser] = useState(false);
   const [dataCategoryList, setDataCategoryList] = useState<DataCategory[]>([]);
   const { showSnackbar } = useSnackbarStore();
 
   const validationSchema = Yup.object({
-    projectName: Yup.string().required("Project Name is required"),
-    template: Yup.object().required("Data Category is required"),
+    userRole: Yup.object().required("User Role is required"),
+    userName: Yup.string().required("User Name is required"),
+    userEmail: Yup.string()
+      .email("Invalid email address")
+      .required("User Email is required"),
+    defaultPassword: Yup.string().required("Default Password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      projectName: "",
-      template: null,
+      userName: "",
+      userEmail: "",
+      userRole: null,
+      defaultPassword: "",
+      companyName: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      onCreateProject(values);
+      onCreateUser(values);
     },
   });
 
   const Columns: GridColDef[] = [
     {
-      field: "project_name",
-      headerName: "Project Name",
+      field: "name",
+      headerName: "User Name",
       width: 220,
       renderCell: (params: GridRenderCellParams) => {
         return (
@@ -76,23 +85,21 @@ const ProjectsPage = () => {
             className="hover:underline"
             to={`/projects/project-details?projectId=${params?.row?.id}`}
           >
-            {params?.row?.project_name}
+            {params?.row?.name}
           </Link>
         );
       },
     },
     {
-      field: "category",
-      headerName: "Data Category",
-      width: 180,
+      field: "user_name",
+      headerName: "User Email",
+      width: 200,
     },
-
     {
-      field: "property_count",
-      headerName: "No of Properties",
+      field: "role",
+      headerName: "User Type",
       width: 140,
     },
-
     {
       field: "last_created",
       headerName: "Created On",
@@ -105,7 +112,7 @@ const ProjectsPage = () => {
       headerName: "Actions",
       minWidth: 100,
       renderCell: (params: GridRenderCellParams) => {
-        console.log("dsgsdfsdfsdf", params?.row?.id);
+        console.log("dsgsdfsdfsdf", params);
 
         return (
           <DropdownMenu>
@@ -120,44 +127,19 @@ const ProjectsPage = () => {
             >
               <DropdownMenuItem
                 onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    {
-                      state: {
-                        tab: "project",
-                      },
-                    },
-                  );
-                }}
-              >
-                <Eye aria-hidden className="mr-1.5" />
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    { state: { tab: "properties" } },
-                  );
+                  handleAssignProject(params.row?.user_id);
                 }}
               >
                 <Plus aria-hidden className="mr-1.5" />
-                Add Property
+                Assign Project
               </DropdownMenuItem>
               <DropdownMenuItem
+                variant="destructive"
                 onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    {
-                      state: {
-                        tab: "user-access",
-                      },
-                    },
-                  );
+                  handleDeleteUser(params.row);
                 }}
               >
-                <ShieldUser aria-hidden className="mr-1.5" />
-                User Access
+                <Trash2 aria-hidden className="mr-1.5" /> Delete User
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -166,9 +148,31 @@ const ProjectsPage = () => {
     },
   ];
 
-  const handleCloseProjectModal = () => {
-    setOpenCreateProject(false);
+  const handleCloseuserModal = () => {
+    setopenCreateUser(false);
     formik.resetForm();
+  };
+
+  const handleAssignProject = (userId: number) => {
+    console.log("Assign project to user with ID:", userId);
+  };
+
+  const handleDeleteUser = (user: any) => {
+    setLoading(true);
+    UsersAPI.deleteUser({ user_names: [user.user_name] })
+      .then((response) => {
+        console.log("Delete user response", response);
+        if (response.status === 200) {
+          getUsersList();
+          showSnackbar("User deleted!");
+        }
+      })
+      .catch(() => {
+        showSnackbar("Failed to delete user.", "error");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const getDataCategoryList = () => {
@@ -192,8 +196,8 @@ const ProjectsPage = () => {
       .catch(() => setDataCategoryList([]));
   };
 
-  const getProjectList = () => {
-    ProjectsAPI.getProjects(Number(userId))
+  const getUsersList = () => {
+    UsersAPI.getUsers()
       .then((response) => {
         if (response.statusText === "OK") {
           setRows(response.data);
@@ -211,37 +215,47 @@ const ProjectsPage = () => {
 
   useEffect(() => {
     if (userId) {
-      getProjectList();
+      getUsersList();
       getDataCategoryList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const onCreateProject = (data: any) => {
+  const onCreateUser = (data: any) => {
     setIsSubmitting(true);
     const requestBody = {
-      project_name: data.projectName,
-      category: data.template?.attribute,
-      property_count: 0,
-      user_id: Number(userId),
-      user_name: userEmail,
+      name: data.userName,
+      user_name: data.userEmail, // email is the username for now
+      password: data.defaultPassword,
+      role: data.userRole?.value,
+      company_id: 1,
+      company_name: "Mobius",
     };
 
-    ProjectsAPI.CreateProject(requestBody)
+    UsersAPI.CreateUser(requestBody)
       .then((response) => {
-        if (response.statusText === "Created") {
-          getProjectList();
-          showSnackbar("Project created!");
+        console.log("Create user response", response);
+        if (response.status === 200) {
+          getUsersList();
+          showSnackbar("User created!");
+          handleCloseuserModal();
         }
       })
       .catch(() => {
-        showSnackbar("Failed to create project.", "error");
+        showSnackbar("Failed to create user.", "error");
       })
       .finally(() => {
         setIsSubmitting(false);
-        handleCloseProjectModal();
       });
   };
+
+  const userRoleOptions = [
+    { label: "Admin", value: "admin", isDisabled: true },
+    { label: "User", value: "user", isDisabled: false },
+    { label: "Client", value: "client", isDisabled: false },
+  ];
+
+  console.log("rows", Rows);
 
   return (
     <div className="px-4 py-2">
@@ -249,14 +263,14 @@ const ProjectsPage = () => {
 
       <div className="flex items-center justify-between">
         <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
-          Projects
+          Users
         </h5>
         <Button
           size="sm"
           variant="primary"
-          onClick={() => setOpenCreateProject(true)}
+          onClick={() => setopenCreateUser(true)}
         >
-          <Plus strokeWidth={3} /> Create Project
+          <Plus strokeWidth={3} /> Create User
         </Button>
       </div>
 
@@ -270,6 +284,7 @@ const ProjectsPage = () => {
           rows={Rows}
           columns={Columns}
           loading={loading}
+          getRowId={(row) => row.user_id}
           initialState={{
             pagination: {
               paginationModel: {
@@ -284,15 +299,15 @@ const ProjectsPage = () => {
         />
       </Box>
 
-      <CreateProject
-        open={openCreateProject}
-        onClose={handleCloseProjectModal}
+      <CreateUser
+        open={openCreateUser}
+        onClose={handleCloseuserModal}
         formik={formik}
-        dataCategoryOptions={dataCategoryList}
+        userRoleOptions={userRoleOptions}
         isSubmitting={isSubmitting}
       />
     </div>
   );
 };
 
-export default ProjectsPage;
+export default UsersPage;

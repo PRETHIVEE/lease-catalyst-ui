@@ -14,4 +14,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-pdf", "pdfjs-dist"],
   },
+  server: {  
+    proxy: {
+      '/api': {
+      target: "http://192.168.1.20:8000",
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, "/proxy"),
+      },
+},
+  },
 });

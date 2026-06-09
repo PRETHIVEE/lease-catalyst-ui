@@ -17,6 +17,7 @@ import PropertyDetails from "@/apps/projects/pages/PropertyDetails/PropertyDetai
 import TranslationHome from "@/apps/translation/pages/TranslationHome";
 import TranslationReview from "@/apps/translation/pages/TranslationReview";
 import EventsPage from "@/apps/events/Pages/EventsPage";
+import UsersPage from "@/apps/users/pages/UsersPage";
 
 export default function AppRouter() {
   return (
@@ -63,6 +64,7 @@ export default function AppRouter() {
             element={<TranslationReview />}
           />
           <Route path="/test" element={<Test />} />
+          <Route path="/users" element={<UsersPage />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>
       </Routes>

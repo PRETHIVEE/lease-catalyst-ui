@@ -33,6 +33,9 @@ export const sidebarNavGroups: NavGroup[] = [
     items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
   },
   {
+    items: [{ label: "Users", path: "/users", icon: Users }],
+  },
+  {
     title: "Property Operations",
     items: [
       { label: "Projects", path: "/projects", icon: Building2 },
