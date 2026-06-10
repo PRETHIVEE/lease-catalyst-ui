@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type CreateUser from "@/apps/users/components/CreateUser/CreateUser";
 import AxiosInstance from "./axiosInstance";
 
 const UsersAPI = {

@@ -1,6 +1,22 @@
+// import StatusChip from "@/components/common/StatusChip";
 import StatusChip from "@/components/common/StatusChip";
 import { Button } from "@/components/ui/button";
-import { Building2, CloudUpload, StickyNoteCheck } from "lucide-react";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Building2,
+  ChevronDownIcon,
+  CloudUpload,
+  // CloudUpload,
+  // StickyNoteCheck,
+  Download,
+} from "lucide-react";
 
 const fieldLabelClass = "text-[0.76rem] font-normal text-[#00000080]";
 
@@ -28,7 +44,15 @@ type PropertyInfoData = {
   lease_id?: string;
 };
 
-const PropertyInfo = ({ property }: { property: PropertyInfoData | null }) => {
+const PropertyInfo = ({
+  property,
+  handleUploadClick,
+  handleRequestDocsClick,
+}: {
+  property: PropertyInfoData | null;
+  handleUploadClick: () => void;
+  handleRequestDocsClick: () => void;
+}) => {
   return (
     <div className="rounded-sm bg-white shadow-card">
       <div className="flex w-full min-w-0 items-center gap-4 px-4 py-3">
@@ -63,40 +87,48 @@ const PropertyInfo = ({ property }: { property: PropertyInfoData | null }) => {
             width={"13%"}
           />
 
-          <div style={{ width: "12%" }}>
-            <p className={fieldLabelClass}>Job status</p>
-            <div className="mt-0.5">
-              <StatusChip
-                variant={"expired"}
-                label={"Expired"}
-                className="font-normal"
-              />
-            </div>
-          </div>
-
           <div
             style={{
-              width: "30%",
-              overflow: "hidden",
+              width: "40%",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            {/* <div> */}
-            <div className="flex justify-end gap-2 pt-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-main-theme text-main-theme hover:bg-[#f0fdf4]"
-                onClick={() => {}}
-              >
+            <div>
+              <p className={fieldLabelClass}>Job status</p>
+              <div className="mt-0.5">
+                <StatusChip
+                  variant={"expired"}
+                  label={"Unknown"}
+                  className="font-normal"
+                />
+              </div>
+            </div>
+
+            <ButtonGroup>
+              <Button variant="primary" onClick={handleUploadClick}>
                 <CloudUpload aria-hidden />
                 Upload Documents
               </Button>
-
-              <Button size="sm" variant="primary" onClick={() => {}}>
-                <StickyNoteCheck aria-hidden />
-                View Docs HITL
-              </Button>
-            </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="primary" className="pl-2!">
+                    <ChevronDownIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
+                >
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onSelect={handleRequestDocsClick}>
+                      <Download />
+                      Request Documents
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ButtonGroup>
           </div>
         </div>
       </div>

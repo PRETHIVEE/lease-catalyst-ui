@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PropertyInfo from "./components/PropertyInfo";
 import EvaluationTable from "./components/EvaluationTable";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import { useSearchParams } from "react-router-dom";
 import DashboardAPI from "@/api/dashboard";
 import { useEffect, useState } from "react";
+import UploadFiles from "../projects/components/UploadFiles/UploadFiles";
+import RequestDocuments from "./components/RequestDocuments/RequestDocuments";
 const BreadcrumbsData = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Document QC", url: "/dashboard/document-qc" },
@@ -30,14 +33,19 @@ function transformData(inputData: Record<string, DqcEntry>) {
 const DocumentQC = () => {
   const [searchParams] = useSearchParams();
   const JobId = searchParams.get("jobId") || "";
-
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [dqcData, setDqcData] = useState<any[]>([]);
   const [propertyInfo, setPropertyInfo] = useState<any>(null);
+  const [isOpenUpload, setIsOpenUpload] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
+  const [isOpenRequestDocs, setIsRequestingDocs] = useState(false);
+
+  console.log("dqcData:", dqcData);
+  console.log("dqcData propertyInfo:", propertyInfo);
 
   useEffect(() => {
     if (JobId) {
-      setLoading(true);
       DashboardAPI.getDqcResult(JobId)
         .then((response) => {
           if (response.status === 200) {
@@ -65,16 +73,54 @@ const DocumentQC = () => {
     }
   }, [JobId]);
 
-  console.log("dqcData:", dqcData);
-  console.log("dqcData propertyInfo:", propertyInfo);
+  const handleUploadClose = () => {
+    setIsOpenUpload(false);
+    setUploadDocuments([]);
+  };
+
+  const handleUpload = () => {
+    setIsUploading(true);
+    // Simulate upload process
+    setTimeout(() => {
+      setIsUploading(false);
+      handleUploadClose();
+    }, 2000);
+  };
+  // Implement the logic to upload documents here
 
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
       <div className="mt-2">
-        <PropertyInfo property={propertyInfo} />
+        <PropertyInfo
+          property={propertyInfo}
+          handleUploadClick={() => setIsOpenUpload(true)}
+          handleRequestDocsClick={() => setIsRequestingDocs(true)}
+        />
         <EvaluationTable data={dqcData} isLoading={loading} />
       </div>
+
+      {/* POP UPS */}
+      <>
+        <UploadFiles
+          open={isOpenUpload}
+          onClose={() => {
+            handleUploadClose();
+          }}
+          isSubmitting={isUploading}
+          propertyName={propertyInfo?.property_name || ""}
+          uploadDocuments={uploadDocuments}
+          setUploadDocuments={setUploadDocuments}
+          handleUpload={handleUpload}
+        />
+
+        <RequestDocuments
+          open={isOpenRequestDocs}
+          onClose={() => setIsRequestingDocs(false)}
+          isSubmitting={false}
+          propertyName={propertyInfo?.property_name || ""}
+        />
+      </>
     </div>
   );
 };
