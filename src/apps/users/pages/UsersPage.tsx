@@ -97,7 +97,7 @@ const UsersPage = () => {
     },
     {
       field: "role",
-      headerName: "User Type",
+      headerName: "User Role",
       width: 140,
     },
     {

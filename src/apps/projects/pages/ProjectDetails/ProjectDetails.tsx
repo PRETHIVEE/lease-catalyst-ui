@@ -39,6 +39,7 @@ import {
 import IconButton from "@/components/common/IconButton";
 import Box from "@mui/material/Box";
 import CreateProperty from "../../components/CreateProperty/CreateProperty";
+import UserAccess from "../../components/UserAccess/UserAccess";
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
@@ -323,6 +324,11 @@ const ProjectDetails = () => {
                   sx={{}}
                 />
               </Box>
+            </>
+          )}
+          {activeTab === "user-access" && (
+            <>
+              <UserAccess />
             </>
           )}
         </div>
