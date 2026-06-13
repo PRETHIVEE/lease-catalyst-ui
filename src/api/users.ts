@@ -5,6 +5,9 @@ const UsersAPI = {
   CreateUser: (payload: any) => {
     return AxiosInstance.post(`/users/user_create`, payload);
   },
+  CreateCompany: (payload: any) => {
+    return AxiosInstance.post(`/users/company_create`, payload);
+  },
   deleteUser: (payload: any) => {
     return AxiosInstance.delete(`/users/`, { data: payload });
   },
@@ -15,6 +18,9 @@ const UsersAPI = {
 
   getUsers: () => {
     return AxiosInstance.get(`/users`);
+  },
+  getCompanies: () => {
+    return AxiosInstance.get(`/users/companies`);
   },
 
   // getProjectById: (projectId: number) => {

@@ -13,6 +13,7 @@ import {
   Languages,
   LayoutDashboard,
   PlayCircle,
+  ShieldCogCorner,
   Users,
 } from "lucide-react";
 
@@ -27,6 +28,15 @@ export type NavGroup = {
   title?: string;
   items: NavItem[];
 };
+
+export const superAdminMenu: NavGroup[] = [
+  {
+    items: [
+      { label: "Companies", path: "/company", icon: Building2 },
+      { label: "Subscriptions", path: "/subscriptions", icon: ShieldCogCorner },
+    ],
+  },
+];
 
 export const sidebarNavGroups: NavGroup[] = [
   {

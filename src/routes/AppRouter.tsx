@@ -18,6 +18,7 @@ import TranslationHome from "@/apps/translation/pages/TranslationHome";
 import TranslationReview from "@/apps/translation/pages/TranslationReview";
 import EventsPage from "@/apps/events/Pages/EventsPage";
 import UsersPage from "@/apps/users/pages/UsersPage";
+import CompanyPage from "@/apps/company/pages/CompanyPage";
 
 export default function AppRouter() {
   return (
@@ -65,6 +66,9 @@ export default function AppRouter() {
           />
           <Route path="/test" element={<Test />} />
           <Route path="/users" element={<UsersPage />} />
+
+          {/* SUPER ADMIN */}
+          <Route path="/company" element={<CompanyPage />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>
       </Routes>

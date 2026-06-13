@@ -1,11 +1,10 @@
-// import leaseCatalystLogoIcon from "@/assets/logos/leaseCatalystLogoIcon.svg";
-// import leaseCatalystLogoText from "@/assets/logos/leaseCatalystLogoText.svg";
 import leaseCatalystLogo2 from "@/assets/logos/lease-catalyst-logo-icon.png";
-import leaseCatalystLogoText2 from "@/assets/logos/lease-catalyst-logo-text.png";
+import leaseCatalystLogoText from "@/assets/logos/lease-text-full-st.png";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
 import { sidebarNavGroups, type NavItem } from "./sidebar-nav-config";
+import { superAdminMenu } from "./sidebar-nav-config";
 import "./Sidebar.scss";
 
 function SidebarNavLink({ item }: { item: NavItem }) {
@@ -41,6 +40,11 @@ export default function Sidebar() {
   const isExpanded = isSidebarPinned || isSidebarHovered || isSidebarPinClosing;
   const isHoverOverlay = isSidebarHovered && !isSidebarPinned;
 
+  const userRole = localStorage.getItem("user_role") || "";
+
+  const NavMenu =
+    userRole === "super-admin" ? superAdminMenu : sidebarNavGroups;
+
   return (
     <aside
       className={cn(
@@ -48,7 +52,7 @@ export default function Sidebar() {
         isSidebarPinned && "sidebar--pinned",
         isSidebarPinClosing && "sidebar--pin-closing",
         isHoverOverlay && "sidebar--hover",
-        isExpanded && "sidebar--expanded"
+        isExpanded && "sidebar--expanded",
       )}
       aria-label="Main navigation"
     >
@@ -59,8 +63,8 @@ export default function Sidebar() {
       >
         <div className="sidebar__inner">
           <div className="sidebar__brand">
-            {/* <img
-              src={leaseCatalystLogoIcon}
+            <img
+              src={leaseCatalystLogo2}
               alt="Lease Catalyst"
               className="sidebar__brand-icon"
             />
@@ -69,22 +73,11 @@ export default function Sidebar() {
               alt=""
               className="sidebar__brand-text"
               aria-hidden
-            /> */}
-            <img
-              src={leaseCatalystLogo2}
-              alt="Lease Catalyst"
-              className="sidebar__brand-icon"
-            />
-            <img
-              src={leaseCatalystLogoText2}
-              alt=""
-              className="sidebar__brand-text"
-              aria-hidden
             />
           </div>
 
           <nav className="sidebar__nav">
-            {sidebarNavGroups.map((group) => (
+            {NavMenu.map((group) => (
               <div
                 key={group.title ?? group.items[0]?.path}
                 className="sidebar__group"

@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import { Eye, EyeOff } from "lucide-react";
+import InputLabel from "@/components/common/InputLabel";
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
@@ -61,18 +62,14 @@ const Login = () => {
       AuthAPI.LoginAPI(formData)
         .then((response) => {
           if (response.data.access_token) {
-            const { user_name, name, access_token, user_role, user_id } =
+            const { user_name, access_token, user_role, user_id, user_email } =
               response.data;
             localStorage.setItem("access_token", access_token);
-            localStorage.setItem("name", name);
-            localStorage.setItem("user_email", user_name);
+            localStorage.setItem("user_name", user_name);
+            localStorage.setItem("user_email", user_email);
             localStorage.setItem("user_role", user_role);
             localStorage.setItem("user_id", user_id);
-            if (keepSignedIn) {
-              localStorage.setItem("keep_signed_in", "true");
-            } else {
-              localStorage.removeItem("keep_signed_in");
-            }
+           
             navigate("/dashboard");
           } else {
             alert(response.data.message || "Error Logging In");
@@ -90,7 +87,7 @@ const Login = () => {
   return (
     <section className="auth-form w-full text-left">
       <div className="mb-6 text-left">
-        <h1 className="mt-1 text-[1.25rem] font-semibold text-[var(--font-color-primary,#102a43)]">
+        <h1 className="mt-1 text-[1.2rem] font-medium text-[var(--font-color-primary,#102a43)]">
           Sign In
         </h1>
         <p className="mt-0.6 text-[0.87rem] text-muted-foreground">
@@ -103,72 +100,78 @@ const Login = () => {
         Continue with Google
       </button>
 
-      <div className="auth-divider my-4">Or</div>
+      <div className="auth-divider my-4 mb-2">Or</div>
 
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-2 login-form-container"
         onSubmit={formik.handleSubmit}
         noValidate
       >
-        <TextField
-          id="login-email"
-          name="email"
-          label="Email"
-          type="email"
-          // size="small"
-          fullWidth
-          autoComplete="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
+        <div>
+          <InputLabel htmlFor="login-email" label="Email Address" />
+          <TextField
+            id="login-email"
+            name="email"
+            type="email"
+            fullWidth
+            disabled={isSubmitting}
+            autoComplete="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+        </div>
 
-        <TextField
-          id="login-password"
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          // size="small"
-          fullWidth
-          autoComplete="current-password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                    size="small"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="size-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="size-4 text-muted-foreground" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
+        <div>
+          <InputLabel htmlFor="login-password" label="Password" />
+          <TextField
+            id="login-password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            disabled={isSubmitting}
+            autoComplete="current-password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      edge="end"
+                      size="small"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="size-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="size-4 text-muted-foreground" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </div>
 
-        <div className="flex items-center justify-between gap-3 my-[-0.75rem]">
+        <div className="flex items-center justify-between gap-3">
           <FormControlLabel
             control={
               <Checkbox
                 checked={keepSignedIn}
+                disabled={isSubmitting}
                 onChange={(e) => setKeepSignedIn(e.target.checked)}
                 size="small"
+                disableRipple
               />
             }
             label="Keep signed in for 30 days"

@@ -42,7 +42,7 @@ function HeaderIconButton({
 export default function Header() {
   const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
-  const userName = localStorage.getItem("name") || "";
+  const userName = localStorage.getItem("user_name") || "";
 
   const handleLogout = () => {
     localStorage.clear();

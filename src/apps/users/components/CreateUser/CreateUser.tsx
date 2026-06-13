@@ -102,6 +102,7 @@ const CreateUser = (props: CreateProjectProps) => {
               disablePortal
               disableClearable
               options={userRoleOptions}
+              disabled={userRoleOptions?.length === 0}
               getOptionLabel={(o) => o?.label}
               getOptionDisabled={(o) => o?.isDisabled}
               value={formik?.values?.userRole}

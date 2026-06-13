@@ -1,9 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import leaseCatalystLogo from "@/assets/logos/lease-catalyst-logo-full.png";
 import xtractLogo from "@/assets/logos/xtract-logo-full.png";
 import "./AuthLayout.scss";
 
+function useAuth() {
+  const token = localStorage.getItem("access_token");
+  return { isAuthenticated: !!token };
+}
+
 const AuthLayout = () => {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="auth-layout">
       <aside className="auth-layout__brand">
