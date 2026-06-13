@@ -195,7 +195,7 @@ const ProjectsPage = () => {
   const getProjectList = () => {
     ProjectsAPI.getProjects(Number(userId))
       .then((response) => {
-        if (response.statusText === "OK") {
+        if (response.status === 200) {
           setRows(response.data);
         } else {
           setRows([]);

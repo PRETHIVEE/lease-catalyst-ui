@@ -128,7 +128,7 @@ const ProjectDetails = () => {
   const getProperties = () => {
     ProjectsAPI.getPropertyList(Number(projectId))
       .then((response) => {
-        if (response.statusText === "OK") {
+        if (response.status === 200) {
           const data = response.data || [];
           setPropertiesData(data);
         }

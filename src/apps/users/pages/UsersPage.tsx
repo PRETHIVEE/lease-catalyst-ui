@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import ProjectsAPI from "@/api/projects";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import IconButton from "@/components/common/IconButton";
@@ -17,13 +16,11 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Ellipsis, Eye, Plus, Trash2 } from "lucide-react";
+import { Ellipsis, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import DashboardAPI from "@/api/dashboard";
 import { useSnackbarStore } from "@/store/snackbar-store";
 import UsersAPI from "@/api/users";
 import CreateUser from "../components/CreateUser/CreateUser";
@@ -33,21 +30,12 @@ const BreadcrumbsData = [
   { label: "Users", url: "/users" },
 ];
 
-interface DataCategory {
-  attribute: string;
-  description: string;
-  status: string;
-}
-
 const UsersPage = () => {
-  const navigate = useNavigate();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId = localStorage.getItem("user_id") || "";
-  const userEmail = localStorage.getItem("user_email") || "";
   const [openCreateUser, setopenCreateUser] = useState(false);
-  const [dataCategoryList, setDataCategoryList] = useState<DataCategory[]>([]);
   const { showSnackbar } = useSnackbarStore();
 
   const validationSchema = Yup.object({
@@ -76,22 +64,12 @@ const UsersPage = () => {
 
   const Columns: GridColDef[] = [
     {
-      field: "name",
+      field: "user_name",
       headerName: "User Name",
       width: 220,
-      renderCell: (params: GridRenderCellParams) => {
-        return (
-          <Link
-            className="hover:underline"
-            to={`/projects/project-details?projectId=${params?.row?.id}`}
-          >
-            {params?.row?.name}
-          </Link>
-        );
-      },
     },
     {
-      field: "user_name",
+      field: "user_email",
       headerName: "User Email",
       width: 200,
     },
@@ -129,17 +107,19 @@ const UsersPage = () => {
                 onSelect={() => {
                   handleAssignProject(params.row?.user_id);
                 }}
+                disabled
               >
-                <Plus aria-hidden className="mr-1.5" />
-                Assign Project
+                <Pencil aria-hidden className="mr-1.5" />
+                Edit user
               </DropdownMenuItem>
               <DropdownMenuItem
                 variant="destructive"
                 onSelect={() => {
                   handleDeleteUser(params.row);
                 }}
+                disabled={params.row?.role === "admin"}
               >
-                <Trash2 aria-hidden className="mr-1.5" /> Delete User
+                <Trash2 aria-hidden className="mr-1.5" /> Delete user
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -159,9 +139,8 @@ const UsersPage = () => {
 
   const handleDeleteUser = (user: any) => {
     setLoading(true);
-    UsersAPI.deleteUser({ user_names: [user.user_name] })
+    UsersAPI.deleteUser({ user_names: [user.user_email] })
       .then((response) => {
-        console.log("Delete user response", response);
         if (response.status === 200) {
           getUsersList();
           showSnackbar("User deleted!");
@@ -175,31 +154,11 @@ const UsersPage = () => {
       });
   };
 
-  const getDataCategoryList = () => {
-    DashboardAPI.getAttributeCategories()
-      .then(({ status, data }) => {
-        if (status !== 200) throw new Error();
-
-        const merged = [
-          ...(Array.isArray(data?.custom) ? data.custom : []),
-          ...(Array.isArray(data?.default) ? data.default : []),
-        ];
-
-        setDataCategoryList(
-          merged.map(({ attribute, description, status = "" }) => ({
-            attribute,
-            description,
-            status,
-          })),
-        );
-      })
-      .catch(() => setDataCategoryList([]));
-  };
-
   const getUsersList = () => {
     UsersAPI.getUsers()
       .then((response) => {
-        if (response.statusText === "OK") {
+        console.log("Get users response", response);
+        if (response.status === 200) {
           setRows(response.data);
         } else {
           setRows([]);
@@ -216,7 +175,6 @@ const UsersPage = () => {
   useEffect(() => {
     if (userId) {
       getUsersList();
-      getDataCategoryList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
@@ -254,8 +212,6 @@ const UsersPage = () => {
     { label: "User", value: "user", isDisabled: false },
     { label: "Client", value: "client", isDisabled: false },
   ];
-
-  console.log("rows", Rows);
 
   return (
     <div className="px-4 py-2">

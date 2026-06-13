@@ -25,6 +25,7 @@ import { useSnackbarStore } from "@/store/snackbar-store";
 import UsersAPI from "@/api/users";
 import CreateCompany from "../components/CreateCompany/CreateCompany";
 import CreateUser from "@/apps/users/components/CreateUser/CreateUser";
+import { useNavigate } from "react-router-dom";
 
 const BreadcrumbsData = [
   { label: "Home", url: "/company" },
@@ -32,6 +33,7 @@ const BreadcrumbsData = [
 ];
 
 const CompanyPage = () => {
+  const navigate = useNavigate();
   const { showSnackbar } = useSnackbarStore();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -142,7 +144,18 @@ const CompanyPage = () => {
                 <UserRoundPlus aria-hidden className="mr-1.5" />
                 Create Admin User
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate(
+                    `/company/module-access?companyId=${params?.row?.id}`,
+                    {
+                      state: {
+                        tab: "module-access",
+                      },
+                    },
+                  );
+                }}
+              >
                 <List aria-hidden className="mr-1.5" />
                 Modules acesss control
               </DropdownMenuItem>

@@ -40,7 +40,7 @@ export const superAdminMenu: NavGroup[] = [
 
 export const sidebarNavGroups: NavGroup[] = [
   {
-    items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
+    items: [{ label: "Job Dashboard", path: "/dashboard", icon: LayoutDashboard }],
   },
   {
     items: [{ label: "Users", path: "/users", icon: Users }],

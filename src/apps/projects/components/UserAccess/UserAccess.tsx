@@ -34,7 +34,7 @@ const UserAccess = () => {
 
   const Columns: GridColDef[] = [
     {
-      field: "name",
+      field: "user_name",
       headerName: "User Name",
       width: 180,
     },
@@ -220,7 +220,7 @@ const UserAccess = () => {
   const getUsersList = () => {
     UsersAPI.getUsers()
       .then((response) => {
-        if (response.statusText === "OK") {
+        if (response.status === 200) {
           setRows(response.data);
         } else {
           setRows([]);
