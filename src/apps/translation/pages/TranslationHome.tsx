@@ -1,5 +1,4 @@
 import TranslationsAPI from "@/api/translation";
-import BreadCrumbs from "@/components/common/BreadCrumbs";
 import IconButton from "@/components/common/IconButton";
 import StatusChip from "@/components/common/StatusChip";
 import UploadArea from "@/components/common/UploadArea";
@@ -21,14 +20,23 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Download, Ellipsis, Eye, Languages, Loader } from "lucide-react";
+import {
+  Download,
+  Ellipsis,
+  Eye,
+  Grid2X2,
+  Languages,
+  LanguagesIcon,
+  Loader,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   autoDetectLang,
   defaultTargetLang,
   languageOptions,
 } from "../components/languages";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type LanguageOption = {
   language: string;
@@ -48,11 +56,6 @@ const formatLanguageLabel = (option: LanguageOption) =>
 const isSameLanguage = (a: LanguageOption, b: LanguageOption) =>
   a.language === b.language && a.language_code === b.language_code;
 
-const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
-  { label: "Lease Translation", url: "/" },
-];
-
 const TranslationHome = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbarStore();
@@ -69,11 +72,21 @@ const TranslationHome = () => {
     useState<LanguageOption>(defaultTargetLang);
 
   const Columns: GridColDef[] = [
-    { field: "file_id", headerName: "File ID", width: 88 },
+    // { field: "file_id", headerName: "File ID", width: 88 },
     {
       field: "file_name",
       headerName: "File Name",
-      width: 220,
+      width: 300,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Link
+            className="hover:underline"
+            to={`/lease-translate/review?id=${params.row.file_id}`}
+          >
+            {params?.row?.file_name}
+          </Link>
+        );
+      },
     },
     {
       field: "input_lang",
@@ -96,8 +109,8 @@ const TranslationHome = () => {
           translate_status === "completed"
             ? "success"
             : translate_status === "pending"
-            ? "pending"
-            : "failed";
+              ? "pending"
+              : "failed";
         return <StatusChip label={translate_status} variant={variant} />;
       },
     },
@@ -208,7 +221,7 @@ const TranslationHome = () => {
           .join(", ");
         showSnackbar(
           errorMessage || "Error uploading file. Please retry",
-          "error"
+          "error",
         );
       })
       .finally(() => {
@@ -216,109 +229,128 @@ const TranslationHome = () => {
       });
   };
 
+  const [activeTab, setActiveTab] = useState("new-translation");
+
   return (
     <div className="p-4">
-      <BreadCrumbs items={BreadcrumbsData} />
-      <h5 className="text-[0.98rem] mt-2 font-semibold text-font-color-primary">
+      <h5 className="text-[0.98rem]  font-semibold text-font-color-primary">
         Lease Translation
       </h5>
 
-      <div className="my-4 max-w-3xl rounded-lg border border-slate-200 bg-[#fafafa] p-4">
-        <div className="mb-3">
-          <UploadArea
-            uploadDocuments={uploadDocuments}
-            setUploadDocuments={setUploadDocuments}
-            supportedFormats={["pdf"]}
-          />
-        </div>
-
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          className="mt-5.5 form-container"
-        >
-          <Autocomplete
-            fullWidth
-            disablePortal
-            options={sourceLanguageOptions}
-            value={sourceLanguage}
-            onChange={(_event, value) => {
-              if (value) setSourceLanguage(value);
-            }}
-            getOptionLabel={formatLanguageLabel}
-            isOptionEqualToValue={isSameLanguage}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                size="small"
-                label="Source Language (Searchable)"
-              />
-            )}
-          />
-          <Autocomplete
-            fullWidth
-            disablePortal
-            options={languageOptions}
-            value={targetLanguage}
-            onChange={(_event, value) => {
-              if (value) setTargetLanguage(value);
-            }}
-            getOptionLabel={formatLanguageLabel}
-            isOptionEqualToValue={isSameLanguage}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                size="small"
-                label="Target Language (Searchable)"
-              />
-            )}
-          />
-        </Stack>
-
-        <Button
-          type="button"
-          variant="primary"
-          className="mt-4 h-9 w-full text-[0.82rem] font-semibold uppercase"
-          disabled={isTranslating || uploadDocuments.length === 0}
-          onClick={handleStartTranslate}
-        >
-          {isTranslating ? (
-            <>
-              <Loader className="animate-spin" />
-              Translating..
-            </>
-          ) : (
-            <>
-              <Languages aria-hidden />
-              Start Translate
-            </>
-          )}
-        </Button>
+      <div className="mt-1.5">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
+          <TabsList>
+            <TabsTrigger value="new-translation">
+              <LanguagesIcon aria-hidden />
+              New Translation
+            </TabsTrigger>
+            <TabsTrigger value="history">
+              <Grid2X2 aria-hidden />
+              Translation History
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
-      <Box
-        sx={{ height: "80vh", width: "100%" }}
-        className="app-datagrid-container mt-2"
-      >
-        {/* <DataGridTitle title="Translations Overview" /> */}
-        <DataGrid
-          density="compact"
-          rows={Rows}
-          columns={Columns}
-          loading={loading}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+      {activeTab === "new-translation" && (
+        <div className="mt-12 max-w-2xl rounded-sm border border-slate-200 bg-[#fafafa] p-4 m-auto">
+          <div className="mb-3">
+            <UploadArea
+              uploadDocuments={uploadDocuments}
+              setUploadDocuments={setUploadDocuments}
+              supportedFormats={["pdf"]}
+            />
+          </div>
+
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            className="mt-5.5 form-container"
+          >
+            <Autocomplete
+              fullWidth
+              disablePortal
+              options={sourceLanguageOptions}
+              value={sourceLanguage}
+              onChange={(_event, value) => {
+                if (value) setSourceLanguage(value);
+              }}
+              getOptionLabel={formatLanguageLabel}
+              isOptionEqualToValue={isSameLanguage}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  size="small"
+                  label="Source Language (Searchable)"
+                />
+              )}
+            />
+            <Autocomplete
+              fullWidth
+              disablePortal
+              options={languageOptions}
+              value={targetLanguage}
+              onChange={(_event, value) => {
+                if (value) setTargetLanguage(value);
+              }}
+              getOptionLabel={formatLanguageLabel}
+              isOptionEqualToValue={isSameLanguage}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  size="small"
+                  label="Target Language (Searchable)"
+                />
+              )}
+            />
+          </Stack>
+
+          <Button
+            type="button"
+            variant="primary"
+            className="mt-4 h-9 w-full text-[0.82rem] font-semibold uppercase"
+            disabled={isTranslating || uploadDocuments.length === 0}
+            onClick={handleStartTranslate}
+          >
+            {isTranslating ? (
+              <>
+                <Loader className="animate-spin" />
+                Translating..
+              </>
+            ) : (
+              <>
+                <Languages aria-hidden />
+                Start Translate
+              </>
+            )}
+          </Button>
+        </div>
+      )}
+
+      {activeTab === "history" && (
+        <Box
+          sx={{ height: "80vh", width: "100%" }}
+          className="app-datagrid-container mt-2"
+        >
+          <DataGrid
+            density="compact"
+            rows={Rows}
+            columns={Columns}
+            loading={loading}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[10]}
-          disableRowSelectionOnClick
-          showToolbar
-          sx={{}}
-        />
-      </Box>
+            }}
+            pageSizeOptions={[10]}
+            disableRowSelectionOnClick
+            showToolbar
+            sx={{}}
+          />
+        </Box>
+      )}
     </div>
   );
 };

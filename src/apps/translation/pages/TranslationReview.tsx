@@ -1,6 +1,5 @@
 import TranslationsAPI from "@/api/translation";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
-import PDFViewer from "@/components/common/PDFViewer";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -14,6 +13,7 @@ import { fileDownloader, getPresignedUrl } from "@/utils/utils";
 import { ChevronDownIcon, Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import LeasePdfViewer from "../components/LeasePdfViewer";
 
 const TranslationReview = () => {
   const [searchParams] = useSearchParams();
@@ -34,10 +34,10 @@ const TranslationReview = () => {
         const responseData = response?.data;
         setData(responseData);
         getPresignedUrl(responseData?.source_file).then((url) =>
-          setSourceFileUrl(url)
+          setSourceFileUrl(url),
         );
         getPresignedUrl(responseData?.translated_file).then((url) =>
-          setTranslatedFileUrl(url)
+          setTranslatedFileUrl(url),
         );
       })
       .catch(() => {});
@@ -53,16 +53,14 @@ const TranslationReview = () => {
     TranslationsAPI.DownloadWord(JobId).then((response) => {
       if (response.status === 200) {
         getPresignedUrl(response?.data?.docx_file).then((url) =>
-          fileDownloader(url)
+          fileDownloader(url),
         );
       }
     });
   };
 
-  console.log("ssss", SourceFileUrl, "ttt", TranslatedFileUrl)
-
   return (
-    <div className="p-4">
+    <div className="pt-4 px-4">
       <div className="flex justify-between align-center">
         <BreadCrumbs items={BreadcrumbsData} />
         <ButtonGroup>
@@ -82,25 +80,16 @@ const TranslationReview = () => {
                   <Download />
                   Download as Word
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem
-                  onSelect={() => fileDownloader(SourceFileUrl)}
-                >
-                  <Download />
-                  Download Source file
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Download />
-                  Download Translated file
-                </DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </ButtonGroup>
       </div>
-      {/* <div className="mt-2 grid flex-1 grid-cols-2 gap-18">
-        <PDFViewer url={SourceFileUrl} title="Source PDF" />
-        <PDFViewer url={TranslatedFileUrl} title="Translated PDF" />
-      </div> */}
+      <div className="mt-1">
+        {SourceFileUrl?.length > 0 && (
+          <LeasePdfViewer url={SourceFileUrl} url2={TranslatedFileUrl} />
+        )}
+      </div>
     </div>
   );
 };

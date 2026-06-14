@@ -1,14 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Switch } from "@/components/ui/switch";
+import { Loader } from "lucide-react";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export default function PdfViewer() {
+export default function LeasePdfViewer({
+  url,
+  url2,
+}: {
+  url: string;
+  url2: string;
+}) {
   const [numPages1, setNumPages1] = useState<number | null>(null);
   const [numPages2, setNumPages2] = useState<number | null>(null);
+  const [isLoading1, setIsLoading1] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
 
   const [scale, setScale] = useState<number>(1.0);
   const [isSyncScroll, setIsSyncScroll] = useState<boolean>(true);
@@ -129,18 +138,17 @@ export default function PdfViewer() {
     }
   };
 
-  const url =
-    "https://asg-bot-cache.s3.us-east-2.amazonaws.com/ASG_MVP/LeaseCat/translation/6/20260601_072636/sciencebook%20from%20wiki_translated_hin%20-%20Copy.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAUXFBSAJOPLVBKMUR%2F20260614%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260614T170908Z&X-Amz-Expires=3600&X-Amz-Signature=3f36f8eb53217dcf9514da7e91308c25d7a3aeb2049f61c6ec27e54f76b3b66f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject";
-  const url2 =
-    "https://asg-bot-cache.s3.us-east-2.amazonaws.com/ASG_MVP/LeaseCat/translation/6/translated/20260601_072618/sciencebook%20from%20wiki_translated_hin_translated_en.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAUXFBSAJOPLVBKMUR%2F20260614%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260614T174524Z&X-Amz-Expires=3600&X-Amz-Signature=48ec2eb17f69d6ab5d35f82148c6cbf24a708a9554c89eec11d635a7dd22ac7d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject";
+  // const url =
+  //   "https://asg-bot-cache.s3.us-east-2.amazonaws.com/ASG_MVP/LeaseCat/translation/6/20260601_072636/sciencebook%20from%20wiki_translated_hin%20-%20Copy.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAUXFBSAJOPLVBKMUR%2F20260614%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260614T170908Z&X-Amz-Expires=3600&X-Amz-Signature=3f36f8eb53217dcf9514da7e91308c25d7a3aeb2049f61c6ec27e54f76b3b66f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject";
+  // const url2 =
+  //   "https://asg-bot-cache.s3.us-east-2.amazonaws.com/ASG_MVP/LeaseCat/translation/6/translated/20260601_072618/sciencebook%20from%20wiki_translated_hin_translated_en.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAUXFBSAJOPLVBKMUR%2F20260614%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260614T174524Z&X-Amz-Expires=3600&X-Amz-Signature=48ec2eb17f69d6ab5d35f82148c6cbf24a708a9554c89eec11d635a7dd22ac7d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject";
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 40px)",
-        border: "1px solid red",
+        height: "calc(100vh - 6.5rem)",
         boxSizing: "border-box",
         fontFamily: "sans-serif",
         position: "relative",
@@ -156,7 +164,6 @@ export default function PdfViewer() {
           flex: 1,
           overflow: "hidden",
           marginBottom: "2rem",
-          border: "1px solid green",
         }}
       >
         {/* Left PDF Column */}
@@ -169,13 +176,32 @@ export default function PdfViewer() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            position: "relative",
             minWidth: 0,
             width: isNarrow ? "100%" : undefined,
           }}
         >
+          {isLoading1 && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
+              }}
+            >
+              <Loader className="w-8 h-8 animate-spin text-gray-500" />
+            </div>
+          )}
           <Document
             file={url}
-            onLoadSuccess={({ numPages }) => setNumPages1(numPages)}
+            onLoadSuccess={({ numPages }) => {
+              setNumPages1(numPages);
+              setIsLoading1(false);
+            }}
+            onLoadError={() => setIsLoading1(false)}
+            loading
           >
             {Array.from(new Array(numPages1), (_el, index) => (
               <div
@@ -207,13 +233,32 @@ export default function PdfViewer() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            position: "relative",
             minWidth: 0,
             width: isNarrow ? "100%" : undefined,
           }}
         >
+          {isLoading2 && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
+              }}
+            >
+              <Loader className="w-8 h-8 animate-spin text-gray-500" />
+            </div>
+          )}
           <Document
             file={url2}
-            onLoadSuccess={({ numPages }) => setNumPages2(numPages)}
+            onLoadSuccess={({ numPages }) => {
+              setNumPages2(numPages);
+              setIsLoading2(false);
+            }}
+            onLoadError={() => setIsLoading2(false)}
+            loading
           >
             {Array.from(new Array(numPages2), (_el, index) => (
               <div
