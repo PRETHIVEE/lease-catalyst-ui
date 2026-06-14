@@ -14,11 +14,9 @@ import {
   PanelLeft,
   Search,
   User,
-  UserRound,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
-import StatusChip from "@/components/common/StatusChip";
 
 type IconButtonProps = {
   label: string;
