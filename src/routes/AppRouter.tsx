@@ -20,6 +20,7 @@ import EventsPage from "@/apps/events/Pages/EventsPage";
 import UsersPage from "@/apps/users/pages/UsersPage";
 import CompanyPage from "@/apps/company/pages/CompanyPage";
 import CompanyModuleAccess from "@/apps/company/pages/CompanyModuleAccess";
+import TestViwer from "@/apps/translation/pages/TestViwer";
 
 export default function AppRouter() {
   return (
@@ -60,6 +61,7 @@ export default function AppRouter() {
           <Route path="/data-category" element={<DataCategory />} />
           <Route path="/data-category/view" element={<ModifyDataCategory />} />
           <Route path="/lease-translate" element={<TranslationHome />} />
+          <Route path="/tttt" element={<TestViwer />} />
           <Route path="/events" element={<EventsPage />} />
           <Route
             path="/lease-translate/review"

@@ -59,6 +59,8 @@ const TranslationReview = () => {
     });
   };
 
+  console.log("ssss", SourceFileUrl, "ttt", TranslatedFileUrl)
+
   return (
     <div className="p-4">
       <div className="flex justify-between align-center">
@@ -95,10 +97,10 @@ const TranslationReview = () => {
           </DropdownMenu>
         </ButtonGroup>
       </div>
-      <div className="mt-2 grid flex-1 grid-cols-2 gap-18">
+      {/* <div className="mt-2 grid flex-1 grid-cols-2 gap-18">
         <PDFViewer url={SourceFileUrl} title="Source PDF" />
         <PDFViewer url={TranslatedFileUrl} title="Translated PDF" />
-      </div>
+      </div> */}
     </div>
   );
 };
