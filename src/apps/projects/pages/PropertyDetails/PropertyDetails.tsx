@@ -29,6 +29,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import IconButton from "@/components/common/IconButton";
@@ -38,6 +39,7 @@ import UploadFiles from "../../components/UploadFiles/UploadFiles";
 import { useSnackbarStore } from "@/store/snackbar-store";
 import StatusChip from "@/components/common/StatusChip";
 import { Tooltip } from "@mui/material";
+import LeaseAbstraction from "../../components/LeaseAbstraction/LeaseAbstraction";
 
 const PropertyDetails = () => {
   const navigate = useNavigate();
@@ -144,7 +146,7 @@ const PropertyDetails = () => {
     {
       field: "filename",
       headerName: "File Name",
-      width: 400,
+      width: 420,
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link className="hover:underline" to={`#`}>
@@ -278,9 +280,9 @@ const PropertyDetails = () => {
                 <Building2 aria-hidden />
                 Property
               </TabsTrigger>
-              <TabsTrigger value="lease">
+              <TabsTrigger value="lease-abstraction">
                 <Building aria-hidden />
-                Leases
+                Lease Abstraction
               </TabsTrigger>
               <TabsTrigger value="documents">
                 <FolderOpen aria-hidden />
@@ -296,7 +298,7 @@ const PropertyDetails = () => {
                 {/* PROPERTY DETAILS */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.86rem] font-medium">
+                    <h6 className="text-[0.84rem] font-medium">
                       Property Details
                     </h6>
                   </div>
@@ -352,22 +354,27 @@ const PropertyDetails = () => {
                 {/* ABSTRACTION JOB STATUS */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.86rem] font-medium">
+                    <h6 className="text-[0.84rem] font-medium">
                       Lease Abstraction Status
                     </h6>
                   </div>
 
                   <div className="py-2.5 px-4">
-                    <div className="flex align-center gap-4">
-                      <StatusChip label="Running" variant={"pending"} />
-
-                      <Tooltip
-                        title="The Job is pending for DQC"
-                        arrow
-                        placement="right"
-                      >
-                        <Info color="gray" size={16} className="mt-1.25" />
-                      </Tooltip>
+                    <div>
+                      <div className="flex align-center gap-4">
+                        <StatusChip label="Running" variant={"pending"} />
+                        <Tooltip
+                          title="The Job is pending for DQC"
+                          arrow
+                          placement="right"
+                        >
+                          <Info color="gray" size={16} className="mt-1.25" />
+                        </Tooltip>
+                      </div>
+                      <p className="mt-2 font-normal text-[0.71rem] text-gray-500">
+                        Last updated at{" "}
+                        {formatDateTime(projectDetails?.last_created)}{" "}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -375,7 +382,7 @@ const PropertyDetails = () => {
                 {/* CONTACT */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.86rem] font-medium">Contact</h6>
+                    <h6 className="text-[0.84rem] font-medium">Contact</h6>
                   </div>
 
                   <div className="py-2.5 px-4">
@@ -401,13 +408,27 @@ const PropertyDetails = () => {
                 {/* MAP */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.86rem] font-medium">Map</h6>
+                    <h6 className="text-[0.84rem] font-medium">Map</h6>
                   </div>
 
-                  <div style={{ height: "20rem" }}>google map</div>
+                  <div className="p-2.5">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1856.9159677645919!2d-76.61500360586942!3d39.294684713426115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c80499053a1171%3A0xd9bed96f1c2ba857!2s13%20E%20Franklin%20St%2C%20Baltimore%2C%20MD%2021202%2C%20USA!5e1!3m2!1sen!2sin!4v1781438546087!5m2!1sen!2sin"
+                      width="100%"
+                      height="400"
+                      // style="border:0;"
+                      // allowfullscreen=""
+                      loading="lazy"
+                      // referrerpolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  </div>
                 </div>
               </div>
             </div>
+          )}
+
+          {activeTab === "lease-abstraction" && (
+            <LeaseAbstraction propertyName={propertyDetails?.property_name} />
           )}
 
           {activeTab === "documents" && (

@@ -123,7 +123,7 @@ const AddAction = ({
     onClick={onClick}
     className={cn(
       "mt-3 inline-flex items-center gap-1.5 text-[0.82rem] font-medium text-main-theme transition-colors hover:text-main-theme/80",
-      className
+      className,
     )}
   >
     <Plus className="size-3.5" aria-hidden />
@@ -163,7 +163,7 @@ const getGroupSelectionState = (group: CategoryGroup) => {
 
 const getSubGroupSelectionState = (subGroup: CategorySubGroup) => {
   const selectedCount = subGroup.attributes.filter(
-    (item) => item.isSelected
+    (item) => item.isSelected,
   ).length;
 
   return {
@@ -181,19 +181,21 @@ const ModifyDataCategory = () => {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<CategoryGroup[]>(() =>
-    normalizeCategoryData([])
+    normalizeCategoryData([]),
   );
   const { showSnackbar } = useSnackbarStore();
   const [dataCategory, setDataCategory] = useState<any>(null);
   const [drawerMode, setDrawerMode] = useState<DrawerMode>(null);
   const [drawerGroupIndex, setDrawerGroupIndex] = useState<number | null>(null);
   const [drawerSubGroupIndex, setDrawerSubGroupIndex] = useState<number | null>(
-    null
+    null,
   );
   const [isSaveDrawerOpen, setIsSaveDrawerOpen] = useState(false);
   const [newDataCategoryName, setNewDataCategoryName] = useState(
-    `${DataCategory} - Modified`
+    `${DataCategory} - Modified`,
   );
+
+  console.log("categories:", categories);
 
   useEffect(() => {
     if (!DataCategory) return;
@@ -212,12 +214,12 @@ const ModifyDataCategory = () => {
 
   const updateGroup = (
     groupIndex: number,
-    updater: (group: CategoryGroup) => CategoryGroup
+    updater: (group: CategoryGroup) => CategoryGroup,
   ) => {
     setCategories((prev) =>
       prev.map((group, index) =>
-        index === groupIndex ? updater(group) : group
-      )
+        index === groupIndex ? updater(group) : group,
+      ),
     );
   };
 
@@ -239,7 +241,7 @@ const ModifyDataCategory = () => {
   const toggleSubGroup = (
     groupIndex: number,
     subGroupIndex: number,
-    checked: boolean
+    checked: boolean,
   ) => {
     updateGroup(groupIndex, (group) => ({
       ...group,
@@ -253,7 +255,7 @@ const ModifyDataCategory = () => {
                 isSelected: checked,
               })),
             }
-          : subGroup
+          : subGroup,
       ),
     }));
   };
@@ -262,7 +264,7 @@ const ModifyDataCategory = () => {
     groupIndex: number,
     subGroupIndex: number,
     attributeIndex: number,
-    checked: boolean
+    checked: boolean,
   ) => {
     updateGroup(groupIndex, (group) => ({
       ...group,
@@ -273,10 +275,10 @@ const ModifyDataCategory = () => {
               attributes: subGroup.attributes.map((attribute, attrIndex) =>
                 attrIndex === attributeIndex
                   ? { ...attribute, isSelected: checked }
-                  : attribute
+                  : attribute,
               ),
             }
-          : subGroup
+          : subGroup,
       ),
     }));
   };
@@ -312,7 +314,7 @@ const ModifyDataCategory = () => {
     groupIndex: number,
     subGroupIndex: number,
     attributeName: string,
-    attributeDescription: string
+    attributeDescription: string,
   ) => {
     updateGroup(groupIndex, (group) => ({
       ...group,
@@ -330,7 +332,7 @@ const ModifyDataCategory = () => {
                 },
               ],
             }
-          : subGroup
+          : subGroup,
       ),
     }));
   };
@@ -342,12 +344,12 @@ const ModifyDataCategory = () => {
   const updateSubGroupName = (
     groupIndex: number,
     subGroupIndex: number,
-    subGroupName: string
+    subGroupName: string,
   ) => {
     updateGroup(groupIndex, (group) => ({
       ...group,
       subGroups: group.subGroups.map((subGroup, index) =>
-        index === subGroupIndex ? { ...subGroup, subGroupName } : subGroup
+        index === subGroupIndex ? { ...subGroup, subGroupName } : subGroup,
       ),
     }));
   };
@@ -356,7 +358,7 @@ const ModifyDataCategory = () => {
     groupIndex: number,
     subGroupIndex: number,
     attributeIndex: number,
-    attributeName: string
+    attributeName: string,
   ) => {
     updateGroup(groupIndex, (group) => ({
       ...group,
@@ -367,10 +369,10 @@ const ModifyDataCategory = () => {
               attributes: subGroup.attributes.map((attribute, attrIndex) =>
                 attrIndex === attributeIndex
                   ? { ...attribute, attributeName }
-                  : attribute
+                  : attribute,
               ),
             }
-          : subGroup
+          : subGroup,
       ),
     }));
   };
@@ -389,7 +391,7 @@ const ModifyDataCategory = () => {
 
   const openDrawerForAttribute = (
     groupIndex: number,
-    subGroupIndex: number
+    subGroupIndex: number,
   ) => {
     setDrawerMode("attribute");
     setDrawerGroupIndex(groupIndex);
@@ -421,7 +423,7 @@ const ModifyDataCategory = () => {
         drawerGroupIndex,
         drawerSubGroupIndex,
         payload.name.trim(),
-        payload.attributeDescription ?? ""
+        payload.attributeDescription ?? "",
       );
     }
 
@@ -499,8 +501,8 @@ const ModifyDataCategory = () => {
 
   const hasAnySelectedAttributes = categories.some((group) =>
     group.subGroups.some((subGroup) =>
-      subGroup.attributes.some((attribute) => attribute.isSelected)
-    )
+      subGroup.attributes.some((attribute) => attribute.isSelected),
+    ),
   );
 
   return (
@@ -531,7 +533,7 @@ const ModifyDataCategory = () => {
                 className="min-w-[6rem]"
                 onClick={() => {
                   navigate(
-                    `/data-category/view?mode=modify&dc=${DataCategory}`
+                    `/data-category/view?mode=modify&dc=${DataCategory}`,
                   );
                 }}
               >
@@ -623,7 +625,7 @@ const ModifyDataCategory = () => {
                                       groupIndex,
                                       subGroupIndex,
                                       attributeIndex,
-                                      checked
+                                      checked,
                                     )
                                   }
                                 />
@@ -636,13 +638,13 @@ const ModifyDataCategory = () => {
                                     groupIndex,
                                     subGroupIndex,
                                     attributeIndex,
-                                    value
+                                    value,
                                   )
                                 }
                                 className="text-[0.82rem] text-[#00000098]"
                               />
                             </div>
-                          )
+                          ),
                         )}
                       </div>
 

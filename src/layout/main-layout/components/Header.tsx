@@ -52,7 +52,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("user_name") || "";
-  const companyname = localStorage.getItem("company_name") || "Name of Company user belongs";
+  const companyname = localStorage.getItem("company_name") || "Name of Company user belongs'";
   const userEmail = localStorage.getItem("user_email") || "";
 
   const handleLogout = () => {
