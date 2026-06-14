@@ -1,4 +1,3 @@
-// import StatusChip from "@/components/common/StatusChip";
 import StatusChip from "@/components/common/StatusChip";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -12,10 +11,9 @@ import {
 import {
   Building2,
   ChevronDownIcon,
-  CloudUpload,
-  // CloudUpload,
-  // StickyNoteCheck,
-  Download,
+  CircleCheckBig,
+  CloudUpload,  
+  FilePlus,
 } from "lucide-react";
 
 const fieldLabelClass = "text-[0.76rem] font-normal text-[#00000080]";
@@ -105,30 +103,37 @@ const PropertyInfo = ({
               </div>
             </div>
 
-            <ButtonGroup>
-              <Button variant="primary" onClick={handleUploadClick}>
-                <CloudUpload aria-hidden />
-                Upload Documents
+            <div className="flex flex-1 align-center justify-end gap-2 mt-2">
+              <Button variant="outline" >
+                <CircleCheckBig aria-hidden />
+                Complete DQC
               </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="primary" className="pl-2!">
-                    <ChevronDownIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
-                >
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem onSelect={handleRequestDocsClick}>
-                      <Download />
-                      Request Documents
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
+
+              <ButtonGroup>
+                <Button variant="primary" onClick={handleUploadClick}>
+                  <CloudUpload aria-hidden />
+                  Upload
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="primary" className="pl-2!">
+                      <ChevronDownIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
+                  >
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem onSelect={handleRequestDocsClick}>
+                        <FilePlus />
+                        Request Files
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ButtonGroup>
+            </div>
           </div>
         </div>
       </div>
