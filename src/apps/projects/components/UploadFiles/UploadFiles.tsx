@@ -56,7 +56,7 @@ const UploadFiles = (props: UploadFilesProps) => {
             />
           </div>
 
-          <div className="mt-2.5">
+          <div className="mt-3">
             <UploadArea
               uploadDocuments={uploadDocuments}
               setUploadDocuments={setUploadDocuments}

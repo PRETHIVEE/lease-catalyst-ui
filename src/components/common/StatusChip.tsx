@@ -33,7 +33,7 @@ const statusChipVariants = cva(
     defaultVariants: {
       variant: "pending",
     },
-  }
+  },
 );
 
 const defaultIcons: Record<
@@ -56,6 +56,7 @@ export type StatusChipProps = {
   label: string;
   icon?: LucideIcon;
   className?: string;
+  showIcon?: boolean;
 } & VariantProps<typeof statusChipVariants>;
 
 const StatusChip = ({
@@ -63,12 +64,13 @@ const StatusChip = ({
   label,
   icon,
   className,
+  showIcon = true,
 }: StatusChipProps) => {
   const Icon = icon ?? defaultIcons[variant ?? "pending"];
 
   return (
     <span className={cn(statusChipVariants({ variant }), className)}>
-      <Icon aria-hidden />
+      {showIcon && <Icon aria-hidden />}
       {label}
     </span>
   );

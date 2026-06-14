@@ -177,13 +177,13 @@ const ProjectDetails = () => {
     },
     {
       field: "property_id",
-      headerName: "Property Id",
+      headerName: "Property ID",
       width: 180,
     },
 
     {
       field: "lease_id",
-      headerName: "Lease Id",
+      headerName: "Lease ID",
       width: 140,
     },
 
@@ -240,10 +240,6 @@ const ProjectDetails = () => {
       <BreadCrumbs items={BreadcrumbsData} />
 
       <div>
-        {/* <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
-          Project Details
-        </h5> */}
-
         <div className="mt-1.5">
           <Tabs
             value={activeTab}
@@ -254,11 +250,11 @@ const ProjectDetails = () => {
               <TabsList>
                 <TabsTrigger value="project">
                   <Building2 aria-hidden />
-                  Project Details
+                  Project
                 </TabsTrigger>
                 <TabsTrigger value="properties">
                   <Building aria-hidden />
-                  Properties
+                  Properties (Leases)
                 </TabsTrigger>
                 <TabsTrigger value="user-access">
                   <ShieldUser aria-hidden />
@@ -269,36 +265,53 @@ const ProjectDetails = () => {
                 <Plus strokeWidth={2} /> Add Property
               </Button>
             </div>
+          </Tabs>
 
-            {activeTab === "project" && (
-              <div className="mt-4 bg-white p-4 rounded-sm shadow-card text-[0.85rem]">
-                <p className="">
-                  <span className="font-medium inline-block min-w-[7rem]">
+          {activeTab === "project" && (
+            <div className="mt-4 bg-white rounded-sm shadow-card">
+              <div className="border-b border-gray-300 py-2.5 px-4">
+                <h6 className="text-[0.86rem] font-medium">Project Details</h6>
+              </div>
+
+              <div className="py-2.5 px-4">
+                <p className="mt-1 text-[0.84rem]">
+                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
                     Project Name{" "}
                   </span>{" "}
-                  : {projectDetails?.project_name || "N/A"}
+                  <span>: {projectDetails?.project_name || "N/A"}</span>
                 </p>
-                <p className="mt-2">
-                  <span className="font-medium inline-block min-w-[7rem]">
+                <p className="mt-1 text-[0.84rem] mt-1.75">
+                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
                     Data Category{" "}
                   </span>{" "}
-                  : {projectDetails?.category || "N/A"}
+                  <span>: {projectDetails?.category || "N/A"}</span>
                 </p>
-                <p className="mt-2">
-                  <span className="font-medium inline-block min-w-[7rem]">
+
+                <p className="mt-1 text-[0.84rem] mt-1.75">
+                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
                     No of Properties{" "}
                   </span>{" "}
-                  : {projectDetails?.property_count || "N/A"}
+                  <span>: {projectDetails?.property_count || "0"}</span>
                 </p>
-                <p className="mt-2">
-                  <span className="font-medium inline-block min-w-[7rem]">
+
+                <p className="mt-1 text-[0.84rem] mt-1.75">
+                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                    Active Lease Count
+                  </span>{" "}
+                  <span>: {"N/A"}</span>
+                </p>
+
+                <p className="mt-1 text-[0.84rem] mt-1.75 my-1.75">
+                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
                     Created On{" "}
                   </span>{" "}
-                  : {formatDateTime(projectDetails?.last_created) || "N/A"}
+                  <span>
+                    : {formatDateTime(projectDetails?.last_created) || "N/A"}
+                  </span>
                 </p>
               </div>
-            )}
-          </Tabs>
+            </div>
+          )}
 
           {activeTab === "properties" && (
             <>

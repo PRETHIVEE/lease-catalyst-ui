@@ -7,9 +7,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
-import { Bell, HelpCircle, LogOut, PanelLeft, Search, User } from "lucide-react";
+import {
+  Bell,
+  HelpCircle,
+  LogOut,
+  PanelLeft,
+  Search,
+  User,
+  UserRound,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
+import StatusChip from "@/components/common/StatusChip";
 
 type IconButtonProps = {
   label: string;
@@ -31,7 +40,7 @@ function HeaderIconButton({
       aria-label={label}
       className={cn(
         "flex size-[2rem] items-center justify-center rounded-md text-[#666666] transition-colors hover:bg-[#f3f4f6] hover:text-[#333333] cursor-pointer",
-        className
+        className,
       )}
     >
       {children}
@@ -43,6 +52,8 @@ export default function Header() {
   const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("user_name") || "";
+  const companyname = localStorage.getItem("company_name") || "Name of Company user belongs";
+  const userEmail = localStorage.getItem("user_email") || "";
 
   const handleLogout = () => {
     localStorage.clear();
@@ -57,7 +68,7 @@ export default function Header() {
           label={isSidebarPinned ? "Unpin navigation" : "Pin navigation open"}
           onClick={toggleSidebarPinned}
           className={cn(
-            isSidebarPinned && "text-main-theme bg-[rgba(31,157,91,0.1)]"
+            isSidebarPinned && "text-main-theme bg-[rgba(31,157,91,0.1)]",
           )}
         >
           <PanelLeft className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
@@ -97,8 +108,30 @@ export default function Header() {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="min-w-[10rem] border border-[#e0e0e0] bg-white p-1 shadow-md"
+            className="w-[15rem] border border-[#e0e0e0] bg-white p-1 shadow-md"
+            // min-w-[10rem]
           >
+            <div className="flex gap-3 px-2 py-1.5">
+              <div>
+                <span className="capitalize flex size-[2.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
+                  {userName[0]}
+                </span>
+              </div>
+              <div className="w-full">
+                <div>
+                  <p className="text-[0.85rem] font-normal">{userName}</p>
+                  <p className="text-[0.75rem] font-normal text-[#666666] mt-[-0.2rem]">
+                    {userEmail}
+                  </p>
+                </div>
+                <div className="mt-2">
+                  <DropdownMenuSeparator className="my-1 bg-[#e0e0e0] w-full" />
+                  <p className="text-[0.76rem]">{companyname}</p>
+                </div>
+              </div>
+            </div>
+            <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
+
             <DropdownMenuItem onSelect={() => {}}>
               <User aria-hidden />
               Profile

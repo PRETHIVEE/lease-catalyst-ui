@@ -13,7 +13,8 @@ dayjs.extend(timezone);
  * Output: "2026-05-14  10:40 PM"
  */
 export const formatDateTime = (isoString: string): string => {
-  return dayjs.utc(isoString).local().format("YYYY-MM-DD  hh:mm A");
+  // return dayjs.utc(isoString).local().format("YYYY-MM-DD  hh:mm A");
+  return dayjs.utc(isoString).local().format("MMM D, YYYY h:mm A");
 };
 
 export const trimLeadingSpace = (inputValue: string) => {

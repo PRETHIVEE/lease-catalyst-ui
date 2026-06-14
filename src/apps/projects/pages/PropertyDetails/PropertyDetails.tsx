@@ -10,6 +10,7 @@ import {
   Ellipsis,
   Eye,
   FolderOpen,
+  Info,
   Loader,
   Play,
   Trash2,
@@ -35,6 +36,8 @@ import Box from "@mui/material/Box";
 import { Button } from "@/components/ui/button";
 import UploadFiles from "../../components/UploadFiles/UploadFiles";
 import { useSnackbarStore } from "@/store/snackbar-store";
+import StatusChip from "@/components/common/StatusChip";
+import { Tooltip } from "@mui/material";
 
 const PropertyDetails = () => {
   const navigate = useNavigate();
@@ -141,7 +144,7 @@ const PropertyDetails = () => {
     {
       field: "filename",
       headerName: "File Name",
-      width: 280,
+      width: 400,
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link className="hover:underline" to={`#`}>
@@ -153,7 +156,7 @@ const PropertyDetails = () => {
     {
       field: "file_type",
       headerName: "File Type",
-      width: 180,
+      width: 100,
       renderCell: (params: GridRenderCellParams) => {
         return <>{getFileExtension(params?.row?.filename)}</>;
       },
@@ -185,7 +188,7 @@ const PropertyDetails = () => {
             >
               <DropdownMenuItem>
                 <Eye aria-hidden className="mr-1.5" />
-                View
+                Preview
               </DropdownMenuItem>
 
               <DropdownMenuItem onSelect={() => {}}>
@@ -273,7 +276,7 @@ const PropertyDetails = () => {
             <TabsList>
               <TabsTrigger value="property">
                 <Building2 aria-hidden />
-                Property Details
+                Property
               </TabsTrigger>
               <TabsTrigger value="lease">
                 <Building aria-hidden />
@@ -287,43 +290,123 @@ const PropertyDetails = () => {
           </Tabs>
 
           {activeTab === "property" && (
-            <div className="mt-4 bg-white p-4 rounded-sm shadow-card text-[0.85rem]">
-              <p className="">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Project Name{" "}
-                </span>{" "}
-                : <span>{projectDetails?.project_name || "N/A"}</span>
-              </p>
-              <p className="mt-2.5">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Property Name{" "}
-                </span>{" "}
-                : {propertyDetails?.property_name || "N/A"}
-              </p>
-              <p className="mt-2.5">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Data Category{" "}
-                </span>{" "}
-                : {projectDetails?.category || "N/A"}
-              </p>
-              <p className="mt-2.5">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Property Id
-                </span>{" "}
-                : {propertyDetails?.property_id || "N/A"}
-              </p>
-              <p className="mt-2.5">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Lease Id
-                </span>{" "}
-                : {propertyDetails?.lease_id || "N/A"}
-              </p>
-              <p className="mt-2.5">
-                <span className="font-medium inline-block min-w-[7rem]">
-                  Created On{" "}
-                </span>{" "}
-                : {formatDateTime(projectDetails?.last_created) || "N/A"}
-              </p>
+            <div className="flex gap-4">
+              {/* LEFT SECTION */}
+              <div style={{ width: "50%" }}>
+                {/* PROPERTY DETAILS */}
+                <div className="mt-4 bg-white rounded-sm shadow-card">
+                  <div className="border-b border-gray-300 py-2.5 px-4">
+                    <h6 className="text-[0.86rem] font-medium">
+                      Property Details
+                    </h6>
+                  </div>
+
+                  <div className="py-2.5 px-4">
+                    <p className="mt-1 text-[0.84rem]">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Property Name
+                      </span>
+                      <span>: {propertyDetails?.property_name || "N/A"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Project Name
+                      </span>
+                      <span>: {projectDetails?.project_name || "N/A"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Data Category
+                      </span>
+                      <span>: {projectDetails?.category || "NA"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        property ID
+                      </span>
+                      <span>: {propertyDetails?.property_id || "N/A"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Lease ID
+                      </span>
+                      <span>: {propertyDetails?.lease_id || "N/A"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75 my-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Created On
+                      </span>
+                      <span>
+                        :{" "}
+                        {formatDateTime(projectDetails?.last_created) || "N/A"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* ABSTRACTION JOB STATUS */}
+                <div className="mt-4 bg-white rounded-sm shadow-card">
+                  <div className="border-b border-gray-300 py-2.5 px-4">
+                    <h6 className="text-[0.86rem] font-medium">
+                      Lease Abstraction Status
+                    </h6>
+                  </div>
+
+                  <div className="py-2.5 px-4">
+                    <div className="flex align-center gap-4">
+                      <StatusChip label="Running" variant={"pending"} />
+
+                      <Tooltip
+                        title="The Job is pending for DQC"
+                        arrow
+                        placement="right"
+                      >
+                        <Info color="gray" size={16} className="mt-1.25" />
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CONTACT */}
+                <div className="mt-4 bg-white rounded-sm shadow-card">
+                  <div className="border-b border-gray-300 py-2.5 px-4">
+                    <h6 className="text-[0.86rem] font-medium">Contact</h6>
+                  </div>
+
+                  <div className="py-2.5 px-4">
+                    <p className="mt-1 text-[0.84rem]">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Email
+                      </span>
+                      <span>: {"NA"}</span>
+                    </p>
+
+                    <p className="mt-1 text-[0.84rem] mt-1.75">
+                      <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                        Work Mobile
+                      </span>
+                      <span>: {"NA"}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT SECTION */}
+              <div style={{ width: "50%" }}>
+                {/* MAP */}
+                <div className="mt-4 bg-white rounded-sm shadow-card">
+                  <div className="border-b border-gray-300 py-2.5 px-4">
+                    <h6 className="text-[0.86rem] font-medium">Map</h6>
+                  </div>
+
+                  <div style={{ height: "20rem" }}>google map</div>
+                </div>
+              </div>
             </div>
           )}
 

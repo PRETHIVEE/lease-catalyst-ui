@@ -229,7 +229,7 @@ const ProjectsPage = () => {
 
     ProjectsAPI.CreateProject(requestBody)
       .then((response) => {
-        if (response.statusText === "Created") {
+        if (response.status === 201) {
           getProjectList();
           showSnackbar("Project created!");
         }
