@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
-import leaseCatalystLogo from "@/assets/logos/lease-catalyst-logo-full.png";
-import xtractLogo from "@/assets/logos/xtract-logo-full.png";
+import leaseCatalystLogo from "@/assets/logos/lease-translator.png";
+
 import "./AuthLayout.scss";
 
 function useAuth() {
@@ -24,12 +24,12 @@ const AuthLayout = () => {
           className="auth-layout__logo"
         />
         <div className="auth-layout__powered-by">
-          <span>Powered by</span>
+          {/* <span>Powered by</span>
           <img
             src={xtractLogo}
             alt="XTRACT.io"
             className="auth-layout__xtract-logo"
-          />
+          /> */}
         </div>
       </aside>
 

@@ -7,18 +7,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
-import {
-  Bell,
-  HelpCircle,
-  LogOut,
-  PanelLeft,
-  Search,
-  User,
-  UserRound,
-} from "lucide-react";
+import { Bell, HelpCircle, LogOut, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLayoutStore } from "../store/layoutStore";
-import StatusChip from "@/components/common/StatusChip";
+import leaseCatalystLogo2 from "@/assets/logos/lease-catalyst-logo-icon.png";
 
 type IconButtonProps = {
   label: string;
@@ -50,9 +41,8 @@ function HeaderIconButton({
 
 export default function Header() {
   const navigate = useNavigate();
-  const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("user_name") || "";
-  const companyname = localStorage.getItem("company_name") || "Name of Company user belongs'";
+
   const userEmail = localStorage.getItem("user_email") || "";
 
   const handleLogout = () => {
@@ -64,19 +54,17 @@ export default function Header() {
     // <header className="flex h-[var(--header-height,2rem)] shrink-0 items-center justify-between border-b border-[#e0e0e0] bg-white px-[1.25rem]">
     <header className="px-2 py-1.75 flex justify-between bg-white border-b border-[#e0e0e0]">
       <div className="flex items-center gap-[0.25rem]">
-        <HeaderIconButton
-          label={isSidebarPinned ? "Unpin navigation" : "Pin navigation open"}
-          onClick={toggleSidebarPinned}
-          className={cn(
-            isSidebarPinned && "text-main-theme bg-[rgba(31,157,91,0.1)]",
-          )}
-        >
-          <PanelLeft className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
-        </HeaderIconButton>
-
-        <HeaderIconButton label="Help">
-          <Search className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
-        </HeaderIconButton>
+        <div className="flex gap-2 ml-2">
+          <div>
+            <img
+              src={leaseCatalystLogo2}
+              alt="Lease Catalyst"
+              className="sidebar__brand-icon"
+              style={{ height: "1.5rem", width: "1.5rem" }}
+            />
+          </div>
+          <h1 className="font-semibold">Lease Translator</h1>
+        </div>
       </div>
 
       <div className="flex items-center gap-[0rem]">
@@ -123,10 +111,6 @@ export default function Header() {
                   <p className="text-[0.75rem] font-normal text-[#666666] mt-[-0.2rem]">
                     {userEmail}
                   </p>
-                </div>
-                <div className="mt-2">
-                  <DropdownMenuSeparator className="my-1 bg-[#e0e0e0] w-full" />
-                  <p className="text-[0.76rem]">{companyname}</p>
                 </div>
               </div>
             </div>

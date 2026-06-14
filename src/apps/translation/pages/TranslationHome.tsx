@@ -232,12 +232,8 @@ const TranslationHome = () => {
   const [activeTab, setActiveTab] = useState("new-translation");
 
   return (
-    <div className="p-4">
-      <h5 className="text-[0.98rem]  font-semibold text-font-color-primary">
-        Lease Translation
-      </h5>
-
-      <div className="mt-1.5">
+    <div className="p-4 pt-2">
+      <div >
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
           <TabsList>
             <TabsTrigger value="new-translation">

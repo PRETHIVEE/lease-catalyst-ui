@@ -70,7 +70,7 @@ const Login = () => {
             localStorage.setItem("user_role", user_role);
             localStorage.setItem("user_id", user_id);
            
-            navigate("/dashboard");
+            navigate("/lease-translate");
           } else {
             alert(response.data.message || "Error Logging In");
           }
@@ -91,7 +91,7 @@ const Login = () => {
           Sign In
         </h1>
         <p className="mt-0.6 text-[0.87rem] text-muted-foreground">
-          Sign in to your Lease management software.
+          Sign in to your Lease translator.
         </p>
       </div>
 
