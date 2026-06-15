@@ -34,9 +34,9 @@ const UsersPage = () => {
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const userId = localStorage.getItem("user_id") || "";
   const [openCreateUser, setopenCreateUser] = useState(false);
   const { showSnackbar } = useSnackbarStore();
+  const companyId = Number(localStorage.getItem("company_id") || "");
 
   const validationSchema = Yup.object({
     userRole: Yup.object().required("User Role is required"),
@@ -155,7 +155,7 @@ const UsersPage = () => {
   };
 
   const getUsersList = () => {
-    UsersAPI.getUsers()
+    UsersAPI.getCompanyUsers(companyId)
       .then((response) => {
         console.log("Get users response", response);
         if (response.status === 200) {
@@ -173,10 +173,9 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-    if (userId) {
-      getUsersList();
-    }
-  }, [userId]);
+    getUsersList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onCreateUser = (data: any) => {
     setIsSubmitting(true);
@@ -185,7 +184,7 @@ const UsersPage = () => {
       user_email: data.userEmail,
       password: data.defaultPassword,
       role: data.userRole?.value,
-      company_id: Number(localStorage.getItem("company_id") || ""),
+      company_id: companyId,
       company_name: localStorage.getItem("company_name") || "",
     };
 

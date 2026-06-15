@@ -43,7 +43,7 @@ export async function getPresignedUrl(s3_path: string) {
 
   if (!region || !accessKeyId || !secretAccessKey || !bucket) {
     throw new Error(
-      "Missing AWS env vars. Define VITE_AWS_REGION, VITE_AWS_ACCESS_KEY_ID, VITE_AWS_SECRET_ACCESS_KEY, and VITE_AWS_BUCKET."
+      "Missing AWS env vars. Define VITE_AWS_REGION, VITE_AWS_ACCESS_KEY_ID, VITE_AWS_SECRET_ACCESS_KEY, and VITE_AWS_BUCKET.",
     );
   }
 
@@ -68,4 +68,30 @@ export const fileDownloader = (url: string) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+export const fileDownloader2 = async (
+  url: string,
+  filename: string = "downloaded_file",
+) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up memory and DOM
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("File download failed:", error);
+    // Fallback: Open in new tab if fetch fails due to CORS restrictions
+    window.open(url, "_blank");
+  }
 };

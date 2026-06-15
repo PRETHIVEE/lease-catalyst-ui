@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TranslationsAPI from "@/api/translation";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { fileDownloader, getPresignedUrl } from "@/utils/utils";
+import {
+  fileDownloader,
+  fileDownloader2,
+  getPresignedUrl,
+} from "@/utils/utils";
 import { ChevronDownIcon, Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -47,6 +52,7 @@ const TranslationReview = () => {
     if (JobId) {
       getTranslationDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JobId]);
 
   const handleDownlaodAsWord = () => {
@@ -64,7 +70,17 @@ const TranslationReview = () => {
       <div className="flex justify-between align-center">
         <BreadCrumbs items={BreadcrumbsData} />
         <ButtonGroup>
-          <Button variant="primary">Download</Button>
+          <Button
+            variant="primary"
+            onClick={() =>
+              fileDownloader2(
+                TranslatedFileUrl,
+                `translated_${data?.output_lang}_${data?.file_name}`,
+              )
+            }
+          >
+            Download
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="primary" className="pl-2!">
@@ -75,6 +91,31 @@ const TranslationReview = () => {
               align="end"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() =>
+                    fileDownloader2(SourceFileUrl, `source_${data?.file_name}`)
+                  }
+                >
+                  <Download />
+                  Download Source File
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() =>
+                    fileDownloader2(
+                      TranslatedFileUrl,
+                      `translated_${data?.output_lang}_${data?.file_name}`,
+                    )
+                  }
+                >
+                  <Download />
+                  Download Translated Fileww
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
               <DropdownMenuGroup>
                 <DropdownMenuItem onSelect={handleDownlaodAsWord}>
                   <Download />

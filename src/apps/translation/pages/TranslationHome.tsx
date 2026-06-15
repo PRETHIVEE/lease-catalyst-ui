@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TranslationsAPI from "@/api/translation";
 import IconButton from "@/components/common/IconButton";
 import StatusChip from "@/components/common/StatusChip";
@@ -10,7 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDateTime } from "@/utils/utils";
+import {
+  fileDownloader2,
+  formatDateTime,
+  getPresignedUrl,
+} from "@/utils/utils";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -28,6 +34,7 @@ import {
   Languages,
   LanguagesIcon,
   Loader,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -156,9 +163,27 @@ const TranslationHome = () => {
                 Review translation
               </DropdownMenuItem>
 
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                onSelect={() => {
+                  handleDownload(
+                    params.row.translated_file,
+                    params.row.file_name,
+                    params.row.output_lang,
+                  );
+                }}
+              >
                 <Download aria-hidden className="mr-1.5" />
                 Download
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={() => {
+                  deleteTranslation(params.row.file_id);
+                }}
+              >
+                <Trash2 aria-hidden className="mr-1.5" />
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -167,9 +192,24 @@ const TranslationHome = () => {
     },
   ];
 
+  const deleteTranslation = (file_id: number) => {
+    console.log("Delete translation with file_id:", file_id);
+    // Call API to delete translation
+    // On success, refresh the translation history
+  };
+
+  const handleDownload = (
+    filePath: string,
+    fileName: string,
+    targetLanguage: string,
+  ) => {
+    getPresignedUrl(filePath).then((url) => {
+      fileDownloader2(url, `translated_${targetLanguage}_${fileName}`);
+    });
+  };
+
   // Fetch translation history
   const getTranslationHistory = () => {
-    setLoading(true);
     TranslationsAPI.getTranslationHistory(user_id)
       .then((res) => {
         const data =
