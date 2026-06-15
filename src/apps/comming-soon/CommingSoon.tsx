@@ -1,14 +1,7 @@
-import { ClipboardClock } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 const CommingSoon = () => {
-  return (
-    <div className="p-10">
-      <p className="flex gap-2 text-[1.2rem] text-gray-500">
-        <ClipboardClock  size={24}/>
-        Comming Soon
-      </p>
-    </div>
-  );
+  <Navigate to="/lease-translate" replace />;
 };
 
 export default CommingSoon;
