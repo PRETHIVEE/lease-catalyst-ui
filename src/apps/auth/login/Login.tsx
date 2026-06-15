@@ -62,13 +62,15 @@ const Login = () => {
       AuthAPI.LoginAPI(formData)
         .then((response) => {
           if (response.data.access_token) {
-            const { user_name, access_token, user_role, user_id, user_email } =
+            const { user_name, access_token, user_role, user_id, user_email, company } =
               response.data;
             localStorage.setItem("access_token", access_token);
             localStorage.setItem("user_name", user_name);
             localStorage.setItem("user_email", user_email);
             localStorage.setItem("user_role", user_role);
             localStorage.setItem("user_id", user_id);
+            localStorage.setItem("company_name", company?.company_name);
+            localStorage.setItem("company_id", company?.company_id);
            
             navigate("/dashboard");
           } else {

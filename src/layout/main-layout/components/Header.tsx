@@ -133,7 +133,7 @@ export default function Header() {
                 </div>
                 <div className="mt-2">
                   <DropdownMenuSeparator className="my-1 bg-[#e0e0e0] w-full" />
-                  <p className="text-[0.76rem]">{companyname}</p>
+                  <p className="text-[0.76rem] mt-1.75">{companyname}</p>
                 </div>
               </div>
             </div>

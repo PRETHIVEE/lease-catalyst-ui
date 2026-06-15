@@ -181,12 +181,12 @@ const UsersPage = () => {
   const onCreateUser = (data: any) => {
     setIsSubmitting(true);
     const requestBody = {
-      name: data.userName,
-      user_name: data.userEmail, // email is the username for now
+      user_name: data.userName,
+      user_email: data.userEmail,
       password: data.defaultPassword,
       role: data.userRole?.value,
-      company_id: 1,
-      company_name: "Mobius",
+      company_id: Number(localStorage.getItem("company_id") || ""),
+      company_name: localStorage.getItem("company_name") || "",
     };
 
     UsersAPI.CreateUser(requestBody)
