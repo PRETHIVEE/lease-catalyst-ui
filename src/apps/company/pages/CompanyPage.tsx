@@ -38,7 +38,6 @@ const CompanyPage = () => {
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const userId = localStorage.getItem("user_id") || "";
   const [openCreateCompany, setopenCreateCompany] = useState(false);
   const [openCreateUser, setOpenCreateUser] = useState(false);
 
@@ -179,60 +178,28 @@ const CompanyPage = () => {
     userFormik.resetForm();
   };
 
-  const sampleCompanyData = [
-    {
-      id: 1,
-      name: "LeaseCat",
-    },
-    {
-      id: 2,
-      name: "Some company",
-    },
-    {
-      id: 3,
-      name: "Logicor",
-    },
-    {
-      id: 4,
-      name: "Company",
-    },
-    {
-      id: 5,
-      name: "JLL Property Management",
-    },
-    {
-      id: 6,
-      name: "Vangaurd",
-    },
-    {
-      id: 7,
-      name: "Black Rock",
-    },
-  ];
+
 
   const getCompanyList = () => {
     UsersAPI.getCompanies()
       .then((response) => {
-        if (response.statusText === "OK") {
-          setRows(response.data);
+        if (response.status === 200) {
+          setRows(response?.data);
         } else {
           setRows([]);
         }
       })
-      .catch(() => {
-        setRows(sampleCompanyData);
-      })
+      .catch(() => {})
       .finally(() => {
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    if (userId) {
-      getCompanyList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+    getCompanyList();
+
+    // eslint-F-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCreateCompany = (data: any) => {
     setIsSubmitting(true);

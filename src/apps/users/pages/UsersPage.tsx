@@ -176,7 +176,6 @@ const UsersPage = () => {
     if (userId) {
       getUsersList();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const onCreateUser = (data: any) => {

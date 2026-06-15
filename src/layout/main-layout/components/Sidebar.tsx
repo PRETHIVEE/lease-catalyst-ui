@@ -43,7 +43,7 @@ export default function Sidebar() {
   const userRole = localStorage.getItem("user_role") || "";
 
   const NavMenu =
-    userRole === "super-admin" ? superAdminMenu : sidebarNavGroups;
+    userRole === "super_admin" ? superAdminMenu : sidebarNavGroups;
 
   return (
     <aside

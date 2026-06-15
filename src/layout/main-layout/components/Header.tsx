@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   Bell,
   HelpCircle,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
+import UsersAPI from "@/api/users";
 
 type IconButtonProps = {
   label: string;
@@ -50,13 +51,21 @@ export default function Header() {
   const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("user_name") || "";
-  const companyname = localStorage.getItem("company_name") || "Name of Company user belongs'";
+  const companyname =
+    localStorage.getItem("company_name") || "Name of Company user belongs'";
   const userEmail = localStorage.getItem("user_email") || "";
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
+
+  useEffect(() => {
+    UsersAPI.getCurrentUsers().then((response) => {
+      const userData = response.data;
+      console.log("Current User Data:", userData);
+    });
+  }, []);
 
   return (
     // <header className="flex h-[var(--header-height,2rem)] shrink-0 items-center justify-between border-b border-[#e0e0e0] bg-white px-[1.25rem]">
