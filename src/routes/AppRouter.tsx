@@ -16,6 +16,7 @@ export default function AppRouter() {
         {/* Auth layout - no sidebar */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<Login />} />
         </Route>
         {/* MAIN Layout */}
         <Route
