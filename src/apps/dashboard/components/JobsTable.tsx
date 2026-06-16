@@ -9,7 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDateTime } from "@/utils/utils";
+import {
+  fileDownloader2,
+  formatDateTime,
+  getPresignedUrl,
+} from "@/utils/utils";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
@@ -75,7 +79,7 @@ export default function JobsTable() {
     {
       field: "output_status",
       headerName: "Status",
-      width: 130,
+      width: 140,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;
         const variant =
@@ -97,16 +101,13 @@ export default function JobsTable() {
     {
       field: "created_on",
       headerName: "Created On",
-      width: 160,
+      width: 174,
       valueFormatter: (value) => formatDateTime(value),
     },
 
     {
       field: "action",
       headerName: "Actions",
-
-      // minWidth: 50,
-      // flex: 1,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;
         return (
@@ -127,7 +128,16 @@ export default function JobsTable() {
               align="end"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                onSelect={() => {
+                  const output_path = params?.row?.output_path
+                    ? JSON.parse(params?.row?.output_path)
+                    : null;
+                  getPresignedUrl(output_path?.csv_s3_key).then((url) => {
+                    fileDownloader2(url);
+                  });
+                }}
+              >
                 <Download aria-hidden className="mr-1.5" />
                 Download
               </DropdownMenuItem>

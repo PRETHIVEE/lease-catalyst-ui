@@ -29,7 +29,7 @@ const RequestDocuments = (props: RequestDocumentsProps) => {
         <DrawerHeader>
           <DrawerTitle>
             <CustomDialogTitle
-              title="Request Documents from Client"
+              title="Request Documents from Customer"
               handleClose={onClose}
             />
           </DrawerTitle>

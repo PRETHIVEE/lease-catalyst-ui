@@ -513,6 +513,7 @@ const PropertyDetails = () => {
         uploadDocuments={uploadDocuments}
         setUploadDocuments={setUploadDocuments}
         handleUpload={handleUpload}
+        componentLocation="PROPERTY DETAILS"
       />
     </div>
   );

@@ -72,7 +72,7 @@ export const fileDownloader = (url: string) => {
 
 export const fileDownloader2 = async (
   url: string,
-  filename: string = "downloaded_file",
+  filename: string = "DEFAULT",
 ) => {
   try {
     const response = await fetch(url);
@@ -81,7 +81,9 @@ export const fileDownloader2 = async (
 
     const link = document.createElement("a");
     link.href = blobUrl;
-    link.download = filename;
+    if (filename !== "DEFAULT") {
+      link.download = filename;
+    }
 
     document.body.appendChild(link);
     link.click();

@@ -23,6 +23,8 @@ interface UploadFilesProps {
   propertyName: string;
   uploadDocuments: File[];
   setUploadDocuments: Dispatch<SetStateAction<File[]>>;
+  componentLocation: "DQC" | "PROPERTY DETAILS";
+  isTriggeringJob?: boolean;
 }
 
 const UploadFiles = (props: UploadFilesProps) => {
@@ -34,6 +36,8 @@ const UploadFiles = (props: UploadFilesProps) => {
     uploadDocuments,
     setUploadDocuments,
     handleUpload,
+    componentLocation,
+    isTriggeringJob = false,
   } = props;
   return (
     <Drawer open={open} onOpenChange={onClose}>
@@ -85,12 +89,20 @@ const UploadFiles = (props: UploadFilesProps) => {
               {isSubmitting ? (
                 <>
                   <Loader />
-                  Uploading
+                  {componentLocation === "DQC" ? (
+                    <>
+                      {isTriggeringJob
+                        ? "Running DQC"
+                        : "Uploading"}
+                    </>
+                  ) : (
+                    "Uploading"
+                  )}
                 </>
               ) : (
                 <>
                   <CloudUpload />
-                  Upload
+                  {componentLocation === "DQC" ? "Upload & Run DQC" : "Upload"}
                 </>
               )}
             </Button>

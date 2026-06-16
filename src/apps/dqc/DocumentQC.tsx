@@ -2,12 +2,13 @@
 import PropertyInfo from "./components/PropertyInfo";
 import EvaluationTable from "./components/EvaluationTable";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DashboardAPI from "@/api/dashboard";
 import { useEffect, useState } from "react";
 import UploadFiles from "../projects/components/UploadFiles/UploadFiles";
 import RequestDocuments from "./components/RequestDocuments/RequestDocuments";
 import ProjectsAPI from "@/api/projects";
+import { useSnackbarStore } from "@/store/snackbar-store";
 const BreadcrumbsData = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Document QC", url: "/dashboard/document-qc" },
@@ -32,6 +33,8 @@ function transformData(inputData: Record<string, DqcEntry>) {
 }
 
 const DocumentQC = () => {
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbarStore();
   const [searchParams] = useSearchParams();
   const JobId = searchParams.get("jobId") || "";
   const [loading, setLoading] = useState(true);
@@ -39,13 +42,10 @@ const DocumentQC = () => {
   const [propertyInfo, setPropertyInfo] = useState<any>(null);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isTriggeringJob, setIsTriggeringJob] = useState(false);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isOpenRequestDocs, setIsRequestingDocs] = useState(false);
   const [legalDocsList, setLegalDocsList] = useState<string[]>([]);
-
-  console.log("dqcData:", dqcData);
-  console.log("dqcData propertyInfo:", propertyInfo);
-  console.log("legalDocsList", legalDocsList);
 
   useEffect(() => {
     if (JobId) {
@@ -84,15 +84,48 @@ const DocumentQC = () => {
     setUploadDocuments([]);
   };
 
-  const handleUpload = () => {
-    setIsUploading(true);
-    // Simulate upload process
-    setTimeout(() => {
-      setIsUploading(false);
-      handleUploadClose();
-    }, 2000);
+  const handleRunJob = () => {
+    setIsTriggeringJob(true);
+    const payload = {
+      property_id: Number(propertyInfo?.property_id),
+    };
+    ProjectsAPI.triggerDQCWorkflow(payload)
+      .then((response) => {
+        if (response?.status === 200) {
+          showSnackbar(response?.data?.message);
+          navigate("/dashboard");
+        }
+      })
+      .catch(() => {
+        showSnackbar("Error running the job", "error");
+      })
+      .finally(() => {
+        setIsTriggeringJob(false);
+        handleUploadClose();
+      });
   };
-  // Implement the logic to upload documents here
+
+  const handleUpload = () => {
+    if (uploadDocuments.length === 0) return;
+
+    const formData = new FormData();
+    uploadDocuments.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    setIsUploading(true);
+    ProjectsAPI.uploadPropertyFiles(Number(propertyInfo?.property_id), formData)
+      .then(() => {
+        showSnackbar("Files Uploaded! ");
+        handleRunJob();
+      })
+      .catch(() => {
+        showSnackbar("error uploading files.", "error");
+      })
+      .finally(() => {
+        setIsUploading(false);
+      });
+  };
 
   const handleCompleteDQC = () => {
     const askConfirmation = window.confirm(
@@ -106,6 +139,7 @@ const DocumentQC = () => {
       })
         .then((r) => {
           console.log("DQC marked as complete:", r);
+          navigate("/dashboard");
         })
         .catch((e) => {
           console.error("Error marking DQC as complete:", e);
@@ -133,11 +167,13 @@ const DocumentQC = () => {
           onClose={() => {
             handleUploadClose();
           }}
-          isSubmitting={isUploading}
+          isSubmitting={isUploading || isTriggeringJob}
           propertyName={propertyInfo?.property_name || ""}
           uploadDocuments={uploadDocuments}
           setUploadDocuments={setUploadDocuments}
           handleUpload={handleUpload}
+          componentLocation="DQC"
+          isTriggeringJob={isTriggeringJob}
         />
 
         <RequestDocuments
