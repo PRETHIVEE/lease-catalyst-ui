@@ -50,7 +50,7 @@ const UploadFiles = (props: UploadFilesProps) => {
 
         <DrawerContentArea className="p-4 form-container">
           <div>
-            <InputLabel htmlFor="property-name" label="Property Name" />
+            <InputLabel htmlFor="property-name" label="Property / Lease Name" />
             <TextField
               id="property-name"
               size="small"
@@ -102,7 +102,7 @@ const UploadFiles = (props: UploadFilesProps) => {
               ) : (
                 <>
                   <CloudUpload />
-                  {componentLocation === "DQC" ? "Upload & Run DQC" : "Upload"}
+                  {componentLocation === "DQC" ? "Upload & Re-run DQC" : "Upload"}
                 </>
               )}
             </Button>

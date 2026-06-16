@@ -223,7 +223,7 @@ const UploadArea = ({
 
       <div className="mt-2 flex items-center justify-between text-[0.74rem] text-[#374151]">
         <span>Supported formats: {supportedFormatsLabel}</span>
-        <span>Maximum size: 25MB</span>
+        <span>Maximum size: 50MB</span>
       </div>
 
       {uploadDocuments.length > 0 && (
