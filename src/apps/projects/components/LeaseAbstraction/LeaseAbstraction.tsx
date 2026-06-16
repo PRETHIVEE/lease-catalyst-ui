@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
-import { Download, Edit } from "lucide-react";
+import { ChevronDownIcon, Edit } from "lucide-react";
 import { sampleleaseabstractiondata } from "./sampledata";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 const LeaseAbstraction = ({ propertyName }: { propertyName: any }) => {
   return (
@@ -9,9 +18,31 @@ const LeaseAbstraction = ({ propertyName }: { propertyName: any }) => {
         <Button variant="outline" size="sm" onClick={() => {}}>
           <Edit /> Edit Lease
         </Button>
-        <Button variant="primary" size="sm">
+
+        <ButtonGroup>
+          <Button variant="primary">Export</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="primary" className="pl-2!">
+                <ChevronDownIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Export as CSV</DropdownMenuItem>
+
+                <DropdownMenuItem>Download as PDF</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </ButtonGroup>
+
+        {/* <Button variant="primary" size="sm">
           <Download /> Download
-        </Button>
+        </Button> */}
       </div>
 
       <div className="mx-auto mt-4 max-w-[1000px] space-y-4">

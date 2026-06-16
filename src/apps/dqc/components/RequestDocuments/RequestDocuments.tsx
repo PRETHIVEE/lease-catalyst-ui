@@ -12,7 +12,7 @@ import InputLabel from "@/components/common/InputLabel";
 import DialogFooterWrapper from "@/components/common/DialogFooterWrapper";
 import { Button } from "@/components/ui/button";
 import { Loader, SendHorizontal, X } from "lucide-react";
-import Autocomplete from "@mui/material/Autocomplete";
+// import Autocomplete from "@mui/material/Autocomplete";
 
 interface RequestDocumentsProps {
   open: boolean;
@@ -47,7 +47,7 @@ const RequestDocuments = (props: RequestDocumentsProps) => {
             />
           </div>
 
-          <div className="mt-2.5">
+          {/* <div className="mt-2.5">
             <InputLabel htmlFor="select-client" label="Select Client" />
             <Autocomplete
               id="select-client"
@@ -61,7 +61,7 @@ const RequestDocuments = (props: RequestDocumentsProps) => {
               // }}
               renderInput={(params) => <TextField {...params} size="small" />}
             />
-          </div>
+          </div> */}
 
           <div className="mt-2.5">
             <InputLabel htmlFor="description" label="Description" />

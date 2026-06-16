@@ -34,8 +34,9 @@ const columns = [
   { key: "evaluationPoint", width: "24%" },
   { key: "dataCaptured", width: "10%" },
   { key: "confidence", width: "12%" },
-  { key: "evidence", width: "35%" },
-  { key: "notes", width: "18%" },
+  { key: "evidence", width: "23%" },
+  { key: "notes", width: "15%" },
+  { key: "customerNotes", width: "15%" },
 ] as const;
 
 function TableColGroup() {
@@ -108,7 +109,8 @@ const EvaluationTable = ({ data, isLoading }: EvaluationTableProps) => {
               Confidence Score
             </th>
             <th className={headerCellClass}>Supporting Evidence</th>
-            <th className={headerCellClass}>Notes</th>
+            <th className={headerCellClass}>Reviewer Notes</th>
+            <th className={headerCellClass}>Customer Notes</th>
           </tr>
         </thead>
       </table>
@@ -142,6 +144,7 @@ const EvaluationTable = ({ data, isLoading }: EvaluationTableProps) => {
                 <td className={bodyCellClass}>
                   {row.supportingEvidence || "-"}
                 </td>
+                <td className={bodyCellClass}>{formatNotes(row.notes)}</td>
                 <td className={bodyCellClass}>{formatNotes(row.notes)}</td>
               </tr>
             ))}

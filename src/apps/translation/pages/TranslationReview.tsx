@@ -111,7 +111,7 @@ const TranslationReview = () => {
                   }
                 >
                   <Download />
-                  Download Translated Fileww
+                  Download Translated File
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
