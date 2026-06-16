@@ -23,7 +23,6 @@ import {
   DataGrid,
   type GridColDef,
   type GridRenderCellParams,
-  type GridRowSelectionModel,
 } from "@mui/x-data-grid";
 import {
   DropdownMenu,
@@ -49,12 +48,6 @@ const PropertyDetails = () => {
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("property");
   const [documents, setDocumnets] = useState<any[]>([]);
-  const [rowSelectionModel, setRowSelectionModel] =
-    useState<GridRowSelectionModel>({
-      type: "include",
-      ids: new Set([]), // Pass initial selected row IDs inside this Set if needed
-    });
-
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isDocumentLoading, setIsDocumentLoading] = useState(true);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
@@ -62,7 +55,6 @@ const PropertyDetails = () => {
   const [isJobSubmitting, setIsJobSubmitting] = useState(false);
 
   const BreadcrumbsData = [
-    { label: "Home", url: "/dashboard" },
     { label: "Projects", url: "/projects" },
     {
       label: `Projects (${projectDetails?.project_name || "..."})`,
@@ -235,24 +227,14 @@ const PropertyDetails = () => {
   };
 
   const handleRunJob = () => {
-    const selectedFileIds = Array.from(rowSelectionModel.ids);
-    if (selectedFileIds?.length === 0) {
-      showSnackbar("Select files to run a Job", "error");
-      return;
-    }
     setIsJobSubmitting(true);
     const payload = {
-      selected_file_ids: selectedFileIds,
       property_id: Number(propertyId),
     };
     ProjectsAPI.triggerJob(payload)
       .then((response) => {
         if (response?.status === 200) {
           showSnackbar(response?.data?.message);
-          setRowSelectionModel({
-            type: "include",
-            ids: new Set([]),
-          });
           navigate("/dashboard");
         }
       })
@@ -468,10 +450,6 @@ const PropertyDetails = () => {
                   rows={documents}
                   columns={DocumentColumns}
                   loading={isDocumentLoading}
-                  rowSelectionModel={rowSelectionModel}
-                  onRowSelectionModelChange={(newSelectionModel) => {
-                    setRowSelectionModel(newSelectionModel);
-                  }}
                   getRowId={(i) => i?.file_id}
                   initialState={{
                     pagination: {

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import BreadCrumbs from "@/components/common/BreadCrumbs";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import IconButton from "@/components/common/IconButton";
 import { Button } from "@/components/ui/button";
@@ -26,11 +25,6 @@ import UsersAPI from "@/api/users";
 import CreateCompany from "../components/CreateCompany/CreateCompany";
 import CreateUser from "@/apps/users/components/CreateUser/CreateUser";
 import { useNavigate } from "react-router-dom";
-
-const BreadcrumbsData = [
-  { label: "Home", url: "/company" },
-  { label: "Company", url: "/company" },
-];
 
 const CompanyPage = () => {
   const navigate = useNavigate();
@@ -178,8 +172,6 @@ const CompanyPage = () => {
     userFormik.resetForm();
   };
 
-
-
   const getCompanyList = () => {
     UsersAPI.getCompanies()
       .then((response) => {
@@ -226,8 +218,6 @@ const CompanyPage = () => {
 
   return (
     <div className="px-4 py-2">
-      <BreadCrumbs items={BreadcrumbsData} />
-
       <div className="flex items-center justify-between">
         <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
           Company

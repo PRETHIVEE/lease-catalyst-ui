@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DataCategoryAPI from "@/api/data-category";
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import AddDrawer, { type AddDrawerPayload } from "../components/AddDrawer";
@@ -12,7 +13,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSnackbarStore } from "@/store/snackbar-store";
 
 const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
   { label: "Data Category", url: "/data-category" },
   { label: "Modify Data Category", url: "/" },
 ];

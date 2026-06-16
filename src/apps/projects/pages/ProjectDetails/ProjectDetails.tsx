@@ -58,7 +58,6 @@ const ProjectDetails = () => {
   const userId = localStorage.getItem("user_id") || "";
 
   const BreadcrumbsData = [
-    { label: "Home", url: "/dashboard" },
     { label: "Projects", url: "/projects" },
     {
       label: `Projects (${projectDetails?.project_name || "..."})`,
@@ -163,7 +162,7 @@ const ProjectDetails = () => {
     {
       field: "property_name",
       headerName: "Property / Lease Name",
-      width: 220,
+      width: 280,
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link

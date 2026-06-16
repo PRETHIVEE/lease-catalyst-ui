@@ -1,10 +1,4 @@
-import BreadCrumbs from "@/components/common/BreadCrumbs";
 import IntegrationCard from "../components/IntegrationCard";
-
-const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
-  { label: "Integrations", url: "/" },
-];
 
 const integrations = [
   {
@@ -86,7 +80,6 @@ const integrationDestination = [
 const IntegrationsPage = () => {
   return (
     <div className="px-4 py-2">
-      <BreadCrumbs items={BreadcrumbsData} />
       <h5 className="mt-4 text-[0.98rem] font-semibold text-font-color-primary">
         Integrations
       </h5>

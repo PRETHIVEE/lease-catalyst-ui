@@ -18,7 +18,6 @@ import { Checkbox } from "@mui/material";
 import { Button } from "@/components/ui/button";
 
 const BreadcrumbsData = [
-  { label: "Home", url: "/company" },
   { label: "Company", url: "/company" },
   {
     label: `Company details (${" "})`,

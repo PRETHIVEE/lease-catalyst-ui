@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import BreadCrumbs from "@/components/common/BreadCrumbs";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import IconButton from "@/components/common/IconButton";
 import { Button } from "@/components/ui/button";
@@ -24,11 +23,6 @@ import * as Yup from "yup";
 import { useSnackbarStore } from "@/store/snackbar-store";
 import UsersAPI from "@/api/users";
 import CreateUser from "../components/CreateUser/CreateUser";
-
-const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
-  { label: "Users", url: "/users" },
-];
 
 const UsersPage = () => {
   const [Rows, setRows] = useState<any[]>([]);
@@ -90,8 +84,6 @@ const UsersPage = () => {
       headerName: "Actions",
       minWidth: 100,
       renderCell: (params: GridRenderCellParams) => {
-        console.log("dsgsdfsdfsdf", params);
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -213,8 +205,6 @@ const UsersPage = () => {
 
   return (
     <div className="px-4 py-2">
-      <BreadCrumbs items={BreadcrumbsData} />
-
       <div className="flex items-center justify-between">
         <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
           Users

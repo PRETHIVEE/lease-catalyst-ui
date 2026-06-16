@@ -28,7 +28,6 @@ const TranslationReview = () => {
   const [TranslatedFileUrl, setTranslatedFileUrl] = useState<string>("");
 
   const BreadcrumbsData = [
-    { label: "Home", url: "/dashboard" },
     { label: "Lease Translation", url: "/lease-translate" },
     { label: data?.file_name || "...", url: "/lease-translate" },
   ];

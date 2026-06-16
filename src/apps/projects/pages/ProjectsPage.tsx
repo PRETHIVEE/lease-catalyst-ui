@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ProjectsAPI from "@/api/projects";
-import BreadCrumbs from "@/components/common/BreadCrumbs";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import IconButton from "@/components/common/IconButton";
 import { Button } from "@/components/ui/button";
@@ -25,11 +24,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DashboardAPI from "@/api/dashboard";
 import { useSnackbarStore } from "@/store/snackbar-store";
-
-const BreadcrumbsData = [
-  { label: "Home", url: "/dashboard" },
-  { label: "Projects", url: "/projects" },
-];
 
 interface DataCategory {
   attribute: string;
@@ -266,8 +260,6 @@ const ProjectsPage = () => {
 
   return (
     <div className="px-4 py-2">
-      <BreadCrumbs items={BreadcrumbsData} />
-
       <div className="flex items-center justify-between">
         <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
           Projects

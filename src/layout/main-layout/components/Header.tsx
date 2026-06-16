@@ -51,8 +51,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { toggleSidebarPinned, isSidebarPinned } = useLayoutStore();
   const userName = localStorage.getItem("user_name") || "";
-  const companyname =
-    localStorage.getItem("company_name") || "Name of Company user belongs'";
+  const companyname = localStorage.getItem("company_name") || null;
   const userEmail = localStorage.getItem("user_email") || "";
 
   const handleLogout = () => {
@@ -120,34 +119,40 @@ export default function Header() {
           >
             <div className="flex gap-3 px-2 py-1.5">
               <div>
-                <span className="capitalize flex size-[2.45rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.75rem] font-semibold text-white">
+                <span className="capitalize flex size-[2.25rem] items-center justify-center overflow-hidden rounded-full bg-main-theme text-[0.85rem] font-semibold text-white">
                   {userName[0]}
                 </span>
               </div>
               <div className="w-full">
                 <div>
                   <p className="text-[0.85rem] font-normal">{userName}</p>
-                  <p className="text-[0.75rem] font-normal text-[#666666] mt-[-0.2rem]">
+                  <p className="w-[9.5rem] truncate text-[0.75rem] font-normal text-[#666666] mt-[-0.1rem]">
                     {userEmail}
                   </p>
                 </div>
-                <div className="mt-2">
-                  <DropdownMenuSeparator className="my-1 bg-[#e0e0e0] w-full" />
-                  <p className="text-[0.76rem] mt-1.75">{companyname}</p>
-                </div>
+
+                {companyname && (
+                  <div className="mt-2">
+                    <DropdownMenuSeparator className="my-1 bg-[#e0e0e0] w-full" />
+                    <p className="text-[0.76rem] mt-1.75">{companyname}</p>
+                  </div>
+                )}
               </div>
             </div>
-            <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
 
-            <DropdownMenuItem onSelect={() => {}}>
-              <User aria-hidden />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
-            <DropdownMenuItem variant="destructive" onSelect={handleLogout}>
-              <LogOut aria-hidden />
-              Log out
-            </DropdownMenuItem>
+            <div >
+              <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
+
+              <DropdownMenuItem onSelect={() => {}}>
+                <User aria-hidden />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
+              <DropdownMenuItem variant="destructive" onSelect={handleLogout}>
+                <LogOut aria-hidden />
+                Log out
+              </DropdownMenuItem>
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
