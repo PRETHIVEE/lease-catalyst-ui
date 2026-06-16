@@ -16,7 +16,7 @@ export type EvaluationRow = {
 
 type EvaluationTableProps = {
   data: EvaluationRow[];
-  isLoading: Boolean;
+  isLoading: boolean;
 };
 
 const headerCellClass =
@@ -90,6 +90,8 @@ const EvaluationTable = ({ data, isLoading }: EvaluationTableProps) => {
       </div>
     );
   }
+
+  console.log("EvaluationTable data:", data);
 
   return (
     <div className="mt-3 w-full overflow-hidden rounded-sm bg-white shadow-card">

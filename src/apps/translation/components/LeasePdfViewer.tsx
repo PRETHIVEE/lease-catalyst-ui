@@ -13,7 +13,7 @@ export default function LeasePdfViewer({
 }: {
   url: string;
   url2: string;
-}) {
+}) {  
   const [numPages1, setNumPages1] = useState<number | null>(null);
   const [numPages2, setNumPages2] = useState<number | null>(null);
   const [isLoading1, setIsLoading1] = useState(true);
@@ -495,7 +495,7 @@ export default function LeasePdfViewer({
           }}
         >
           <span>Scroll Sync</span>
-          <Switch checked={isSyncScroll} onCheckedChange={setIsSyncScroll} />
+          <Switch checked={isSyncScroll} onCheckedChange={setIsSyncScroll} color="primary" />
         </div>
       </div>
     </div>

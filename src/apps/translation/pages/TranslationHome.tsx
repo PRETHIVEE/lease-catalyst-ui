@@ -67,11 +67,13 @@ const TranslationHome = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbarStore();
   const user_id = localStorage.getItem("user_id") || "";
-  const user_email = localStorage.getItem("user_email") || "";
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isTranslating, setIsTranslating] = useState(false);
+  const currentActiveTab =
+    sessionStorage.getItem("Translate-activeTab") || "new-translation";
+  const [activeTab, setActiveTab] = useState(currentActiveTab);
 
   const [sourceLanguage, setSourceLanguage] =
     useState<LanguageOption>(autoDetectLang);
@@ -87,7 +89,7 @@ const TranslationHome = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link
-            className="hover:underline"
+            className="column-cell-link"
             to={`/lease-translate/review?id=${params.row.file_id}`}
           >
             {params?.row?.file_name}
@@ -194,8 +196,17 @@ const TranslationHome = () => {
 
   const deleteTranslation = (file_id: number) => {
     console.log("Delete translation with file_id:", file_id);
-    // Call API to delete translation
-    // On success, refresh the translation history
+    TranslationsAPI.deleteTranslation(file_id.toString())
+      .then(() => {
+        showSnackbar("Translation deleted", "success");
+        getTranslationHistory();
+      })
+      .catch(() => {
+        showSnackbar(
+          "Failed to delete translation. Please try again.",
+          "error",
+        );
+      });
   };
 
   const handleDownload = (
@@ -240,7 +251,6 @@ const TranslationHome = () => {
     const formData = new FormData();
     formData.append("file", uploadDocuments[0]);
     formData.append("user_id", user_id);
-    formData.append("user_name", user_email);
     formData.append("input_lang", sourceLanguage.language);
     formData.append("input_lang_code", sourceLanguage.language_code);
     formData.append("output_lang", targetLanguage.language);
@@ -253,6 +263,7 @@ const TranslationHome = () => {
           setUploadDocuments([]);
           showSnackbar("Translation started!");
           getTranslationHistory();
+          setActiveTab("history");
         }
       })
       .catch((err) => {
@@ -269,8 +280,6 @@ const TranslationHome = () => {
       });
   };
 
-  const [activeTab, setActiveTab] = useState("new-translation");
-
   return (
     <div className="p-4">
       <h5 className="text-[0.98rem]  font-semibold text-font-color-primary">
@@ -278,7 +287,14 @@ const TranslationHome = () => {
       </h5>
 
       <div className="mt-1.5">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
+        <Tabs
+          value={activeTab}
+          onValueChange={(tab) => {
+            setActiveTab(tab);
+            sessionStorage.setItem("Translate-activeTab", tab);
+          }}
+          className="gap-0"
+        >
           <TabsList>
             <TabsTrigger value="new-translation">
               <LanguagesIcon aria-hidden />
@@ -369,7 +385,7 @@ const TranslationHome = () => {
 
       {activeTab === "history" && (
         <Box
-          sx={{ height: "80vh", width: "100%" }}
+          sx={{ height: "77vh", width: "100%" }}
           className="app-datagrid-container mt-2"
         >
           <DataGrid

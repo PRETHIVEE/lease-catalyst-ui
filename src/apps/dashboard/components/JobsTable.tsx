@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DashboardAPI from "@/api/dashboard";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import IconButton from "@/components/common/IconButton";
@@ -26,7 +27,6 @@ export default function JobsTable() {
   const [Rows, setRows] = useState<any[]>([]);
 
   const getWorkFlow = () => {
-    setLoading(true);
     DashboardAPI.getWorkflow(userEmail)
       .then((response) => {
         if (response.status === 200) {
@@ -46,6 +46,7 @@ export default function JobsTable() {
 
   useEffect(() => {
     getWorkFlow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const columns: GridColDef[] = [
@@ -57,7 +58,7 @@ export default function JobsTable() {
     },
     {
       field: "property_name",
-      headerName: "Property Name",
+      headerName: "Property / Lease Name",
       width: 200,
     },
     {
@@ -76,8 +77,8 @@ export default function JobsTable() {
           output_status === "Completed"
             ? "success"
             : output_status === "pending" || output_status === "In Progress"
-            ? "pending"
-            : "failed";
+              ? "pending"
+              : "failed";
         return <StatusChip label={output_status} variant={variant} />;
       },
     },

@@ -34,10 +34,18 @@ const ProjectsAPI = {
     return AxiosInstance.delete(`/projects/properties/file?file_id=${fileId}`);
   },
 
+  deleteProject: (projectId: number) => {
+    return AxiosInstance.delete(`/projects/project_delete/${projectId}`);
+  },
+
+  deleteProperty: (projectId: number) => {
+    return AxiosInstance.delete(`/projects/property_delete/${projectId}`);
+  },
+
   uploadPropertyFiles: (propertyId: number, formData: FormData) => {
     return AxiosInstance.post(
       `/projects/properties/upload?id=${propertyId}`,
-      formData
+      formData,
     );
   },
 

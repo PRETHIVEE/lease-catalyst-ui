@@ -162,12 +162,12 @@ const ProjectDetails = () => {
   const Columns: GridColDef[] = [
     {
       field: "property_name",
-      headerName: "Property Name",
+      headerName: "Property / Lease Name",
       width: 220,
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link
-            className="hover:underline"
+            className="column-cell-link"
             to={`/projects/project-details/property-details?projectId=${projectId}&propertyId=${params?.row?.id}`}
           >
             {params?.row?.property_name}

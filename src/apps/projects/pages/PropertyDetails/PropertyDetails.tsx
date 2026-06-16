@@ -85,7 +85,6 @@ const PropertyDetails = () => {
 
     ProjectsAPI.getPropertyById(Number(propertyId))
       .then((response) => {
-        console.log;
         setPropertyDetails(response?.data);
       })
       .catch(() => {
@@ -163,6 +162,12 @@ const PropertyDetails = () => {
       },
     },
 
+    {
+      field: "uploaded_by",
+      headerName: "Uploaded By",
+      width: 160,
+      valueFormatter: (value) => (value ? value : "-"),
+    },
     {
       field: "uploaded_at",
       headerName: "Uploaded At",
@@ -264,10 +269,6 @@ const PropertyDetails = () => {
       <BreadCrumbs items={BreadcrumbsData} />
 
       <div>
-        {/* <h5 className="text-[0.98rem] px-0.5 font-semibold text-font-color-primary mt-1.5">
-          Project Details
-        </h5> */}
-
         <div className="mt-1.5">
           <Tabs
             value={activeTab}
@@ -279,13 +280,13 @@ const PropertyDetails = () => {
                 <Building2 aria-hidden />
                 Property
               </TabsTrigger>
-              <TabsTrigger value="lease-abstraction">
-                <Building aria-hidden />
-                Lease Abstraction
-              </TabsTrigger>
               <TabsTrigger value="documents">
                 <FolderOpen aria-hidden />
                 Documents
+              </TabsTrigger>
+              <TabsTrigger value="lease-abstraction">
+                <Building aria-hidden />
+                Lease Abstraction
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -467,7 +468,6 @@ const PropertyDetails = () => {
                   rows={documents}
                   columns={DocumentColumns}
                   loading={isDocumentLoading}
-                  checkboxSelection
                   rowSelectionModel={rowSelectionModel}
                   onRowSelectionModelChange={(newSelectionModel) => {
                     setRowSelectionModel(newSelectionModel);
@@ -483,20 +483,6 @@ const PropertyDetails = () => {
                   pageSizeOptions={[10]}
                   disableRowSelectionOnClick
                   showToolbar
-                  sx={{
-                    // Target the checkbox cell
-                    "& .MuiDataGrid-checkboxInput": {
-                      // Change color
-                      // color: "red", // unchecked color
-                      "&.Mui-checked": {
-                        color: "#1f9d5b", // checked color
-                      },
-                      // Change size
-                      "& .MuiSvgIcon-root": {
-                        fontSize: "1.25rem", // smaller icon (default ~1.5rem)
-                      },
-                    },
-                  }}
                 />
               </Box>
             </>

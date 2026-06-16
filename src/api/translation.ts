@@ -18,6 +18,10 @@ const TranslationsAPI = {
     return AxiosInstance.post(`/translate/retranslate/${file_id}`);
   },
 
+  deleteTranslation: (file_id: string) => {
+    return AxiosInstance.delete(`/translate/delete-translation/${file_id}`);
+  },
+
   DownloadWord: (file_id: string) => {
     return AxiosInstance.post(`/translate/convert-pdf-to-doc/${file_id}`);
   },

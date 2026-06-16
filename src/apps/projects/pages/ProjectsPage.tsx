@@ -17,7 +17,7 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Ellipsis, Eye, Plus, ShieldUser } from "lucide-react";
+import { Ellipsis, Eye, Plus, ShieldUser, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreateProject from "../components/CreateProject/CreateProject";
@@ -69,11 +69,11 @@ const ProjectsPage = () => {
     {
       field: "project_name",
       headerName: "Project Name",
-      width: 220,
+      width: 280,
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Link
-            className="hover:underline"
+            className="column-cell-link"
             to={`/projects/project-details?projectId=${params?.row?.id}`}
           >
             {params?.row?.project_name}
@@ -89,8 +89,8 @@ const ProjectsPage = () => {
 
     {
       field: "property_count",
-      headerName: "No of Properties",
-      width: 140,
+      headerName: "No of Properties / Leases",
+      width: 160,
     },
 
     {
@@ -159,6 +159,16 @@ const ProjectsPage = () => {
                 <ShieldUser aria-hidden className="mr-1.5" />
                 User Access
               </DropdownMenuItem>
+
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={() => {
+                  deleteProject(params.row?.id);
+                }}
+              >
+                <Trash2 aria-hidden className="mr-1.5" />
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -206,6 +216,17 @@ const ProjectsPage = () => {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const deleteProject = (projectId: number) => {
+    ProjectsAPI.deleteProject(projectId)
+      .then(() => {
+        showSnackbar("Project deleted", "success");
+        getProjectList();
+      })
+      .catch(() => {
+        showSnackbar("Failed to delete project. Please try again.", "error");
       });
   };
 
