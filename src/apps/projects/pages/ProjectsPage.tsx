@@ -24,6 +24,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DashboardAPI from "@/api/dashboard";
 import { useSnackbarStore } from "@/store/snackbar-store";
+import ProjectWidget from "../components/ProjectWidget/ProjectWidget";
 
 interface DataCategory {
   attribute: string;
@@ -99,8 +100,6 @@ const ProjectsPage = () => {
       headerName: "Actions",
       minWidth: 100,
       renderCell: (params: GridRenderCellParams) => {
-        console.log("dsgsdfsdfsdf", params?.row?.id);
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -120,7 +119,7 @@ const ProjectsPage = () => {
                       state: {
                         tab: "project",
                       },
-                    },
+                    }
                   );
                 }}
               >
@@ -131,7 +130,7 @@ const ProjectsPage = () => {
                 onSelect={() => {
                   navigate(
                     `/projects/project-details?projectId=${params?.row?.id}`,
-                    { state: { tab: "properties" } },
+                    { state: { tab: "properties" } }
                   );
                 }}
               >
@@ -146,7 +145,7 @@ const ProjectsPage = () => {
                       state: {
                         tab: "user-access",
                       },
-                    },
+                    }
                   );
                 }}
               >
@@ -190,7 +189,7 @@ const ProjectsPage = () => {
             attribute,
             description,
             status,
-          })),
+          }))
         );
       })
       .catch(() => setDataCategoryList([]));
@@ -274,7 +273,7 @@ const ProjectsPage = () => {
       </div>
 
       <Box
-        sx={{ height: "80vh", width: "100%" }}
+        sx={{ height: "40vh", width: "100%" }}
         className="app-datagrid-container mt-2"
       >
         <DataGridTitle title=" " />
@@ -296,6 +295,20 @@ const ProjectsPage = () => {
           sx={{}}
         />
       </Box>
+
+      <div className="card-version mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {Rows.map((row) => (
+          <ProjectWidget
+            key={row.id}
+            projectId={row.id}
+            companyName={row.project_name}
+            dataCategory={row.category}
+            propertiesCount={row.property_count ?? 0}
+            date={formatDateTime(row.last_created)}
+            onDelete={deleteProject}
+          />
+        ))}
+      </div>
 
       <CreateProject
         open={openCreateProject}
