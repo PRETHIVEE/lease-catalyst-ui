@@ -8,17 +8,20 @@ import {
   CloudUpload,
   Download,
   Ellipsis,
-  Eye,
   FolderOpen,
   Info,
   Loader,
-  Play,
   Trash2,
+  Workflow,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ProjectsAPI from "@/api/projects";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { formatDateTime, getFileExtension } from "@/utils/utils";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  formatDateTime,
+  getFileExtension,
+  getPresignedUrl,
+} from "@/utils/utils";
 import {
   DataGrid,
   type GridColDef,
@@ -139,9 +142,19 @@ const PropertyDetails = () => {
       width: 420,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <Link className="hover:underline" to={`#`}>
+          <p
+            className="column-cell-link"
+            onClick={async () => {
+              try {
+                const url = await getPresignedUrl(params?.row?.s3_path);
+                window.open(url, "_blank");
+              } catch (error) {
+                console.error("Error opening file:", error);
+              }
+            }}
+          >
             {params?.row?.filename}
-          </Link>
+          </p>
         );
       },
     },
@@ -184,12 +197,16 @@ const PropertyDetails = () => {
               align="end"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
-              <DropdownMenuItem>
-                <Eye aria-hidden className="mr-1.5" />
-                Preview
-              </DropdownMenuItem>
-
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                onSelect={async () => {
+                  try {
+                    const url = await getPresignedUrl(params?.row?.s3_path);
+                    window.open(url, "_blank");
+                  } catch (error) {
+                    console.error("Error opening file:", error);
+                  }
+                }}
+              >
                 <Download aria-hidden className="mr-1.5" />
                 Download
               </DropdownMenuItem>
@@ -470,7 +487,7 @@ const PropertyDetails = () => {
                     </>
                   ) : (
                     <>
-                      <Play /> Run Job
+                      <Workflow /> Run Document QC (DQC)
                     </>
                   )}
                 </Button>

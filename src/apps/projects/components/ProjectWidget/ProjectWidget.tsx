@@ -49,8 +49,8 @@ const ProjectWidget = ({
   return (
     <article
       className={cn(
-        "w-full max-w-md overflow-hidden rounded-md border border-[#E5E7EB] bg-white shadow-card",
-        className
+        "w-full max-w-md overflow-hidden rounded-md  bg-white shadow-card",
+        className,
       )}
     >
       <div
@@ -71,13 +71,13 @@ const ProjectWidget = ({
             <div
               aria-hidden
               className={cn(
-                "flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white",
-                "bg-main-theme"
+                "flex size-7 shrink-0 items-center justify-center rounded-full text-[0.86rem]  text-white",
+                "bg-main-theme",
               )}
             >
               {companyInitial}
             </div>
-            <h6 className="truncate text-[0.9rem] font-semibold text-font-color-primary">
+            <h6 className="truncate text-[0.86rem] font-semibold text-font-color-primary">
               {companyName}
             </h6>
           </div>

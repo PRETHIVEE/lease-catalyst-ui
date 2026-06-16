@@ -1,24 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ProjectsAPI from "@/api/projects";
-import DataGridTitle from "@/components/common/DataGridTitle";
-import IconButton from "@/components/common/IconButton";
+import NoDataFound from "@/components/common/NoDataFound";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateTime } from "@/utils/utils";
-import Box from "@mui/material/Box";
-import {
-  DataGrid,
-  type GridColDef,
-  type GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { Ellipsis, Eye, Plus, ShieldUser, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import CreateProject from "../components/CreateProject/CreateProject";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -33,7 +20,6 @@ interface DataCategory {
 }
 
 const ProjectsPage = () => {
-  const navigate = useNavigate();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,115 +46,6 @@ const ProjectsPage = () => {
     },
   });
 
-  const Columns: GridColDef[] = [
-    {
-      field: "project_name",
-      headerName: "Project Name",
-      width: 280,
-      renderCell: (params: GridRenderCellParams) => {
-        return (
-          <Link
-            className="column-cell-link"
-            to={`/projects/project-details?projectId=${params?.row?.id}`}
-          >
-            {params?.row?.project_name}
-          </Link>
-        );
-      },
-    },
-    {
-      field: "category",
-      headerName: "Data Category",
-      width: 180,
-    },
-
-    {
-      field: "property_count",
-      headerName: "No of Properties / Leases",
-      width: 160,
-    },
-
-    {
-      field: "last_created",
-      headerName: "Created On",
-      width: 174,
-      valueFormatter: (value) => formatDateTime(value),
-    },
-
-    {
-      field: "action",
-      headerName: "Actions",
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams) => {
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <IconButton aria-label={`action options`} className="ml-2 mt-1.5">
-                <Ellipsis className="size-4" aria-hidden />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
-            >
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    {
-                      state: {
-                        tab: "project",
-                      },
-                    }
-                  );
-                }}
-              >
-                <Eye aria-hidden className="mr-1.5" />
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    { state: { tab: "properties" } }
-                  );
-                }}
-              >
-                <Plus aria-hidden className="mr-1.5" />
-                Add Property /Lease
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(
-                    `/projects/project-details?projectId=${params?.row?.id}`,
-                    {
-                      state: {
-                        tab: "user-access",
-                      },
-                    }
-                  );
-                }}
-              >
-                <ShieldUser aria-hidden className="mr-1.5" />
-                User Access
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                variant="destructive"
-                onSelect={() => {
-                  deleteProject(params.row?.id);
-                }}
-              >
-                <Trash2 aria-hidden className="mr-1.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
-    },
-  ];
-
   const handleCloseProjectModal = () => {
     setOpenCreateProject(false);
     formik.resetForm();
@@ -189,7 +66,7 @@ const ProjectsPage = () => {
             attribute,
             description,
             status,
-          }))
+          })),
         );
       })
       .catch(() => setDataCategoryList([]));
@@ -264,6 +141,7 @@ const ProjectsPage = () => {
           Projects
         </h5>
         <Button
+          className="mt-1"
           size="sm"
           variant="primary"
           onClick={() => setOpenCreateProject(true)}
@@ -272,43 +150,31 @@ const ProjectsPage = () => {
         </Button>
       </div>
 
-      <Box
-        sx={{ height: "40vh", width: "100%" }}
-        className="app-datagrid-container mt-2"
-      >
-        <DataGridTitle title=" " />
-        <DataGrid
-          density="compact"
-          rows={Rows}
-          columns={Columns}
-          loading={loading}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-          disableRowSelectionOnClick
-          showToolbar
-          sx={{}}
-        />
-      </Box>
-
-      <div className="card-version mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {Rows.map((row) => (
-          <ProjectWidget
-            key={row.id}
-            projectId={row.id}
-            companyName={row.project_name}
-            dataCategory={row.category}
-            propertiesCount={row.property_count ?? 0}
-            date={formatDateTime(row.last_created)}
-            onDelete={deleteProject}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+          <Skeleton className="h-[11rem] bg-[#e8f4e5] w-full" />
+          <Skeleton className="h-[11rem] bg-[#e8f4e5] w-full" />
+          <Skeleton className="h-[11rem] bg-[#e8f4e5] w-full" />
+        </div>
+      ) : Rows.length > 0 ? (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+          {Rows.map((row) => (
+            <ProjectWidget
+              key={row.id}
+              projectId={row.id}
+              companyName={row.project_name}
+              dataCategory={row.category}
+              propertiesCount={row.property_count ?? 0}
+              date={formatDateTime(row.last_created)}
+              onDelete={deleteProject}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4">
+          <NoDataFound message="No projects found. Create your first project!" />
+        </div>
+      )}
 
       <CreateProject
         open={openCreateProject}

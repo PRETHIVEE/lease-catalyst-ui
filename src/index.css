@@ -353,11 +353,11 @@ code {
 
   --status-chip-failed-bg: #fef2f2;
   --status-chip-failed-fg: #dc2626;
-  --status-chip-failed-border: #fecaca;
+  --status-chip-failed-border: #ffbebe;
 
   --status-chip-success-bg: #eafef0;
   --status-chip-success-fg: #15803d;
-  --status-chip-success-border: #b6ffd0;
+  --status-chip-success-border: #77fda5;
 
   --status-chip-expired-bg: #f3f4f6;
   --status-chip-expired-fg: #4b5563;

@@ -94,7 +94,11 @@ export default function JobsTable() {
             : output_status === "pending" || output_status === "In Progress"
               ? "In Progress"
               : output_status;
-        return <StatusChip label={statusLabel} variant={variant} />;
+        return (
+          <div className="mt-0.5">
+            <StatusChip label={statusLabel} variant={variant} />
+          </div>
+        );
       },
     },
 

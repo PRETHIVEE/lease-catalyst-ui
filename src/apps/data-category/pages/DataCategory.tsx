@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Grid2x2, Grid2x2Plus, LayoutGrid } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,11 +17,10 @@ const DataCategory = () => {
     activeTab === "all"
       ? [...builtInDataCat, ...customDataCat]
       : activeTab === "built-in"
-      ? builtInDataCat
-      : customDataCat;
+        ? builtInDataCat
+        : customDataCat;
 
   const getAttributesTypes = () => {
-    setLoading(true);
     DataCategoryAPI.getDataCategoryList(userEmail)
       .then((response) => {
         if (response.status === 200) {

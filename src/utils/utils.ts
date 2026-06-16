@@ -97,3 +97,27 @@ export const fileDownloader2 = async (
     window.open(url, "_blank");
   }
 };
+export const openFileInNewTab = async (
+  url: string,
+) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.target = "_blank";
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up memory and DOM
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("File download failed:", error);
+    // Fallback: Open in new tab if fetch fails due to CORS restrictions
+    window.open(url, "_blank");
+  }
+};
