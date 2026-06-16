@@ -158,7 +158,7 @@ export default function JobsTable() {
 
   return (
     <Box
-      sx={{ height: "70.75vh", width: "100%", position: "relative" }}
+      sx={{ height: "74vh", width: "100%", position: "relative" }}
       className="app-datagrid-container"
     >
       <DataGridTitle title=" Job Overview" />

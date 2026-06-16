@@ -4,10 +4,10 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const widgetCardVariants = cva(
-  "flex items-center justify-between gap-4 rounded-md  bg-white p-4 shadow-sm"
+  "flex items-center justify-between gap-4 rounded-lg  bg-white p-4 shadow-sm",
 );
 
-const labelVariants = cva("text-[0.88rem] mt-1 mb-[-0.25rem]", {
+const labelVariants = cva("text-[0.82rem] mt-1 mb-[-0.25rem]", {
   variants: {
     variant: {
       info: "text-[#2563eb]",
@@ -37,7 +37,7 @@ const iconContainerVariants = cva(
     defaultVariants: {
       variant: "info",
     },
-  }
+  },
 );
 
 export type WidgetCardVariant = NonNullable<
@@ -56,7 +56,6 @@ const WidgetCard = ({
   value,
   variant = "info",
   label,
-  subDescription,
   icon: Icon,
   className,
 }: WidgetCardProps) => {
@@ -67,7 +66,7 @@ const WidgetCard = ({
           {value}
         </p>
         <p className={cn(labelVariants({ variant }))}>{label}</p>
-        <p className="text-[0.82rem] text-[#9ca3af]">{subDescription}</p>
+        {/* <p className="text-[0.82rem] text-[#9ca3af]">{subDescription}</p> */}
       </div>
       <div aria-hidden className={cn(iconContainerVariants({ variant }))}>
         <Icon />

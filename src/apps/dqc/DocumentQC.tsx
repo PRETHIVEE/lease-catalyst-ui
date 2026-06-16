@@ -129,21 +129,24 @@ const DocumentQC = () => {
 
   const handleCompleteDQC = () => {
     const askConfirmation = window.confirm(
-      "Are you sure you want to mark this DQC as complete?",
+      "Complete DQC and start the Abstraction workflow?",
     );
 
     if (askConfirmation) {
       ProjectsAPI?.triggerAbstractionWorkflow({
         property_id: propertyInfo?.property_id,
         legal_docs_list: legalDocsList,
-      })
-        .then((r) => {
-          console.log("DQC marked as complete:", r);
-          navigate("/dashboard");
-        })
-        .catch((e) => {
-          console.error("Error marking DQC as complete:", e);
-        });
+      }).then(() => {
+        navigate("/dashboard");
+        // showSnackbar(
+        //   r?.data?.message ||
+        //     "DQC Completed!, Abstraction workflow triggered! ",
+        // );
+      });
+      // .catch((e) => {
+      //   console.error("Error marking DQC as complete:", e);
+      //   showSnackbar("DQC Completed!, Abstraction workflow triggereds! ");
+      // });
     }
   };
 

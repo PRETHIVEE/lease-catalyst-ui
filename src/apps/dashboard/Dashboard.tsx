@@ -7,35 +7,35 @@ const Dashboard = () => {
     <div className="p-4">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-5 xl:grid-cols-5">
         <WidgetCard
-          value={42}
+          value={5}
           variant="info"
           label="New"
           subDescription="Awaiting intake"
           icon={FileText}
         />
         <WidgetCard
-          value={18}
+          value={3}
           variant="warning"
           label="Running"
           subDescription="In progress"
           icon={Clock3}
         />
         <WidgetCard
-          value={7}
+          value={1}
           variant="error"
           label="Failed"
           subDescription="Needs review"
           icon={XCircle}
         />
         <WidgetCard
-          value={855}
+          value={85}
           variant="success"
           label="Completed"
           subDescription="Abstracted"
           icon={CheckCircle2}
         />
         <WidgetCard
-          value={922}
+          value={92}
           variant="neutral"
           label="Total"
           subDescription="All leases"
