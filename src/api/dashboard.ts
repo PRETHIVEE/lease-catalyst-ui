@@ -12,7 +12,7 @@ const DashboardAPI = {
 
   getWorkflow: (payload: any) => {
     return AxiosInstance.get(
-      `/workflow/jobs/by-user_name?user_name=${payload}`,
+      `/workflow/jobs/by-user_name?user_email=${payload}`,
     );
   },
 

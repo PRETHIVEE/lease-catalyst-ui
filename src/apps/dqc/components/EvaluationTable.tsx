@@ -145,7 +145,7 @@ const EvaluationTable = ({ data, isLoading }: EvaluationTableProps) => {
                   {row.supportingEvidence || "-"}
                 </td>
                 <td className={bodyCellClass}>{formatNotes(row.notes)}</td>
-                <td className={bodyCellClass}>{formatNotes(row.notes)}</td>
+                <td className={bodyCellClass}></td>
               </tr>
             ))}
           </tbody>

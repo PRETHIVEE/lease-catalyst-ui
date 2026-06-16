@@ -81,6 +81,7 @@
     width: 1.75rem;
     height: 1.5rem;
     object-fit: contain;
+    // margin-left: 0.25rem;
   }
 
   &__brand-text {
@@ -196,14 +197,12 @@
     justify-content: center;
     // width: 1.1rem;
     // height: 1.1rem;
-   
   }
 
   &__link-icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.1rem;
+    height: 1.1rem;
     // border: 1px solid blue;
-
   }
 
   &__link-label {
@@ -214,7 +213,7 @@
     transition:
       opacity 0.25s ease,
       max-width 0.3s ease;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   &--expanded &__link-label {

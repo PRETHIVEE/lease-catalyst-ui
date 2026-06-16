@@ -54,7 +54,7 @@ export default function JobsTable() {
     {
       field: "project_name",
       headerName: "Project Name",
-      width: 190,
+      width: 160,
     },
     {
       field: "property_name",
@@ -64,13 +64,18 @@ export default function JobsTable() {
     {
       field: "lease_id",
       headerName: "Lease ID",
-      width: 130,
+      width: 120,
+    },
+    {
+      field: "workflow_name",
+      headerName: "Workflow Type",
+      width: 150,
     },
 
     {
       field: "output_status",
       headerName: "Status",
-      width: 140,
+      width: 130,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;
         const variant =
@@ -79,21 +84,28 @@ export default function JobsTable() {
             : output_status === "pending" || output_status === "In Progress"
               ? "pending"
               : "failed";
-        return <StatusChip label={output_status} variant={variant} />;
+        const statusLabel =
+          output_status === "Completed"
+            ? "Completed"
+            : output_status === "pending" || output_status === "In Progress"
+              ? "In Progress"
+              : output_status;
+        return <StatusChip label={statusLabel} variant={variant} />;
       },
     },
 
     {
       field: "created_on",
       headerName: "Created On",
-      width: 174,
+      width: 160,
       valueFormatter: (value) => formatDateTime(value),
     },
 
     {
       field: "action",
       headerName: "Actions",
-      minWidth: 100,
+
+      // minWidth: 50,
       // flex: 1,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;

@@ -1,4 +1,3 @@
-import StatusChip from "@/components/common/StatusChip";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -12,7 +11,7 @@ import {
   Building2,
   ChevronDownIcon,
   CircleCheckBig,
-  CloudUpload,  
+  CloudUpload,
   FilePlus,
 } from "lucide-react";
 
@@ -46,10 +45,12 @@ const PropertyInfo = ({
   property,
   handleUploadClick,
   handleRequestDocsClick,
+  handleCompleteDQC,
 }: {
   property: PropertyInfoData | null;
   handleUploadClick: () => void;
   handleRequestDocsClick: () => void;
+  handleCompleteDQC: () => void;
 }) => {
   return (
     <div className="rounded-sm bg-white shadow-card">
@@ -92,19 +93,8 @@ const PropertyInfo = ({
               justifyContent: "space-between",
             }}
           >
-            <div>
-              <p className={fieldLabelClass}>Job status</p>
-              <div className="mt-0.5">
-                <StatusChip
-                  variant={"expired"}
-                  label={"Unknown"}
-                  className="font-normal"
-                />
-              </div>
-            </div>
-
             <div className="flex flex-1 align-center justify-end gap-2 mt-2">
-              <Button variant="outline" >
+              <Button variant="outline" onClick={handleCompleteDQC}>
                 <CircleCheckBig aria-hidden />
                 Complete DQC
               </Button>

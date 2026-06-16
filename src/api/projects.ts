@@ -52,6 +52,20 @@ const ProjectsAPI = {
   triggerJob: (payload: any) => {
     return AxiosInstance.post(`/workflow/trigger-job`, payload);
   },
+
+  triggerDQCWorkflow: (payload: any) => {
+    return AxiosInstance.post(`/workflow/trigger/wf-dqc`, payload);
+  },
+
+  triggerAbstractionWorkflow: (payload: any) => {
+    return AxiosInstance.post(`/workflow/trigger/wf-abstraction`, payload);
+  },
+
+  getAbstractionStatus: (property_id: string) => {
+    return AxiosInstance.get(
+      `/workflow/abstraction/status?property_id=${property_id}`,
+    );
+  },
 };
 
 export default ProjectsAPI;

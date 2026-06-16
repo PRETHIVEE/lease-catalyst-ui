@@ -136,7 +136,7 @@ const ProjectsPage = () => {
                 }}
               >
                 <Plus aria-hidden className="mr-1.5" />
-                Add Property
+                Add Property /Lease
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => {

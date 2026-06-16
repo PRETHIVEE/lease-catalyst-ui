@@ -4,7 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const widgetCardVariants = cva(
-  "flex items-center justify-between gap-4 rounded-lg  bg-white p-4 shadow-sm"
+  "flex items-center justify-between gap-4 rounded-md  bg-white p-4 shadow-sm"
 );
 
 const labelVariants = cva("text-[0.88rem] mt-1 mb-[-0.25rem]", {

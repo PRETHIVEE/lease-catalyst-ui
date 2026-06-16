@@ -231,7 +231,7 @@ const PropertyDetails = () => {
     const payload = {
       property_id: Number(propertyId),
     };
-    ProjectsAPI.triggerJob(payload)
+    ProjectsAPI.triggerDQCWorkflow(payload)
       .then((response) => {
         if (response?.status === 200) {
           showSnackbar(response?.data?.message);
@@ -245,6 +245,35 @@ const PropertyDetails = () => {
         setIsJobSubmitting(false);
       });
   };
+
+  const [abstractionStatus, setAbstractionStatus] = useState<any>(null);
+
+  const getLabelVariant = (status: string) => {
+    switch (status) {
+      case "DQC completed":
+        return "success";
+      case "DQC running":
+        return "pending";
+      default:
+        return "expired";
+    }
+  };
+
+  const LabelVariant = getLabelVariant(abstractionStatus?.status);
+
+  const fetchAbstractionStatus = () => {
+    ProjectsAPI.getAbstractionStatus(String(propertyId)).then((response) => {
+      if (response?.status === 200) {
+        setAbstractionStatus(response?.data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchAbstractionStatus();
+  }, []);
+
+  console.log("abstractionStatus:", abstractionStatus);
 
   return (
     <div className="px-4 py-2">
@@ -344,19 +373,25 @@ const PropertyDetails = () => {
                   <div className="py-2.5 px-4">
                     <div>
                       <div className="flex align-center gap-4">
-                        <StatusChip label="Running" variant={"pending"} />
+                        <StatusChip
+                          label={abstractionStatus?.status}
+                          variant={LabelVariant}
+                        />
                         <Tooltip
-                          title="The Job is pending for DQC"
+                          title="Current status of the Lease Abstraction Job"
                           arrow
                           placement="right"
                         >
                           <Info color="gray" size={16} className="mt-1.25" />
                         </Tooltip>
                       </div>
-                      <p className="mt-2 font-normal text-[0.71rem] text-gray-500">
-                        Last updated at{" "}
-                        {formatDateTime(projectDetails?.last_created)}{" "}
-                      </p>
+
+                      {Boolean(abstractionStatus?.timestamp) && (
+                        <p className="mt-2 font-normal text-[0.71rem] text-gray-500">
+                          Last updated at{" "}
+                          {formatDateTime(abstractionStatus?.timestamp)}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

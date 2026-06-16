@@ -7,6 +7,7 @@ import DashboardAPI from "@/api/dashboard";
 import { useEffect, useState } from "react";
 import UploadFiles from "../projects/components/UploadFiles/UploadFiles";
 import RequestDocuments from "./components/RequestDocuments/RequestDocuments";
+import ProjectsAPI from "@/api/projects";
 const BreadcrumbsData = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Document QC", url: "/dashboard/document-qc" },
@@ -40,15 +41,20 @@ const DocumentQC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isOpenRequestDocs, setIsRequestingDocs] = useState(false);
+  const [legalDocsList, setLegalDocsList] = useState<string[]>([]);
 
   console.log("dqcData:", dqcData);
   console.log("dqcData propertyInfo:", propertyInfo);
+  console.log("legalDocsList", legalDocsList);
 
   useEffect(() => {
     if (JobId) {
       DashboardAPI.getDqcResult(JobId)
         .then((response) => {
           if (response.status === 200) {
+            const legalDocs =
+              response?.data?.full_dqc_data?.Legal_Doc_List || [];
+            setLegalDocsList(legalDocs);
             const transformedData = transformData(response.data.DQC || {});
             setDqcData(transformedData);
             setPropertyInfo({
@@ -88,6 +94,25 @@ const DocumentQC = () => {
   };
   // Implement the logic to upload documents here
 
+  const handleCompleteDQC = () => {
+    const askConfirmation = window.confirm(
+      "Are you sure you want to mark this DQC as complete?",
+    );
+
+    if (askConfirmation) {
+      ProjectsAPI?.triggerAbstractionWorkflow({
+        property_id: propertyInfo?.property_id,
+        legal_docs_list: legalDocsList,
+      })
+        .then((r) => {
+          console.log("DQC marked as complete:", r);
+        })
+        .catch((e) => {
+          console.error("Error marking DQC as complete:", e);
+        });
+    }
+  };
+
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
@@ -96,6 +121,7 @@ const DocumentQC = () => {
           property={propertyInfo}
           handleUploadClick={() => setIsOpenUpload(true)}
           handleRequestDocsClick={() => setIsRequestingDocs(true)}
+          handleCompleteDQC={handleCompleteDQC}
         />
         <EvaluationTable data={dqcData} isLoading={loading} />
       </div>

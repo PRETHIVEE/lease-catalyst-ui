@@ -261,7 +261,7 @@ const ProjectDetails = () => {
                 </TabsTrigger>
               </TabsList>
               <Button variant="primary" onClick={() => handleCreate()}>
-                <Plus strokeWidth={2} /> Add Property
+                <Plus strokeWidth={2} /> Add Property / Lease
               </Button>
             </div>
           </Tabs>
