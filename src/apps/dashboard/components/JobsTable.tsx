@@ -73,7 +73,7 @@ export default function JobsTable() {
     {
       field: "workflow_name",
       headerName: "Workflow Type",
-      width: 150,
+      width: 145,
     },
 
     {
@@ -105,13 +105,16 @@ export default function JobsTable() {
     {
       field: "created_on",
       headerName: "Created On",
-      width: 174,
+      width: 170,
       valueFormatter: (value) => formatDateTime(value),
     },
 
     {
       field: "action",
       headerName: "Actions",
+      width: 80,
+      disableColumnMenu: true,
+      sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;
         return (
@@ -162,7 +165,7 @@ export default function JobsTable() {
 
   return (
     <Box
-      sx={{ height: "74vh", width: "100%", position: "relative" }}
+      sx={{ height: "76vh", width: "100%", position: "relative" }}
       className="app-datagrid-container"
     >
       <DataGridTitle title=" Job Overview" />
