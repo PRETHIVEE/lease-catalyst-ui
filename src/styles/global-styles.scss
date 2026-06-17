@@ -23,3 +23,10 @@
   }
 }
 
+.column-cell-link {
+  color: #186bbf;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
+}
