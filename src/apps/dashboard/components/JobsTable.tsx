@@ -116,7 +116,7 @@ export default function JobsTable() {
       disableColumnMenu: true,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
-        const { output_status } = params.row;
+        const { output_status, workflow_name } = params.row;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -148,13 +148,12 @@ export default function JobsTable() {
                 <Download aria-hidden className="mr-1.5" />
                 Download
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(`/dashboard/document-qc?jobId=${params.row.job_id}`);
-                }}
-              >
+
+              <DropdownMenuItem onSelect={handleNavigate(params?.row)}>
                 <FileSearch aria-hidden className="mr-1.5" />
-                View DQC
+                {workflow_name === "Lease Abstraction"
+                  ? "Open HITL"
+                  : "View DQC"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -162,6 +161,18 @@ export default function JobsTable() {
       },
     },
   ];
+
+  const handleNavigate = (data: any) => () => {
+    if (data?.workflow_name === "Lease Abstraction") {
+      window.open(
+        "https://xdas-one.xtract.io/#/auth/login",
+        "_blank",
+        "noopener,noreferrer",
+      );
+    } else {
+      navigate(`/dashboard/document-qc?jobId=${data.job_id}`);
+    }
+  };
 
   return (
     <Box
