@@ -641,7 +641,7 @@ const ModifyDataCategory = () => {
                                     value,
                                   )
                                 }
-                                className="text-[0.82rem] text-[#00000098]"
+                                className="text-[0.82rem] text-[#313131]"
                               />
                             </div>
                           ),

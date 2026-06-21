@@ -54,32 +54,32 @@ export default function JobsTable() {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: "job_id", headerName: "Job ID", width: 98 },
+    { field: "job_id", headerName: "Job ID", width: 80 },
     {
       field: "project_name",
       headerName: "Project Name",
-      width: 160,
+      width: 170,
     },
     {
       field: "property_name",
       headerName: "Property / Lease Name",
-      width: 200,
+      width: 170,
     },
     {
       field: "lease_id",
       headerName: "Lease ID",
-      width: 120,
+      width: 100,
     },
     {
       field: "workflow_name",
       headerName: "Workflow Type",
-      width: 145,
+      width: 140,
     },
 
     {
       field: "output_status",
       headerName: "Status",
-      width: 140,
+      width: 120,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status } = params.row;
         const variant =
@@ -105,7 +105,7 @@ export default function JobsTable() {
     {
       field: "created_on",
       headerName: "Created On",
-      width: 170,
+      width: 160,
       valueFormatter: (value) => formatDateTime(value),
     },
 

@@ -13,6 +13,7 @@ import {
   CircleCheckBig,
   CloudUpload,
   FilePlus,
+  Loader,
 } from "lucide-react";
 
 const fieldLabelClass = "text-[0.76rem] font-normal text-[#00000080]";
@@ -46,11 +47,13 @@ const PropertyInfo = ({
   handleUploadClick,
   handleRequestDocsClick,
   handleCompleteDQC,
+  isTriggeringWf,
 }: {
   property: PropertyInfoData | null;
   handleUploadClick: () => void;
   handleRequestDocsClick: () => void;
   handleCompleteDQC: () => void;
+  isTriggeringWf: boolean;
 }) => {
   return (
     <div className="rounded-sm bg-white shadow-card">
@@ -94,9 +97,22 @@ const PropertyInfo = ({
             }}
           >
             <div className="flex flex-1 align-center justify-end gap-2 mt-2">
-              <Button variant="outline" onClick={handleCompleteDQC}>
-                <CircleCheckBig aria-hidden />
-                Complete DQC
+              <Button
+                variant="outline"
+                onClick={handleCompleteDQC}
+                disabled={isTriggeringWf}
+              >
+                {isTriggeringWf ? (
+                  <>
+                    <Loader aria-hidden />
+                    Completing..
+                  </>
+                ) : (
+                  <>
+                    <CircleCheckBig aria-hidden />
+                    Complete DQC
+                  </>
+                )}
               </Button>
 
               <ButtonGroup>

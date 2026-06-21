@@ -30,3 +30,110 @@
     text-decoration: underline;
   }
 }
+
+// DATAGRID STYLES:
+.app-datagrid-container {
+  // border: 1px solid;
+  .MuiDataGrid-root {
+    border-radius: 0.45rem;
+
+    .MuiDataGrid-toolbar {
+      .MuiIconButton-root {
+        padding: 0.25rem;
+        .MuiSvgIcon-root {
+          font-size: 1rem;
+        }
+      }
+    }
+    .MuiDataGrid-virtualScroller {
+      border-radius: 0.25rem;
+    }
+    .MuiDataGrid-columnHeader {
+      background-color: #ebf0f6;
+      color: #000;
+
+      &:not(.MuiDataGrid-columnHeader ~ .MuiDataGrid-columnHeader) {
+        padding-inline-start: 16px;
+      }
+
+      .MuiDataGrid-columnHeaderTitle {
+        font-size: 0.79rem;
+        font-weight: 600;
+      }
+
+      .MuiDataGrid-checkboxInput {
+        color: #1f9d5b;
+        margin-left: -0.17rem;
+      }
+
+      .MuiDataGrid-sortButton {
+        padding: 0.25rem;
+        margin-left: 0.25rem;
+        .MuiDataGrid-sortIcon {
+          font-size: 0.85rem;
+          color: #000;
+        }
+      }
+
+      .MuiDataGrid-menuIconButton {
+        padding: 0.3rem;
+        .MuiSvgIcon-root {
+          font-size: 0.9rem;
+          color: #000;
+        }
+      }
+    }
+
+    .MuiDataGrid-columnHeaders {
+      .MuiDataGrid-scrollbarFiller {
+        background-color: #ebf0f6;
+      }
+      .MuiDataGrid-filler {
+        background-color: #ebf0f6;
+      }
+    }
+
+    .MuiDataGrid-cell {
+      font-size: 0.79rem;
+      font-weight: 00;
+      color: #313131;
+      // color: #3b3b3b;
+    }
+
+    .actionBtn {
+      height: 1.75rem;
+    }
+
+    .MuiDataGrid-row {
+      .MuiDataGrid-cell:not(.MuiDataGrid-cell ~ .MuiDataGrid-cell) {
+        padding-inline-start: 16px;
+      }
+    }
+
+    .MuiDataGrid-toolbar {
+      min-height: 44px;
+    }
+
+    // Footer
+    .MuiDataGrid-footerContainer {
+      overflow: hidden;
+      // border: 1px solid green;
+      min-height: 2.5rem;
+      // padding: 0 8px;
+
+      .MuiTablePagination-displayedRows {
+        font-size: 0.8rem;
+      }
+    }
+    .MuiTablePagination-toolbar {
+      overflow: hidden;
+
+      min-height: 2.5rem;
+      // padding: 0 8px;
+    }
+    .MuiTablePagination-root {
+      // border: 1px solid;
+      overflow: hidden;
+    }
+  }
+}

@@ -1,18 +1,18 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import {
-  BadgeCheck,
-  Ban,
-  CircleX,
-  Clock,
-  Loader,
-  Send,
+  // BadgeCheck,
+  // Ban,
+  // CircleX,
+  // Clock,
+  // Loader,
+  // Send,
   type LucideIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const statusChipVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[0.78rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.78rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -36,17 +36,17 @@ const statusChipVariants = cva(
   },
 );
 
-const defaultIcons: Record<
-  NonNullable<VariantProps<typeof statusChipVariants>["variant"]>,
-  LucideIcon
-> = {
-  pending: Clock,
-  progress: Loader,
-  submitted: Send,
-  failed: CircleX,
-  success: BadgeCheck,
-  expired: Ban,
-};
+// const defaultIcons: Record<
+//   NonNullable<VariantProps<typeof statusChipVariants>["variant"]>,
+//   LucideIcon
+// > = {
+//   pending: Clock,
+//   progress: Loader,
+//   submitted: Send,
+//   failed: CircleX,
+//   success: BadgeCheck,
+//   expired: Ban,
+// };
 
 export type StatusChipVariant = NonNullable<
   VariantProps<typeof statusChipVariants>["variant"]
@@ -62,15 +62,15 @@ export type StatusChipProps = {
 const StatusChip = ({
   variant = "pending",
   label,
-  icon,
+  // icon,
   className,
-  showIcon = true,
+  // showIcon = true,
 }: StatusChipProps) => {
-  const Icon = icon ?? defaultIcons[variant ?? "pending"];
+  // const Icon = icon ?? defaultIcons[variant ?? "pending"];
 
   return (
     <span className={cn(statusChipVariants({ variant }), className)}>
-      {showIcon && <Icon aria-hidden />}
+      {/* {showIcon && <Icon aria-hidden />} */}
       {label}
     </span>
   );

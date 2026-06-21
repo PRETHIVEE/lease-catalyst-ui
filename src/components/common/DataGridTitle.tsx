@@ -2,7 +2,7 @@ const DataGridTitle = ({ title }: { title: string }) => {
   return (
     <p
       style={{
-        fontSize: "0.86rem",
+        fontSize: "0.88rem",
         fontWeight: 600,
         position: "absolute",
         zIndex: 10,

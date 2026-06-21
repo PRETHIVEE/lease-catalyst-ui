@@ -43,6 +43,8 @@ const DocumentQC = () => {
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isTriggeringJob, setIsTriggeringJob] = useState(false);
+  const [isTriggeringAbstractionJob, setisTriggeringAbstractionJob] =
+    useState(false);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isOpenRequestDocs, setIsRequestingDocs] = useState(false);
   const [legalDocsList, setLegalDocsList] = useState<string[]>([]);
@@ -128,6 +130,7 @@ const DocumentQC = () => {
   };
 
   const handleCompleteDQC = () => {
+    setisTriggeringAbstractionJob(true);
     const askConfirmation = window.confirm(
       "Complete DQC and start the Abstraction workflow?",
     );
@@ -136,17 +139,21 @@ const DocumentQC = () => {
       ProjectsAPI?.triggerAbstractionWorkflow({
         property_id: propertyInfo?.property_id,
         legal_docs_list: legalDocsList,
-      }).then(() => {
-        navigate("/dashboard");
-        // showSnackbar(
-        //   r?.data?.message ||
-        //     "DQC Completed!, Abstraction workflow triggered! ",
-        // );
-      });
-      // .catch((e) => {
-      //   console.error("Error marking DQC as complete:", e);
-      //   showSnackbar("DQC Completed!, Abstraction workflow triggereds! ");
-      // });
+      })
+        .then((r) => {
+          const resMsg = r?.data?.message;
+          if (resMsg === "Job triggered successfully") {
+            showSnackbar("DQC Completed!, Abstraction workflow Startted!");
+          }
+          navigate("/dashboard");
+        })
+        .catch((e) => {
+          console.error("Error marking DQC as complete:", e);
+          showSnackbar("DQC Completed!, Abstraction workflow triggereds! ");
+        })
+        .finally(() => {
+          setisTriggeringAbstractionJob(false);
+        });
     }
   };
 
@@ -159,6 +166,7 @@ const DocumentQC = () => {
           handleUploadClick={() => setIsOpenUpload(true)}
           handleRequestDocsClick={() => setIsRequestingDocs(true)}
           handleCompleteDQC={handleCompleteDQC}
+          isTriggeringWf={isTriggeringAbstractionJob}
         />
         <EvaluationTable data={dqcData} isLoading={loading} />
       </div>
