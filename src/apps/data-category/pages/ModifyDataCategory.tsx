@@ -4,7 +4,7 @@ import BreadCrumbs from "@/components/common/BreadCrumbs";
 import AddDrawer, { type AddDrawerPayload } from "../components/AddDrawer";
 import SaveDrawer, { type SaveDrawerPayload } from "../components/SaveDrawer";
 import { cn } from "@/lib/utils";
-import { Pencil, Plus, SendHorizonal } from "lucide-react";
+import { Pencil, Plus, Save } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { transformAttributes } from "../components/datatransfomer";
 import { Button } from "@/components/ui/button";
@@ -550,7 +550,7 @@ const ModifyDataCategory = () => {
                 disabled={!hasAnySelectedAttributes}
                 onClick={() => setIsSaveDrawerOpen(true)}
               >
-                <SendHorizonal />
+                <Save />
                 Save
               </Button>
             </div>

@@ -36,8 +36,31 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
 
   const navigate = useNavigate();
 
+  const handleNavigateToView = () => {
+    if (status !== "pending") {
+      navigate(`/data-category/view?mode=view&dc=${title}`);
+    }
+  };
+
   return (
-    <article className={cn("rounded-md shadow-card bg-white p-4", className)}>
+    <article
+      role={status !== "pending" ? "button" : undefined}
+      tabIndex={status !== "pending" ? 0 : undefined}
+      aria-label={status !== "pending" ? `View ${title}` : title}
+      aria-disabled={status === "pending"}
+      className={cn(
+        "rounded-md shadow-card bg-white p-4",
+        status !== "pending" && "cursor-pointer transition-colors hover:bg-slate-50",
+        className,
+      )}
+      onClick={handleNavigateToView}
+      onKeyDown={(event) => {
+        if (status !== "pending" && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          handleNavigateToView();
+        }
+      }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div
           aria-hidden
@@ -56,6 +79,7 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
                 disabled={status === "pending"}
                 aria-label={`${title} options`}
                 className="ml-2"
+                onClick={(event) => event.stopPropagation()}
               >
                 <MoreVertical className="size-4" aria-hidden />
               </IconButton>

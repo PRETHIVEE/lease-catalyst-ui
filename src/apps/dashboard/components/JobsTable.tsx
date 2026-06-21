@@ -9,11 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  fileDownloader2,
-  formatDateTime,
-  getPresignedUrl,
-} from "@/utils/utils";
+import { fileDownloader, formatDateTime, getPresignedUrl } from "@/utils/utils";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
@@ -95,7 +91,7 @@ export default function JobsTable() {
               ? "In Progress"
               : output_status;
         return (
-          <div className="mt-0.5">
+          <div>
             <StatusChip label={statusLabel} variant={variant} />
           </div>
         );
@@ -135,20 +131,14 @@ export default function JobsTable() {
               align="end"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
-              <DropdownMenuItem
-                onSelect={() => {
-                  const output_path = params?.row?.output_path
-                    ? JSON.parse(params?.row?.output_path)
-                    : null;
-                  getPresignedUrl(output_path?.csv_s3_key).then((url) => {
-                    fileDownloader2(url);
-                  });
-                }}
-              >
+              <DropdownMenuItem onSelect={handleDownload(params?.row, "CSV")}>
                 <Download aria-hidden className="mr-1.5" />
-                Download
+                Download as CSV
               </DropdownMenuItem>
-
+              {/* <DropdownMenuItem onSelect={handleDownload(params?.row, "JSON")}>
+                <Download aria-hidden className="mr-1.5" />
+                Download as JSON
+              </DropdownMenuItem> */}
               <DropdownMenuItem onSelect={handleNavigate(params?.row)}>
                 <FileSearch aria-hidden className="mr-1.5" />
                 {workflow_name === "Lease Abstraction"
@@ -174,12 +164,31 @@ export default function JobsTable() {
     }
   };
 
+  const handleDownload = (data: any, type: string) => () => {
+    const parsedOutputPath = data?.output_path
+      ? JSON.parse(data?.output_path)
+      : null;
+    if (parsedOutputPath) {
+      const filePath =
+        type === "CSV"
+          ? parsedOutputPath?.csv_s3_key
+          : parsedOutputPath?.rhs_filename;
+      // const csvFilePath = parsedOutputPath?.csv_s3_key;
+      // const jsonFilePath = parsedOutputPath?.rhs_filename;
+
+      // Getting Presigned URL :
+      getPresignedUrl(filePath).then((url) => {
+        fileDownloader(url);
+      });
+    }
+  };
+
   return (
     <Box
       sx={{ height: "76vh", width: "100%", position: "relative" }}
       className="app-datagrid-container"
     >
-      <DataGridTitle title=" Job Overview" />
+      <DataGridTitle title="Job Overview" />
       <DataGrid
         density="compact"
         rows={Rows}
