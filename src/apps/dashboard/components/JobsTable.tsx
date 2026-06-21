@@ -20,11 +20,31 @@ import { Download, Ellipsis, FileSearch } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function JobsTable() {
+export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("user_email") || "";
   const [loading, setLoading] = useState(true);
   const [Rows, setRows] = useState<any[]>([]);
+
+  const getFilteredValue = (data: any[]) => {
+    // compute status counts based on `output_status` values
+    const total = data?.length || 0;
+    let completed = 0;
+    let running = 0;
+    let failed = 0;
+    (data || []).forEach((item: any) => {
+      const s = item?.output_status;
+      if (s === "Completed") completed += 1;
+      else if (s === "In Progress" || s === "pending") running += 1;
+      else failed += 1;
+    });
+    setStatusCount({
+      total,
+      running,
+      failed,
+      completed,
+    });
+  };
 
   const getWorkFlow = () => {
     DashboardAPI.getWorkflow(userEmail)
@@ -32,6 +52,7 @@ export default function JobsTable() {
         if (response.status === 200) {
           const { data } = response;
           setRows(data || []);
+          getFilteredValue(data);
         } else {
           setRows([]);
         }

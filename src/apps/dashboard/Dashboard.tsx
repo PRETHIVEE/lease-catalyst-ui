@@ -1,53 +1,30 @@
-import { CheckCircle2, Clock3, FileText, List, XCircle } from "lucide-react";
-import WidgetCard from "./components/WidgetCard";
+import { useState } from "react";
 import JobsTable from "./components/JobsTable";
+import StatsBar from "./components/WidgetCard";
 
 const Dashboard = () => {
+  const [statusCount, setStatusCount] = useState({
+    total: 0,
+    running: 0,
+    failed: 0,
+    completed: 0,
+  });
   return (
     <div className="p-4">
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-5 xl:grid-cols-5">
-        <WidgetCard
-          value={5}
-          variant="info"
-          label="New"
-          subDescription="Awaiting intake"
-          icon={FileText}
-        />
-        <WidgetCard
-          value={3}
-          variant="warning"
-          label="Running"
-          subDescription="In progress"
-          icon={Clock3}
-        />
-        <WidgetCard
-          value={1}
-          variant="error"
-          label="Failed"
-          subDescription="Needs review"
-          icon={XCircle}
-        />
-        <WidgetCard
-          value={85}
-          variant="success"
-          label="Completed"
-          subDescription="Abstracted"
-          icon={CheckCircle2}
-        />
-        <WidgetCard
-          value={92}
-          variant="neutral"
-          label="Total"
-          subDescription="All leases"
-          icon={List}
+      <section className="w-full">
+        <StatsBar
+          completed={statusCount?.completed}
+          failed={statusCount?.failed}
+          running={statusCount?.running}
+          total={statusCount?.total}
         />
       </section>
 
       <section
-        className="mt-4 shadow-sm rounded-lg"
+        className="mt-3 shadow-sm rounded-lg"
         style={{ overflow: "hidden" }}
       >
-        <JobsTable />
+        <JobsTable setStatusCount={setStatusCount} />
       </section>
     </div>
   );

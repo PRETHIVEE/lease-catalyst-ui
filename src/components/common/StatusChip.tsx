@@ -1,18 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import {
-  // BadgeCheck,
-  // Ban,
-  // CircleX,
-  // Clock,
-  // Loader,
-  // Send,
-  type LucideIcon,
-} from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const statusChipVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.78rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.77rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
