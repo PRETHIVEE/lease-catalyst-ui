@@ -102,10 +102,10 @@ const Login = () => {
   return (
     <section className="auth-form w-full text-left">
       <div className="mb-6 text-left">
-        <h1 className="mt-1 text-[1.2rem] font-medium text-[var(--font-color-primary,#102a43)]">
+        <h1 className="mt-1 text-[1.25rem] font-medium text-[var(--font-color-primary,#102a43)]">
           Sign In
         </h1>
-        <p className="mt-0.6 text-[0.87rem] text-muted-foreground">
+        <p className="mt-0.6 text-[0.9rem] text-muted-foreground">
           Sign in to your Lease management software.
         </p>
       </div>

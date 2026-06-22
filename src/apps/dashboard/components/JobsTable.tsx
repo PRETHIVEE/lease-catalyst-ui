@@ -143,7 +143,7 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
               <IconButton
                 disabled={output_status !== "Completed"}
                 aria-label={`action options`}
-                className="ml-2"
+                className="ml-2 mt-1.5"
               >
                 <Ellipsis className="size-4" aria-hidden />
               </IconButton>

@@ -66,6 +66,12 @@ const ProjectsAPI = {
       `/workflow/abstraction/status?property_id=${property_id}`,
     );
   },
+
+  getAbstractionData: (property_id: string) => {
+    return AxiosInstance.get(
+      `/workflow/abstraction/data?property_id=${property_id}`,
+    );
+  },
 };
 
 export default ProjectsAPI;

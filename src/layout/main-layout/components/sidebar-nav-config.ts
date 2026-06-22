@@ -53,7 +53,7 @@ export const sidebarNavGroups: NavGroup[] = [
         label: "Data Category",
         path: "/data-category",
         icon: FileText,
-        // hasNotification: true,
+        hasNotification: false,
       },
       { label: "Events", path: "/events", icon: Calendar },
       { label: "Reporting Dashboard", path: "/reports", icon: BarChart3 },

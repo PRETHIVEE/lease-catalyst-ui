@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Bell,
   HelpCircle,
@@ -18,12 +19,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../store/layoutStore";
 import UsersAPI from "@/api/users";
+import NotificationDrawer from "./NotificationDrawer";
+import DashboardAPI from "@/api/dashboard";
 
 type IconButtonProps = {
   label: string;
   onClick?: () => void;
   children: ReactNode;
   className?: string;
+  hasNotification?: boolean;
 };
 
 function HeaderIconButton({
@@ -31,6 +35,7 @@ function HeaderIconButton({
   onClick,
   children,
   className,
+  hasNotification = false,
 }: IconButtonProps) {
   return (
     <button
@@ -41,8 +46,28 @@ function HeaderIconButton({
         "flex size-[2rem] items-center justify-center rounded-md text-[#666666] transition-colors hover:bg-[#f3f4f6] hover:text-[#333333] cursor-pointer",
         className,
       )}
+      style={{
+        position: "relative",
+      }}
     >
       {children}
+
+      {hasNotification && (
+        <span
+          className="notification-dot"
+          aria-label="New updates"
+          style={{
+            height: "0.5rem",
+            width: "0.5rem",
+            backgroundColor: "#e53e3e",
+            borderRadius: "50%",
+            display: "block",
+            position: "absolute",
+            top: "18%",
+            right: "20%",
+          }}
+        />
+      )}
     </button>
   );
 }
@@ -53,10 +78,28 @@ export default function Header() {
   const userName = localStorage.getItem("user_name") || "";
   const companyname = localStorage.getItem("company_name") || null;
   const userEmail = localStorage.getItem("user_email") || "";
+  const userId = localStorage.getItem("user_id") || "";
+  const [toggleNotificationDrawer, setToggleNotificationDrawer] =
+    useState(false);
+  const [notificationData, setNotificationData] = useState([]);
+  const hasNotification = notificationData?.length > 0;
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
+  };
+
+  const handleToggleNotification = () => {
+    setToggleNotificationDrawer((prev) => !prev);
+  };
+
+  const handledismissNotifications = () => {
+    setNotificationData([]);
+    const ids = notificationData?.map((i: any) => i?.id);
+    DashboardAPI?.updateNotifications({
+      is_read: true,
+      ids: [56, 650],
+    });
   };
 
   useEffect(() => {
@@ -64,7 +107,14 @@ export default function Header() {
       const userData = response.data;
       console.log("Current User Data:", userData);
     });
+
+    DashboardAPI.getNotifications(userId).then((resposne) => {
+      setNotificationData(resposne?.data?.notifications);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log("notificationData:", notificationData);
 
   return (
     // <header className="flex h-[var(--header-height,2rem)] shrink-0 items-center justify-between border-b border-[#e0e0e0] bg-white px-[1.25rem]">
@@ -86,7 +136,11 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-[0rem]">
-        <HeaderIconButton label="Help">
+        <HeaderIconButton
+          label="Help"
+          hasNotification={hasNotification}
+          onClick={hasNotification ? handleToggleNotification : () => {}}
+        >
           <Bell className="size-[1.1rem]" strokeWidth={1.75} aria-hidden />
         </HeaderIconButton>
 
@@ -140,7 +194,7 @@ export default function Header() {
               </div>
             </div>
 
-            <div >
+            <div>
               <DropdownMenuSeparator className="my-1 bg-[#e0e0e0]" />
 
               <DropdownMenuItem onSelect={() => {}}>
@@ -156,6 +210,12 @@ export default function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <NotificationDrawer
+        open={toggleNotificationDrawer}
+        onClose={handleToggleNotification}
+        handleDismiss={handledismissNotifications}
+        notificationData={notificationData}
+      />
     </header>
   );
 }

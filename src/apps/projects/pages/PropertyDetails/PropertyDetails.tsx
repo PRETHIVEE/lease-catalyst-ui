@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ProjectsAPI from "@/api/projects";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   formatDateTime,
   getFileExtension,
@@ -49,13 +49,17 @@ const PropertyDetails = () => {
   const { projectId, propertyId } = Object.fromEntries(searchParams as any);
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState("property");
+  const location = useLocation();
+  const defaultTab = location?.state?.tab || "property";
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [documents, setDocumnets] = useState<any[]>([]);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isDocumentLoading, setIsDocumentLoading] = useState(true);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isJobSubmitting, setIsJobSubmitting] = useState(false);
+  const [abstractionData, setAbstractionData] = useState(null);
+  const [abstractionDataLoading, setAbstractionDataLoading] = useState(true);
 
   const BreadcrumbsData = [
     { label: "Projects", url: "/projects" },
@@ -74,17 +78,13 @@ const PropertyDetails = () => {
       .then((response) => {
         setProjectDetails(response?.data);
       })
-      .catch(() => {
-        // Handle error
-      });
+      .catch(() => {});
 
     ProjectsAPI.getPropertyById(Number(propertyId))
       .then((response) => {
         setPropertyDetails(response?.data);
       })
-      .catch(() => {
-        // Handle error
-      });
+      .catch(() => {});
 
     fetchPropertyFiles();
   };
@@ -95,9 +95,7 @@ const PropertyDetails = () => {
       .then((response) => {
         setDocumnets(response?.data?.files || []);
       })
-      .catch(() => {
-        // Handle error
-      })
+      .catch(() => {})
       .finally(() => {
         setIsDocumentLoading(false);
       });
@@ -144,6 +142,7 @@ const PropertyDetails = () => {
         return (
           <p
             className="column-cell-link"
+            style={{ cursor: "pointer" }}
             onClick={async () => {
               try {
                 const url = await getPresignedUrl(params?.row?.s3_path);
@@ -269,7 +268,11 @@ const PropertyDetails = () => {
     switch (status) {
       case "DQC completed":
         return "success";
+      case "Abstraction Completed":
+        return "success";
       case "DQC running":
+        return "pending";
+      case "DQC Under Review":
         return "pending";
       default:
         return "expired";
@@ -286,8 +289,22 @@ const PropertyDetails = () => {
     });
   };
 
+  const fetchAbstractionData = () => {
+    ProjectsAPI.getAbstractionData(String(propertyId))
+      .then((response) => {
+        if (response?.status === 200) {
+          setAbstractionData(response?.data);
+        }
+      })
+      .catch()
+      .finally(() => {
+        setAbstractionDataLoading(false);
+      });
+  };
+
   useEffect(() => {
     fetchAbstractionStatus();
+    fetchAbstractionData();
   }, []);
 
   console.log("abstractionStatus:", abstractionStatus);
@@ -462,7 +479,12 @@ const PropertyDetails = () => {
           )}
 
           {activeTab === "lease-abstraction" && (
-            <LeaseAbstraction propertyName={propertyDetails?.property_name} />
+            <LeaseAbstraction
+              propertyName={propertyDetails?.property_name}
+              abstractionStatus={abstractionStatus?.status}
+              isLoading={abstractionDataLoading}
+              abstractionData={abstractionData}
+            />
           )}
 
           {activeTab === "documents" && (

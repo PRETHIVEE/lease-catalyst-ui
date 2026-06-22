@@ -12,7 +12,7 @@ const CustomDialogTitle: FC<CustomDialogTitleProps> = ({
   handleClose,
 }) => {
   return (
-    <div className="flex items-center justify-between border-b px-4 py-2.5 border-[#cfd0d0]">
+    <div className="flex items-center justify-between border-b px-4 py-2.75 border-[#cfd0d0]">
       <h3 className="text-[0.9rem] font-medium leading-none tracking-tight">
         {title}
       </h3>

@@ -1,0 +1,57 @@
+/* Styles for NotificationCard component */
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 0.35rem;
+  margin-block-end: 1rem;
+  cursor: pointer;
+}
+
+.notification-left {
+  flex: 0 0 auto;
+}
+
+.notification-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.notification-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.notification-title {
+  font-weight: 500;
+  font-size: 0.86rem;
+  color: #585b61;
+}
+
+.notification-time {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.notification-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
