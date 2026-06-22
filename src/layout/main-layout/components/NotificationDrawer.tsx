@@ -18,13 +18,20 @@ interface NotificationDrawerProps {
   open: boolean;
   onClose: () => void;
   handleDismiss: () => void;
+  handleReadNotifications: (id: number) => void;
   // formik: any;
   notificationData: any[];
   // isSubmitting: boolean;
 }
 
 const NotificationDrawer = (props: NotificationDrawerProps) => {
-  const { open, onClose, handleDismiss, notificationData } = props;
+  const {
+    open,
+    onClose,
+    handleDismiss,
+    notificationData,
+    handleReadNotifications,
+  } = props;
 
   return (
     <Drawer open={open} onOpenChange={onClose}>
@@ -53,7 +60,12 @@ const NotificationDrawer = (props: NotificationDrawerProps) => {
 
               <div>
                 {notificationData?.map((i) => (
-                  <NotificationCard key={i?.id} data={i} onClose={onClose} />
+                  <NotificationCard
+                    key={i?.id}
+                    data={i}
+                    onClose={onClose}
+                    handleReadNotifications={handleReadNotifications}
+                  />
                 ))}
               </div>
             </>

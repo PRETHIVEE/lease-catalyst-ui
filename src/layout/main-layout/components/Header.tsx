@@ -81,7 +81,7 @@ export default function Header() {
   const userId = localStorage.getItem("user_id") || "";
   const [toggleNotificationDrawer, setToggleNotificationDrawer] =
     useState(false);
-  const [notificationData, setNotificationData] = useState([]);
+  const [notificationData, setNotificationData] = useState<any[]>([]);
   const hasNotification = notificationData?.length > 0;
 
   const handleLogout = () => {
@@ -98,7 +98,16 @@ export default function Header() {
     const ids = notificationData?.map((i: any) => i?.id);
     DashboardAPI?.updateNotifications({
       is_read: true,
-      ids: [56, 650],
+      ids: ids,
+    });
+  };
+
+  const handleReadNotifications = (id: any) => {
+    const filtered = notificationData?.filter((i) => i?.id !== id);
+    setNotificationData(filtered);
+    DashboardAPI?.updateNotifications({
+      is_read: true,
+      ids: [id],
     });
   };
 
@@ -215,6 +224,7 @@ export default function Header() {
         onClose={handleToggleNotification}
         handleDismiss={handledismissNotifications}
         notificationData={notificationData}
+        handleReadNotifications={handleReadNotifications}
       />
     </header>
   );

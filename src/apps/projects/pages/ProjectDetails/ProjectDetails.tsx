@@ -269,7 +269,7 @@ const ProjectDetails = () => {
           {activeTab === "project" && (
             <div className="mt-4 bg-white rounded-sm shadow-card">
               <div className="border-b border-gray-300 py-2.5 px-4">
-                <h6 className="text-[0.84rem] font-medium">Project Details</h6>
+                <h6 className="text-[0.86rem] font-medium">Project Details</h6>
               </div>
 
               <div className="py-2.5 px-4">

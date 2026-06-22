@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { ChevronDownIcon, Edit } from "lucide-react";
-import { sampleleaseabstractiondata } from "./sampledata";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -12,9 +11,199 @@ import {
 import { ButtonGroup } from "@/components/ui/button-group";
 import NoDataFound from "@/components/common/NoDataFound";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fileDownloader, getPresignedUrl } from "@/utils/utils";
+
+type LeaseAttribute = {
+  attributeName: string;
+  attributeDescription: string;
+  attributeValue: any;
+  isSelected: boolean;
+  isNew: boolean;
+};
+
+type LeaseSubGroup = {
+  subGroupName: string;
+  isSelected: boolean;
+  isNew: boolean;
+  attributes: LeaseAttribute[];
+};
+
+type LeaseGroup = {
+  groupName: string;
+  isSelected: boolean;
+  isNew: boolean;
+  subGroups: LeaseSubGroup[];
+};
+
+const parseJson = (value: any) => {
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
+
+  return value;
+};
+
+const isLeafAttributeField = (value: any) => {
+  return (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    "value" in value
+  );
+};
+
+const isAttributeContainer = (value: any) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+
+  return Object.values(value).every(isLeafAttributeField);
+};
+
+const formatAttributeValue = (value: any) => {
+  if (value === null || value === undefined) {
+    return "-";
+  }
+
+  if (typeof value === "object") {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return "-";
+    }
+  }
+
+  return String(value);
+};
+
+const toAttributes = (value: any): LeaseAttribute[] => {
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => toAttributes(item));
+  }
+
+  if (!value || typeof value !== "object") {
+    return [];
+  }
+
+  if (isAttributeContainer(value)) {
+    return Object.entries(value).map(
+      ([attributeName, field]: [string, any]) => ({
+        attributeName,
+        attributeDescription:
+          field && typeof field.attributeDescription === "string"
+            ? field.attributeDescription
+            : "",
+        attributeValue: formatAttributeValue(field?.value ?? "-"),
+        isSelected: false,
+        isNew: false,
+      }),
+    );
+  }
+
+  return Object.entries(value).flatMap(
+    ([attributeName, field]: [string, any]) => {
+      if (isLeafAttributeField(field)) {
+        return [
+          {
+            attributeName,
+            attributeDescription:
+              field && typeof field.attributeDescription === "string"
+                ? field.attributeDescription
+                : "",
+            attributeValue: formatAttributeValue(field?.value ?? "-"),
+            isSelected: false,
+            isNew: false,
+          },
+        ];
+      }
+
+      if (Array.isArray(field)) {
+        return toAttributes(field);
+      }
+
+      return [];
+    },
+  );
+};
+
+const toSubGroups = (value: any, fallbackName: string): LeaseSubGroup[] => {
+  if (!value && value !== 0) {
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item, index) => ({
+      subGroupName:
+        item && typeof item === "object" && "subGroupName" in item
+          ? item.subGroupName
+          : value.length > 1
+            ? `${fallbackName} ${index + 1}`
+            : fallbackName,
+      isSelected: false,
+      isNew: false,
+      attributes: toAttributes(item),
+    }));
+  }
+
+  if (typeof value === "object") {
+    if (isAttributeContainer(value)) {
+      return [
+        {
+          subGroupName: fallbackName,
+          isSelected: false,
+          isNew: false,
+          attributes: toAttributes(value),
+        },
+      ];
+    }
+
+    return Object.entries(value).map(([subGroupName, subGroupValue]) => ({
+      subGroupName,
+      isSelected: false,
+      isNew: false,
+      attributes: toAttributes(subGroupValue),
+    }));
+  }
+
+  return [];
+};
+
+const normalizeLeaseAbstractionData = (data: any): LeaseGroup[] => {
+  const parsed = parseJson(data);
+  const root = parsed?.Lease_Abstraction ?? parsed;
+
+  if (!root || (typeof root !== "object" && !Array.isArray(root))) {
+    return [];
+  }
+
+  if (Array.isArray(root)) {
+    return root.map((entry, index) => ({
+      groupName:
+        entry && typeof entry === "object" && "groupName" in entry
+          ? entry.groupName
+          : `Group ${index + 1}`,
+      isSelected: false,
+      isNew: false,
+      subGroups:
+        entry && typeof entry === "object" && Array.isArray(entry.subGroups)
+          ? entry.subGroups
+          : toSubGroups(entry, `Group ${index + 1}`),
+    }));
+  }
+
+  return Object.entries(root).map(([groupName, groupValue]) => ({
+    groupName,
+    isSelected: false,
+    isNew: false,
+    subGroups: toSubGroups(groupValue, groupName),
+  }));
+};
 
 const LeaseAbstraction = ({
-  propertyName,
   abstractionStatus,
   isLoading,
   abstractionData,
@@ -24,7 +213,6 @@ const LeaseAbstraction = ({
   isLoading: boolean;
   abstractionData: any;
 }) => {
-  //
   if (isLoading) {
     return (
       <div className="mt-10 w-[70%] m-auto">
@@ -42,14 +230,54 @@ const LeaseAbstraction = ({
     );
   }
 
-  const abstractionJsonData =
-    abstractionData?.abstraction_json_data?.Lease_Abstraction;
-  console.log("abstractionData", abstractionData);
+  const abstractionJsonData = parseJson(abstractionData?.abstraction_json_data);
+  const leaseAbstractionData =
+    normalizeLeaseAbstractionData(abstractionJsonData);
+  const displayData = leaseAbstractionData.length ? leaseAbstractionData : [];
+
+  const handleDownload = (type: string = "CSV") => {
+    const data = JSON.parse(abstractionData?.abstraction_output);
+
+    if (data) {
+      const filePath = type === "CSV" ? data?.csv_s3_key : data?.rhs_filename;
+      if (type === "CSV") {
+        getPresignedUrl(filePath).then((url) => {
+          fileDownloader(url);
+        });
+      } else if (type === "JSON") {
+        getPresignedUrl(filePath).then((url) => {
+          const filename = filePath.split("/").pop() || "download.json";
+          JsonDownloader(url, filename);
+        });
+      }
+    }
+  };
+
+  const JsonDownloader = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("File download failed:", error);
+      window.open(url, "_blank");
+    }
+  };
 
   return (
     <div className="mt-1.2">
       <div className="flex justify-end items-center gap-3 mt-2">
-        <Button variant="outline" size="sm" onClick={() => {}}>
+        <Button variant="outline" size="sm" disabled>
           <Edit /> Edit Lease
         </Button>
 
@@ -66,9 +294,12 @@ const LeaseAbstraction = ({
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
               <DropdownMenuGroup>
-                <DropdownMenuItem>Export as CSV</DropdownMenuItem>
-
-                <DropdownMenuItem>Download as PDF</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => handleDownload("CSV")}>
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => handleDownload("JSON")}>
+                  Download as JSON
+                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -76,7 +307,7 @@ const LeaseAbstraction = ({
       </div>
 
       <div className="mx-auto mt-4 max-w-[1000px] space-y-4">
-        {sampleleaseabstractiondata.map((group) => (
+        {displayData.map((group) => (
           <section
             key={group.groupName}
             className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm"
@@ -96,20 +327,16 @@ const LeaseAbstraction = ({
                   <div className="overflow-hidden rounded-sm border border-slate-200">
                     <table className="min-w-full border-collapse text-left text-sm">
                       <tbody className="divide-y divide-slate-200">
-                        {subGroup.attributes.map((attribute) => (
+                        {subGroup.attributes.map((attribute, index) => (
                           <tr
-                            key={attribute.attributeName}
+                            key={`${attribute.attributeName}-${index}`}
                             className="bg-white hover:bg-gray-100 transition-colors text-[0.8rem]"
                           >
                             <td className="w-1/3 whitespace-nowrap px-4 py-1.5 font-medium text-slate-900">
                               {attribute.attributeName}
                             </td>
                             <td className="px-4 py-1.5 text-gray-500">
-                              {attribute?.attributeName === "Property name" ? (
-                                <>{propertyName}</>
-                              ) : (
-                                <>{attribute.attributeValue ?? "-"}</>
-                              )}
+                              {attribute.attributeValue ?? "-"}
                             </td>
                           </tr>
                         ))}

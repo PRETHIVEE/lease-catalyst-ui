@@ -343,7 +343,7 @@ const PropertyDetails = () => {
                 {/* PROPERTY DETAILS */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.84rem] font-medium">
+                    <h6 className="text-[0.86rem] font-medium">
                       Property Details
                     </h6>
                   </div>
@@ -399,7 +399,7 @@ const PropertyDetails = () => {
                 {/* ABSTRACTION JOB STATUS */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.84rem] font-medium">
+                    <h6 className="text-[0.86rem] font-medium">
                       Lease Abstraction Status
                     </h6>
                   </div>
@@ -410,13 +410,20 @@ const PropertyDetails = () => {
                         <StatusChip
                           label={abstractionStatus?.status}
                           variant={LabelVariant}
+                          className="text-[0.85rem]"
                         />
                         <Tooltip
-                          title="Current status of the Lease Abstraction Job"
+                          title={
+                            <p style={{ fontSize: "0.8rem", fontWeight: 400 }}>
+                              {
+                                "[ Not Initiated -> Document QC -> Abstraction ]"
+                              }
+                            </p>
+                          }
                           arrow
                           placement="right"
                         >
-                          <Info color="gray" size={16} className="mt-1.25" />
+                          <Info color="gray" size={16} className="mt-1.5" />
                         </Tooltip>
                       </div>
 
@@ -433,7 +440,7 @@ const PropertyDetails = () => {
                 {/* CONTACT */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.84rem] font-medium">Contact</h6>
+                    <h6 className="text-[0.86rem] font-medium">Contact</h6>
                   </div>
 
                   <div className="py-2.5 px-4">
@@ -459,7 +466,7 @@ const PropertyDetails = () => {
                 {/* MAP */}
                 <div className="mt-4 bg-white rounded-sm shadow-card">
                   <div className="border-b border-gray-300 py-2.5 px-4">
-                    <h6 className="text-[0.84rem] font-medium">Map</h6>
+                    <h6 className="text-[0.86rem] font-medium">Map</h6>
                   </div>
 
                   <div className="p-2.5">

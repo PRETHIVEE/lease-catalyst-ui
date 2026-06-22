@@ -2,7 +2,6 @@
 import React from "react";
 import "./NotificationCard.scss";
 import { X } from "lucide-react";
-import IconButton from "@/components/common/IconButton";
 import { formatDateTime } from "@/utils/utils";
 import { useNavigate } from "react-router-dom";
 
@@ -10,10 +9,15 @@ type Props = {
   title?: string;
   timeAgo?: string;
   onClose: () => void;
+  handleReadNotifications: (id: number) => void;
   data: any;
 };
 
-const NotificationCard: React.FC<Props> = ({ onClose, data }) => {
+const NotificationCard: React.FC<Props> = ({
+  onClose,
+  data,
+  handleReadNotifications,
+}) => {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
@@ -31,12 +35,8 @@ const NotificationCard: React.FC<Props> = ({ onClose, data }) => {
   };
 
   return (
-    <div
-      className="notification-card shadow-card"
-      role="article"
-      onClick={handleNavigation}
-    >
-      <div className="notification-left">
+    <div className="notification-card shadow-card" role="article">
+      <div className="notification-left" onClick={handleNavigation}>
         <div className="notification-icon" aria-hidden>
           <svg
             width="16"
@@ -53,7 +53,7 @@ const NotificationCard: React.FC<Props> = ({ onClose, data }) => {
         </div>
       </div>
 
-      <div className="notification-body">
+      <div className="notification-body" onClick={handleNavigation}>
         <div className="notification-title">
           <strong>{data?.workflow_name}</strong> has been completed for the
           property <strong>{data?.property_name}</strong>
@@ -64,14 +64,15 @@ const NotificationCard: React.FC<Props> = ({ onClose, data }) => {
         </div>
       </div>
 
-      <div className="border-1">
-        <IconButton
-          className="notification-close"
-          aria-label="Dismiss notification"
-          onClick={onClose}
+      <div style={{ paddingInline: "0.5rem", cursor: "pointer" }}>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            handleReadNotifications(data?.id);
+          }}
         >
           <X size={16} />
-        </IconButton>
+        </button>
       </div>
     </div>
   );
