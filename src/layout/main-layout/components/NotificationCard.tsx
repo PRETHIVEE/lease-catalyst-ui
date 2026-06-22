@@ -55,8 +55,11 @@ const NotificationCard: React.FC<Props> = ({
 
       <div className="notification-body" onClick={handleNavigation}>
         <div className="notification-title">
-          <strong>{data?.workflow_name}</strong> has been completed for the
-          property <strong>{data?.property_name}</strong>
+          <strong>{data?.workflow_name}</strong> has been{" "}
+          <strong>
+            {data?.workflow_status === "Error" ? "Error" : "Completed"}
+          </strong>{" "}
+          for the property <strong>{data?.property_name}</strong>
         </div>
 
         <div className="notification-time">
