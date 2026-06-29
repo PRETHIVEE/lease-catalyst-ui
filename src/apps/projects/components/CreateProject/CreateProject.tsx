@@ -59,7 +59,7 @@ const CreateProject = (props: CreateProjectProps) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 formik?.setFieldValue(
                   "projectName",
-                  trimLeadingSpace(event.target.value),
+                  trimLeadingSpace(event.target.value)
                 );
               }}
               error={
@@ -105,6 +105,7 @@ const CreateProject = (props: CreateProjectProps) => {
               setUploadDocuments={setUploadDocuments}
               // supportedFormats={["xls", "xlsx", "pdf"]}
               supportedFormats={["pdf"]}
+              maxFiles={1} // Maximum number of files to upload
             />
           </div>
         </DrawerContentArea>

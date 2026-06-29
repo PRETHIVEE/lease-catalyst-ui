@@ -45,7 +45,7 @@ const ProjectsAPI = {
   uploadPropertyFiles: (propertyId: number, formData: FormData) => {
     return AxiosInstance.post(
       `/projects/properties/upload?id=${propertyId}`,
-      formData,
+      formData
     );
   },
 
@@ -63,13 +63,13 @@ const ProjectsAPI = {
 
   getAbstractionStatus: (property_id: string) => {
     return AxiosInstance.get(
-      `/workflow/abstraction/status?property_id=${property_id}`,
+      `/workflow/abstraction/status?property_id=${property_id}`
     );
   },
 
   getAbstractionData: (property_id: string) => {
     return AxiosInstance.get(
-      `/workflow/abstraction/data?property_id=${property_id}`,
+      `/workflow/abstraction/data?property_id=${property_id}`
     );
   },
 };

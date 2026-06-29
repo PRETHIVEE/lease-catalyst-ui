@@ -51,6 +51,7 @@ const ProjectsPage = () => {
   const handleCloseProjectModal = () => {
     setOpenCreateProject(false);
     formik.resetForm();
+    setUploadDocuments([]); // Clear the uploaded documents
   };
 
   const getDataCategoryList = () => {
@@ -68,7 +69,7 @@ const ProjectsPage = () => {
             attribute,
             description,
             status,
-          })),
+          }))
         );
       })
       .catch(() => setDataCategoryList([]));
@@ -112,27 +113,39 @@ const ProjectsPage = () => {
 
   const onCreateProject = (data: any) => {
     setIsSubmitting(true);
-    const requestBody = {
-      project_name: data.projectName,
-      category: data.template?.attribute,
-      property_count: 0,
-      user_id: Number(userId),
-      user_name: userEmail,
-    };
+    // const requestBody = {
+    //   project_name: data.projectName,
+    //   category: data.template?.attribute,
+    //   property_count: 0,
+    //   user_id: Number(userId),
+    //   user_name: userEmail,
+    // };
 
-    ProjectsAPI.CreateProject(requestBody)
+    const formData = new FormData();
+    formData.append("project_name", data.projectName);
+    formData.append("category", data.template?.attribute);
+    formData.append("property_count", "0");
+
+    formData.append("user_id", userId);
+    formData.append("user_name", userEmail);
+    if (uploadDocuments.length > 0) {
+      formData.append("scope_document", uploadDocuments[0]);
+    }
+
+    ProjectsAPI.CreateProject(formData)
       .then((response) => {
-        if (response.status === 201) {
+        console.log("Create project response", response);
+        if (response.status === 200) {
           getProjectList();
           showSnackbar("Project created!");
         }
+        handleCloseProjectModal();
       })
       .catch(() => {
         showSnackbar("Failed to create project.", "error");
       })
       .finally(() => {
         setIsSubmitting(false);
-        handleCloseProjectModal();
       });
   };
 

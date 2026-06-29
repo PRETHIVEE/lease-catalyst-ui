@@ -30,6 +30,7 @@ export interface UploadAreaProps {
   uploadDocuments: File[];
   setUploadDocuments: Dispatch<SetStateAction<File[]>>;
   supportedFormats: string[];
+  maxFiles?: number;
 }
 
 const normalizeExtensions = (formats: string[]): string[] =>
@@ -72,10 +73,12 @@ const isValidFile = (file: File, supportedFormats: string[]): boolean => {
 const mergeFiles = (
   current: File[],
   incoming: File[],
-  supportedFormats: string[]
+  supportedFormats: string[],
+  maxFiles?: number
 ): File[] => {
   const next = [...current];
   for (const file of incoming) {
+    if (maxFiles !== undefined && next.length >= maxFiles) break;
     if (!isValidFile(file, supportedFormats)) continue;
     const isDuplicate = next.some(
       (existing) =>
@@ -132,36 +135,43 @@ const UploadArea = ({
   uploadDocuments,
   setUploadDocuments,
   supportedFormats,
+  maxFiles,
 }: UploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const acceptAttribute = buildAcceptAttribute(supportedFormats);
   const supportedFormatsLabel = formatSupportedFormatsLabel(supportedFormats);
+  const isUploadDisabled =
+    maxFiles !== undefined && uploadDocuments.length >= maxFiles;
 
   const addFiles = useCallback(
     (files: FileList | File[]) => {
+      if (isUploadDisabled) return;
       const fileArray = Array.from(files);
       if (fileArray.length === 0) return;
       setUploadDocuments((current) =>
-        mergeFiles(current, fileArray, supportedFormats)
+        mergeFiles(current, fileArray, supportedFormats, maxFiles)
       );
     },
-    [setUploadDocuments, supportedFormats]
+    [isUploadDisabled, maxFiles, setUploadDocuments, supportedFormats]
   );
 
   const handleDragOver = (event: DragEvent<HTMLLabelElement>) => {
+    if (isUploadDisabled) return;
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(true);
   };
 
   const handleDragLeave = (event: DragEvent<HTMLLabelElement>) => {
+    if (isUploadDisabled) return;
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(false);
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
+    if (isUploadDisabled) return;
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(false);
@@ -187,10 +197,13 @@ const UploadArea = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        aria-disabled={isUploadDisabled}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center rounded-sm border border-dashed px-6 py-4 transition-colors",
-          "border-[#3b82f6] bg-[#f0f7ff]",
-          isDragging && "border-[#2563eb] bg-[#dbeafe]"
+          "flex flex-col items-center justify-center rounded-sm border border-dashed px-6 py-4 transition-colors",
+          isUploadDisabled
+            ? "cursor-not-allowed border-[#d1d5db] bg-[#f9fafb] opacity-60"
+            : "cursor-pointer border-[#3b82f6] bg-[#f0f7ff]",
+          !isUploadDisabled && isDragging && "border-[#2563eb] bg-[#dbeafe]"
         )}
       >
         <div className="relative mb-4" aria-hidden>
@@ -214,16 +227,17 @@ const UploadArea = ({
         <input
           ref={inputRef}
           type="file"
-          multiple
+          multiple={maxFiles === undefined || maxFiles > 1}
           accept={acceptAttribute}
           className="sr-only"
+          disabled={isUploadDisabled}
           onChange={handleInputChange}
         />
       </label>
 
       <div className="mt-2 flex items-center justify-between text-[0.74rem] text-[#374151]">
-        <span>Supported formats: {supportedFormatsLabel}</span>
-        <span>Maximum size: 50MB</span>
+        <span>Allowed formats: {supportedFormatsLabel}</span>
+        <span>Max. size: 50MB</span>
       </div>
 
       {uploadDocuments.length > 0 && (

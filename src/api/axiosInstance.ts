@@ -14,7 +14,24 @@ AxiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
+);
+
+// Response Interceptor
+AxiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const requestUrl = error.config?.url ?? "";
+      const isLoginRequest = requestUrl.includes("/login");
+
+      if (!isLoginRequest) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default AxiosInstance;
