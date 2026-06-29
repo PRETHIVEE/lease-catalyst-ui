@@ -37,25 +37,21 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
   const navigate = useNavigate();
 
   const handleNavigateToView = () => {
-    if (status !== "pending") {
-      navigate(`/data-category/view?mode=view&dc=${title}`);
-    }
+    navigate(`/data-category/view?mode=view&dc=${title}`);
   };
 
   return (
     <article
-      role={status !== "pending" ? "button" : undefined}
-      tabIndex={status !== "pending" ? 0 : undefined}
-      aria-label={status !== "pending" ? `View ${title}` : title}
-      aria-disabled={status === "pending"}
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${title}`}
       className={cn(
-        "rounded-md shadow-card bg-white p-4",
-        status !== "pending" && "cursor-pointer transition-colors hover:bg-slate-50",
+        "rounded-md shadow-card bg-white p-4 cursor-pointer transition-colors hover:bg-slate-50",
         className,
       )}
       onClick={handleNavigateToView}
       onKeyDown={(event) => {
-        if (status !== "pending" && (event.key === "Enter" || event.key === " ")) {
+        if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           handleNavigateToView();
         }
@@ -74,9 +70,8 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
             <StatusChip variant="pending" label="Pending" />
           )}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild disabled={status === "pending"}>
+            <DropdownMenuTrigger asChild>
               <IconButton
-                disabled={status === "pending"}
                 aria-label={`${title} options`}
                 className="ml-2"
                 onClick={(event) => event.stopPropagation()}

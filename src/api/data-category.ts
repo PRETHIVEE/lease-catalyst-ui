@@ -2,8 +2,8 @@
 import AxiosInstance from "./axiosInstance";
 
 const DataCategoryAPI = {
-  getDataCategoryList: (userEmail: string) => {
-    return AxiosInstance.get(`/attributes/categories?user_name=${userEmail}`);
+  getDataCategoryList: () => {
+    return AxiosInstance.get(`/attributes/categories/`);
   },
   // UploadFiles: (payload: any) => {
   //   return AxiosInstance.post(`/upload/upload`, payload);

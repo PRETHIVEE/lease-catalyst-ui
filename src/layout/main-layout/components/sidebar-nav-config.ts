@@ -2,14 +2,12 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   Blocks,
-  // BriefcaseBusiness,
   Building2,
   Calculator,
   Calendar,
   ClipboardList,
   Cloud,
   FileText,
-  FolderOpen,
   Languages,
   LayoutDashboard,
   PlayCircle,
@@ -40,7 +38,9 @@ export const superAdminMenu: NavGroup[] = [
 
 export const sidebarNavGroups: NavGroup[] = [
   {
-    items: [{ label: "Job Dashboard", path: "/dashboard", icon: LayoutDashboard }],
+    items: [
+      { label: "Job Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    ],
   },
   {
     items: [{ label: "Users", path: "/users", icon: Users }],
@@ -57,30 +57,24 @@ export const sidebarNavGroups: NavGroup[] = [
       },
       { label: "Events", path: "/events", icon: Calendar },
       { label: "Reporting Dashboard", path: "/reports", icon: BarChart3 },
-      // { label: "Lease Data Validation", path: "/renters", icon: Users },
-      { label: "Document Management", path: "/documents", icon: FolderOpen },
     ],
   },
   {
     title: "Financials",
     items: [
-      // { label: "Revenues", path: "/revenues", icon: Home },
       { label: "Portfolio Reporting", path: "/expenses", icon: Calculator },
       {
         label: "CAM / OPEX Reconcilation",
         path: "/owner-financials",
         icon: ClipboardList,
       },
-      // {
-      //   label: "Portfolio Analytics",
-      //   path: "/portfolio",
-      //   icon: BriefcaseBusiness,
-      // },
     ],
   },
   {
     title: "Translation Services",
-    items: [{ label: "Translation", path: "/lease-translate", icon: Languages }],
+    items: [
+      { label: "Translation", path: "/lease-translate", icon: Languages },
+    ],
   },
   {
     title: "Integrations",

@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DashboardAPI from "@/api/dashboard";
 import DataGridTitle from "@/components/common/DataGridTitle";
-import IconButton from "@/components/common/IconButton";
 import StatusChip from "@/components/common/StatusChip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import IconButton from "@/components/common/IconButton";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import { fileDownloader, formatDateTime, getPresignedUrl } from "@/utils/utils";
+import { IconButton, Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
   type GridColDef,
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Download, Ellipsis, FileSearch } from "lucide-react";
+import { Download, FileSearch } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -125,61 +126,112 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
       width: 160,
       valueFormatter: (value) => formatDateTime(value),
     },
-
     {
       field: "action",
-      headerName: "Actions",
-      width: 80,
-      disableColumnMenu: true,
-      sortable: false,
+      headerName: "Action",
+      width: 90,
       renderCell: (params: GridRenderCellParams) => {
         const { output_status, workflow_name } = params.row;
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              asChild
-              disabled={output_status !== "Completed"}
+          <span>
+            <Tooltip
+              title={workflow_name === "Abstraction" ? "Open HITL" : "View DQC"}
+              arrow
+              placement="bottom"
             >
               <IconButton
+                sx={{ mr: 0.75 }}
+                size="small"
+                onClick={handleNavigate(params?.row)}
                 disabled={output_status !== "Completed"}
-                aria-label={`action options`}
-                className="ml-2 mt-1.5"
               >
-                <Ellipsis className="size-4" aria-hidden />
+                <FileSearch className="size-4" aria-hidden />
               </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
-            >
-              <DropdownMenuItem onSelect={handleDownload(params?.row, "CSV")}>
-                <Download aria-hidden className="mr-1.5" />
-                Download as CSV
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem onSelect={handleDownload(params?.row, "JSON")}>
-                <Download aria-hidden className="mr-1.5" />
-                Download as JSON
-              </DropdownMenuItem> */}
-              <DropdownMenuItem onSelect={handleNavigate(params?.row)}>
-                <FileSearch aria-hidden className="mr-1.5" />
-                {workflow_name === "Lease Abstraction"
-                  ? "Open HITL"
-                  : "View DQC"}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </Tooltip>
+
+            <Tooltip title={"Download"} arrow placement="bottom">
+              <IconButton
+                size="small"
+                onClick={handleDownload(params?.row, "CSV")}
+                disabled={output_status !== "Completed"}
+              >
+                <Download className="size-3.5" aria-hidden />
+              </IconButton>
+            </Tooltip>
+          </span>
         );
       },
     },
+
+    // {
+    //   field: "action",
+    //   headerName: "Actions",
+    //   width: 80,
+    //   disableColumnMenu: true,
+    //   sortable: false,
+    //   renderCell: (params: GridRenderCellParams) => {
+    //     const { output_status, workflow_name } = params.row;
+    //     return (
+    //       <DropdownMenu>
+    //         <DropdownMenuTrigger
+    //           asChild
+    //           disabled={output_status !== "Completed"}
+    //         >
+    //           <IconButton
+    //             disabled={output_status !== "Completed"}
+    //             aria-label={`action options`}
+    //             className="ml-2 mt-1.5"
+    //           >
+    //             <Ellipsis className="size-4" aria-hidden />
+    //           </IconButton>
+    //         </DropdownMenuTrigger>
+    //         <DropdownMenuContent
+    //           align="end"
+    //           className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
+    //         >
+    //           <DropdownMenuItem onSelect={handleDownload(params?.row, "CSV")}>
+    //             <Download aria-hidden className="mr-1.5" />
+    //             Download as CSV
+    //           </DropdownMenuItem>
+    //           {/* <DropdownMenuItem onSelect={handleDownload(params?.row, "JSON")}>
+    //             <Download aria-hidden className="mr-1.5" />
+    //             Download as JSON
+    //           </DropdownMenuItem> */}
+    //           <DropdownMenuItem onSelect={handleNavigate(params?.row)}>
+    //             <FileSearch aria-hidden className="mr-1.5" />
+    //             {workflow_name === "Abstraction" ? "Open HITL" : "View DQC"}
+    //           </DropdownMenuItem>
+    //         </DropdownMenuContent>
+    //       </DropdownMenu>
+    //     );
+    //   },
+    // },
   ];
 
   const handleNavigate = (data: any) => () => {
-    if (data?.workflow_name === "Lease Abstraction") {
-      window.open(
-        "https://xdas-one.xtract.io/#/auth/login",
-        "_blank",
-        "noopener,noreferrer",
-      );
+    if (data?.workflow_name === "Abstraction") {
+      DashboardAPI?.generateSSOTokenForXdas({
+        emailId: userEmail,
+      })
+        .then((response) => {
+          console.log("response", response);
+          if (response?.data?.redirectUrl) {
+            window.open(
+              response?.data?.redirectUrl,
+              "_blank",
+              "noopener,noreferrer",
+            );
+          } else {
+            window.open(
+              "https://xdas-one.xtract.io/#/auth/login",
+              "_blank",
+              "noopener,noreferrer",
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       navigate(`/dashboard/document-qc?jobId=${data.job_id}`);
     }

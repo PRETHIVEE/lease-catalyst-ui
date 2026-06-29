@@ -478,6 +478,7 @@ const ModifyDataCategory = () => {
       status: "pending",
       user: userEmail,
       attributes: convertStructure(categories),
+      is_default: false,
     };
 
     DataCategoryAPI?.createDataCategory(requestbody)

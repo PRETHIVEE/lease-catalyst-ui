@@ -233,6 +233,9 @@ const ProjectDetails = () => {
 
   console.log("propertiesData", propertiesData);
   console.log("location", location);
+  console.log("projectDetails :", projectDetails);
+
+
 
   return (
     <div className="px-4 py-2">
@@ -267,49 +270,61 @@ const ProjectDetails = () => {
           </Tabs>
 
           {activeTab === "project" && (
-            <div className="mt-4 bg-white rounded-sm shadow-card">
-              <div className="border-b border-gray-300 py-2.5 px-4">
-                <h6 className="text-[0.86rem] font-medium">Project Details</h6>
+            <>
+              <div className="mt-4 bg-white rounded-sm shadow-card">
+                <div className="border-b border-gray-300 py-2.5 px-4">
+                  <h6 className="text-[0.86rem] font-medium">
+                    Project Details
+                  </h6>
+                </div>
+
+                <div className="py-2.5 px-4">
+                  <p className="mt-1 text-[0.84rem]">
+                    <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                      Project Name{" "}
+                    </span>{" "}
+                    <span>: {projectDetails?.project_name || "N/A"}</span>
+                  </p>
+                  <p className="mt-1 text-[0.84rem] mt-1.75">
+                    <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                      Data Category{" "}
+                    </span>{" "}
+                    <span>: {projectDetails?.category || "N/A"}</span>
+                  </p>
+
+                  <p className="mt-1 text-[0.84rem] mt-1.75">
+                    <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                      No of Properties{" "}
+                    </span>{" "}
+                    <span>: {projectDetails?.property_count || "0"}</span>
+                  </p>
+
+                  <p className="mt-1 text-[0.84rem] mt-1.75">
+                    <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                      Active Lease Count
+                    </span>{" "}
+                    <span>: {"N/A"}</span>
+                  </p>
+
+                  <p className="mt-1 text-[0.84rem] mt-1.75 my-1.75">
+                    <span className="font-normal inline-block min-w-[8rem] text-gray-500">
+                      Created On{" "}
+                    </span>{" "}
+                    <span>
+                      : {formatDateTime(projectDetails?.last_created) || "N/A"}
+                    </span>
+                  </p>
+                </div>
               </div>
 
-              <div className="py-2.5 px-4">
-                <p className="mt-1 text-[0.84rem]">
-                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
-                    Project Name{" "}
-                  </span>{" "}
-                  <span>: {projectDetails?.project_name || "N/A"}</span>
-                </p>
-                <p className="mt-1 text-[0.84rem] mt-1.75">
-                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
-                    Data Category{" "}
-                  </span>{" "}
-                  <span>: {projectDetails?.category || "N/A"}</span>
-                </p>
+              {/* <div className="mt-4 bg-white rounded-sm shadow-card">
+                <div className="border-b border-gray-300 py-2.5 px-4">
+                  <h6 className="text-[0.86rem] font-medium">Project Scope</h6>
+                </div>
 
-                <p className="mt-1 text-[0.84rem] mt-1.75">
-                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
-                    No of Properties{" "}
-                  </span>{" "}
-                  <span>: {projectDetails?.property_count || "0"}</span>
-                </p>
-
-                <p className="mt-1 text-[0.84rem] mt-1.75">
-                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
-                    Active Lease Count
-                  </span>{" "}
-                  <span>: {"N/A"}</span>
-                </p>
-
-                <p className="mt-1 text-[0.84rem] mt-1.75 my-1.75">
-                  <span className="font-normal inline-block min-w-[8rem] text-gray-500">
-                    Created On{" "}
-                  </span>{" "}
-                  <span>
-                    : {formatDateTime(projectDetails?.last_created) || "N/A"}
-                  </span>
-                </p>
-              </div>
-            </div>
+                <div className="py-2.5 px-4">PROJECT SCOPE FILE</div>
+              </div> */}
+            </>
           )}
 
           {activeTab === "properties" && (

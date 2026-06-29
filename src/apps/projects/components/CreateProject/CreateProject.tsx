@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import {
@@ -14,6 +15,8 @@ import DialogFooterWrapper from "@/components/common/DialogFooterWrapper";
 import { Button } from "@/components/ui/button";
 import { Loader, SendHorizontal, X } from "lucide-react";
 import { trimLeadingSpace } from "@/utils/utils";
+import UploadArea from "@/components/common/UploadArea";
+import type { Dispatch, SetStateAction } from "react";
 
 interface CreateProjectProps {
   open: boolean;
@@ -21,10 +24,21 @@ interface CreateProjectProps {
   formik: any;
   dataCategoryOptions: any[];
   isSubmitting: boolean;
+  uploadDocuments: File[];
+  setUploadDocuments: Dispatch<SetStateAction<File[]>>;
 }
 
 const CreateProject = (props: CreateProjectProps) => {
-  const { open, onClose, formik, dataCategoryOptions, isSubmitting } = props;
+  const {
+    open,
+    onClose,
+    formik,
+    dataCategoryOptions,
+    isSubmitting,
+    uploadDocuments,
+    setUploadDocuments,
+  } = props;
+
   return (
     <Drawer open={open} onOpenChange={onClose}>
       <DrawerContent>
@@ -45,7 +59,7 @@ const CreateProject = (props: CreateProjectProps) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 formik?.setFieldValue(
                   "projectName",
-                  trimLeadingSpace(event.target.value)
+                  trimLeadingSpace(event.target.value),
                 );
               }}
               error={
@@ -66,7 +80,7 @@ const CreateProject = (props: CreateProjectProps) => {
               disableClearable
               options={dataCategoryOptions}
               getOptionLabel={(o) => o?.attribute}
-              getOptionDisabled={(o) => o?.status === "pending"}
+              // getOptionDisabled={(o) => o?.status === "pending"}
               value={formik?.values?.template}
               onChange={(_e, newValue) => {
                 formik?.setFieldValue("template", newValue);
@@ -81,6 +95,16 @@ const CreateProject = (props: CreateProjectProps) => {
                   helperText={formik.touched.template && formik.errors.template}
                 />
               )}
+            />
+          </div>
+
+          <div className="mt-3">
+            <InputLabel htmlFor="scope-document" label="Scope document" />
+            <UploadArea
+              uploadDocuments={uploadDocuments}
+              setUploadDocuments={setUploadDocuments}
+              // supportedFormats={["xls", "xlsx", "pdf"]}
+              supportedFormats={["pdf"]}
             />
           </div>
         </DrawerContentArea>

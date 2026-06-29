@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Grid2x2, Grid2x2Plus, LayoutGrid } from "lucide-react";
@@ -9,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const DataCategory = () => {
   const [activeTab, setActiveTab] = useState("all");
-  const userEmail = localStorage.getItem("user_email") || "";
   const [loading, setLoading] = useState(true);
   const [builtInDataCat, setBuitInDataCat] = useState<any[]>([]);
   const [customDataCat, setCustomDataCat] = useState<any[]>([]);
@@ -21,7 +19,7 @@ const DataCategory = () => {
         : customDataCat;
 
   const getAttributesTypes = () => {
-    DataCategoryAPI.getDataCategoryList(userEmail)
+    DataCategoryAPI.getDataCategoryList()
       .then((response) => {
         if (response.status === 200) {
           const data = response.data;

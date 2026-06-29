@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
 import AxiosInstance from "./axiosInstance";
 
 const DashboardAPI = {
@@ -23,6 +24,13 @@ const DashboardAPI = {
   getNotifications: (userId: string) => {
     return AxiosInstance.get(
       `/workflow/notifications/get/${userId}?read=false`,
+    );
+  },
+
+  generateSSOTokenForXdas: (payload: any) => {
+    return axios.post(
+      `https://xdas-one.xtract.io/authenticationservice/AuthenticationAPI/Login/GenerateSSOToken`,
+      payload,
     );
   },
 };

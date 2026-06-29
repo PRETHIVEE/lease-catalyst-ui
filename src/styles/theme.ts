@@ -10,7 +10,7 @@ const theme = createTheme({
         tooltip: {
           backgroundColor: "#1b1a1a",
           color: "#fff",
-          fontSize: "0.75rem",
+          fontSize: "0.65rem",
         },
         arrow: {
           color: "#1b1a1a",

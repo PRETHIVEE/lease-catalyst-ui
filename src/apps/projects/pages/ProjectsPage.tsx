@@ -27,6 +27,8 @@ const ProjectsPage = () => {
   const userEmail = localStorage.getItem("user_email") || "";
   const [openCreateProject, setOpenCreateProject] = useState(false);
   const [dataCategoryList, setDataCategoryList] = useState<DataCategory[]>([]);
+  const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
+
   const { showSnackbar } = useSnackbarStore();
 
   const validationSchema = Yup.object({
@@ -182,6 +184,8 @@ const ProjectsPage = () => {
         formik={formik}
         dataCategoryOptions={dataCategoryList}
         isSubmitting={isSubmitting}
+        uploadDocuments={uploadDocuments}
+        setUploadDocuments={setUploadDocuments}
       />
     </div>
   );
