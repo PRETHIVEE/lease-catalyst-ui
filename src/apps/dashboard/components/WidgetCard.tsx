@@ -53,8 +53,9 @@ export default function StatsBar({
         justifyContent: "end",
         gap: "3.5rem",
         padding: "0.5rem 1.5rem",
-        borderRadius: "0.35rem",
-        background: "linear-gradient(90deg, transparent 0%, #e2f3e5 30%, #E2F3E5 100%)",
+        borderRadius: "0.2rem",
+        background:
+          "linear-gradient(90deg, transparent 0%, #e2f3e5 30%, #E2F3E5 100%)",
         // fontFamily:
         //   "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
         width: "100%",
@@ -115,7 +116,7 @@ export default function StatsBar({
               </span>
             </div>
           </div>
-        ),
+        )
       )}
     </div>
   );

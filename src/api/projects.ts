@@ -5,6 +5,9 @@ const ProjectsAPI = {
   CreateProject: (payload: any) => {
     return AxiosInstance.post(`/projects/project_create`, payload);
   },
+  UpdateProject: (payload: any) => {
+    return AxiosInstance.put(`/projects/project_update`, payload);
+  },
 
   CreateProperty: (payload: any) => {
     return AxiosInstance.post(`/projects/property_create`, payload);

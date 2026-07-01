@@ -7,6 +7,7 @@ import {
   Building2,
   Ellipsis,
   Eye,
+  Loader,
   Plus,
   ShieldUser,
   Trash2,
@@ -24,7 +25,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSnackbarStore } from "@/store/snackbar-store";
-import { formatDateTime } from "@/utils/utils";
+import { formatDateTime, getPresignedUrl } from "@/utils/utils";
 import {
   DataGrid,
   type GridColDef,
@@ -40,6 +41,7 @@ import IconButton from "@/components/common/IconButton";
 import Box from "@mui/material/Box";
 import CreateProperty from "../../components/CreateProperty/CreateProperty";
 import UserAccess from "../../components/UserAccess/UserAccess";
+import PdfViewer from "@/components/common/PdfViewer";
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
@@ -49,6 +51,7 @@ const ProjectDetails = () => {
   const { showSnackbar } = useSnackbarStore();
   const projectId = searchParams.get("projectId");
   const [projectDetails, setProjectDetails] = useState<any>(null);
+  const [scopeDocumentUrl, setScopeDocumentUrl] = useState<string>("");
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [propertiesData, setPropertiesData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -141,7 +144,13 @@ const ProjectDetails = () => {
   const getProjectDetails = () => {
     ProjectsAPI.getProjectById(Number(projectId))
       .then((response) => {
-        setProjectDetails(response?.data);
+        const data = response?.data || null;
+        setProjectDetails(data);
+        if (data?.scope_document) {
+          getPresignedUrl(data?.scope_document).then((url) =>
+            setScopeDocumentUrl(url)
+          );
+        }
       })
       .catch(() => {
         // Handle error
@@ -235,8 +244,6 @@ const ProjectDetails = () => {
   console.log("location", location);
   console.log("projectDetails :", projectDetails);
 
-
-
   return (
     <div className="px-4 py-2">
       <BreadCrumbs items={BreadcrumbsData} />
@@ -317,13 +324,30 @@ const ProjectDetails = () => {
                 </div>
               </div>
 
-              {/* <div className="mt-4 bg-white rounded-sm shadow-card">
-                <div className="border-b border-gray-300 py-2.5 px-4">
-                  <h6 className="text-[0.86rem] font-medium">Project Scope</h6>
-                </div>
+              {Boolean(projectDetails?.scope_document) && (
+                <div className="mt-4 bg-white rounded-sm shadow-card">
+                  <div className="border-b border-gray-300 py-2.5 px-4">
+                    <h6 className="text-[0.86rem] font-medium">
+                      Scope Document
+                    </h6>
+                  </div>
 
-                <div className="py-2.5 px-4">PROJECT SCOPE FILE</div>
-              </div> */}
+                  <div
+                    className="py-2 mb-1 h-[83vh] overflow-y-auto"
+                    style={{ backgroundColor: "#6B6B6B" }}
+                  >
+                    <div style={{ width: "65%", margin: "0 auto" }}>
+                      {scopeDocumentUrl ? (
+                        <PdfViewer url={scopeDocumentUrl} />
+                      ) : (
+                        <div className="flex justify-center items-center h-full">
+                          <Loader className="size-4 animate-spin" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </>
           )}
 

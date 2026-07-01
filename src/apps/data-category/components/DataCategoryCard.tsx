@@ -46,8 +46,8 @@ const DataCategoryCard = (props: DataCategoryCardProps) => {
       tabIndex={0}
       aria-label={`View ${title}`}
       className={cn(
-        "rounded-md shadow-card bg-white p-4 cursor-pointer transition-colors hover:bg-slate-50",
-        className,
+        "rounded-sm shadow-card bg-white p-4 cursor-pointer transition-colors hover:bg-slate-50",
+        className
       )}
       onClick={handleNavigateToView}
       onKeyDown={(event) => {

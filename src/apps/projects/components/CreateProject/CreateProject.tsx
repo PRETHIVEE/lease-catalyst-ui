@@ -44,7 +44,12 @@ const CreateProject = (props: CreateProjectProps) => {
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>
-            <CustomDialogTitle title="Create Project" handleClose={onClose} />
+            <CustomDialogTitle
+              title={
+                formik?.values?.isEditMode ? "Edit Project" : "Create Project"
+              }
+              handleClose={onClose}
+            />
           </DrawerTitle>
         </DrawerHeader>
 
@@ -129,12 +134,12 @@ const CreateProject = (props: CreateProjectProps) => {
               {isSubmitting ? (
                 <>
                   <Loader />
-                  Creating
+                  {formik?.values?.isEditMode ? "Updating" : "Creating"}
                 </>
               ) : (
                 <>
                   <SendHorizontal />
-                  Create
+                  {formik?.values?.isEditMode ? "Update" : "Create"}
                 </>
               )}
             </Button>

@@ -64,7 +64,7 @@ export const sidebarNavGroups: NavGroup[] = [
     items: [
       { label: "Portfolio Reporting", path: "/expenses", icon: Calculator },
       {
-        label: "CAM / OPEX Reconcilation",
+        label: "CAM Reconciliation Audit",
         path: "/owner-financials",
         icon: ClipboardList,
       },

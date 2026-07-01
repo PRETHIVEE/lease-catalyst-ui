@@ -24,7 +24,6 @@ const ProjectsPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId = localStorage.getItem("user_id") || "";
-  const userEmail = localStorage.getItem("user_email") || "";
   const [openCreateProject, setOpenCreateProject] = useState(false);
   const [dataCategoryList, setDataCategoryList] = useState<DataCategory[]>([]);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
@@ -36,10 +35,17 @@ const ProjectsPage = () => {
     template: Yup.object().required("Data Category is required"),
   });
 
-  const formik = useFormik({
+  const formik = useFormik<{
+    projectName: string;
+    template: DataCategory | null;
+    isEditMode: boolean;
+    projectId: number | null;
+  }>({
     initialValues: {
       projectName: "",
       template: null,
+      isEditMode: false,
+      projectId: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -113,40 +119,64 @@ const ProjectsPage = () => {
 
   const onCreateProject = (data: any) => {
     setIsSubmitting(true);
-    // const requestBody = {
-    //   project_name: data.projectName,
-    //   category: data.template?.attribute,
-    //   property_count: 0,
-    //   user_id: Number(userId),
-    //   user_name: userEmail,
-    // };
-
     const formData = new FormData();
     formData.append("project_name", data.projectName);
     formData.append("category", data.template?.attribute);
-    formData.append("property_count", "0");
-
-    formData.append("user_id", userId);
-    formData.append("user_name", userEmail);
     if (uploadDocuments.length > 0) {
       formData.append("scope_document", uploadDocuments[0]);
     }
 
-    ProjectsAPI.CreateProject(formData)
-      .then((response) => {
-        console.log("Create project response", response);
-        if (response.status === 200) {
-          getProjectList();
-          showSnackbar("Project created!");
-        }
-        handleCloseProjectModal();
-      })
-      .catch(() => {
-        showSnackbar("Failed to create project.", "error");
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+    if (data.isEditMode) {
+      formData.append("project_id", data.projectId);
+    }
+
+    if (data.isEditMode) {
+      ProjectsAPI.UpdateProject(formData)
+        .then((response) => {
+          console.log("Update project response", response);
+          if (response.status === 200) {
+            getProjectList();
+            showSnackbar("Project Updated!");
+          }
+          handleCloseProjectModal();
+        })
+        .catch(() => {
+          showSnackbar("Error updating project.", "error");
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
+    } else {
+      ProjectsAPI.CreateProject(formData)
+        .then((response) => {
+          console.log("Create project response", response);
+          if (response.status === 200) {
+            getProjectList();
+            showSnackbar("Project created!");
+          }
+          handleCloseProjectModal();
+        })
+        .catch(() => {
+          showSnackbar("Failed to create project.", "error");
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
+    }
+  };
+
+  const onEditProject = (projectId: number) => {
+    const project = Rows.find((row) => row.id === projectId);
+    const dataCategory = dataCategoryList.find(
+      (category) => category.attribute === project?.category
+    );
+    formik.setValues({
+      projectName: project.project_name,
+      template: dataCategory || null,
+      isEditMode: true,
+      projectId: projectId || null,
+    });
+    setOpenCreateProject(true);
   };
 
   return (
@@ -182,6 +212,7 @@ const ProjectsPage = () => {
               propertiesCount={row.property_count ?? 0}
               date={formatDateTime(row.last_created)}
               onDelete={deleteProject}
+              onEditProject={onEditProject}
             />
           ))}
         </div>

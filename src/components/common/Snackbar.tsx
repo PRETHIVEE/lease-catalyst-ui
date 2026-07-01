@@ -11,13 +11,18 @@ export default function AppSnackbar() {
       autoHideDuration={1400}
       onClose={closeSnackbar}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      sx={{
+        ".MuiAlert-root": {
+          fontSize: "0.84rem",
+          padding: "0.16rem",
+          paddingInline: "0.85rem",
+        },
+        ".MuiSvgIcon-root": {
+          fontSize: "1.2rem",
+        },
+      }}
     >
-      <Alert
-        onClose={closeSnackbar}
-        severity={severity}
-        variant="filled"
-        sx={{ width: "100%" }}
-      >
+      <Alert onClose={closeSnackbar} severity={severity} variant="filled">
         {message}
       </Alert>
     </Snackbar>

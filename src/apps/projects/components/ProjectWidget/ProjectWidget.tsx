@@ -11,6 +11,7 @@ import {
   Building2,
   Calendar,
   Ellipsis,
+  Pencil,
   Plus,
   ShieldUser,
   SquareArrowOutUpRight,
@@ -26,6 +27,7 @@ export type ProjectWidgetProps = {
   date: string;
   className?: string;
   onDelete?: (projectId: number) => void;
+  onEditProject?: (projectId: number) => void;
 };
 
 const ProjectWidget = ({
@@ -36,6 +38,7 @@ const ProjectWidget = ({
   date,
   className,
   onDelete,
+  onEditProject,
 }: ProjectWidgetProps) => {
   const navigate = useNavigate();
   const companyInitial = companyName.trim().charAt(0).toUpperCase() || "?";
@@ -49,7 +52,7 @@ const ProjectWidget = ({
   return (
     <article
       className={cn(
-        "w-full max-w-md overflow-hidden rounded-md  bg-white shadow-card",
+        "w-full max-w-md overflow-hidden rounded-sm  bg-white shadow-card",
         className,
       )}
     >
@@ -122,8 +125,8 @@ const ProjectWidget = ({
               </IconButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              side="top"
-              align="end"
+              side="left"
+              // align="start"
               className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
             >
               <DropdownMenuItem
@@ -131,6 +134,10 @@ const ProjectWidget = ({
               >
                 <Plus aria-hidden className="mr-1.5" />
                 Add Property / Lease
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => onEditProject?.(projectId)}>
+                <Pencil aria-hidden className="mr-1.5" />
+                Edit Project
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => openProjectDetails("user-access")}

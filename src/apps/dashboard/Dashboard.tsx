@@ -20,10 +20,7 @@ const Dashboard = () => {
         />
       </section>
 
-      <section
-        className="mt-3 shadow-sm rounded-lg"
-        style={{ overflow: "hidden" }}
-      >
+      <section className="mt-3 shadow-sm" style={{ overflow: "hidden" }}>
         <JobsTable setStatusCount={setStatusCount} />
       </section>
     </div>

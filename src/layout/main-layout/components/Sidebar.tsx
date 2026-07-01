@@ -17,7 +17,11 @@ function SidebarNavLink({ item }: { item: NavItem }) {
       title={item.label}
     >
       <span className="sidebar__link-icon-wrap">
-        <item.icon className="sidebar__link-icon" aria-hidden />
+        <item.icon
+          className="sidebar__link-icon"
+          aria-hidden
+          strokeWidth={2.15}
+        />
         {item.hasNotification && (
           <span
             className="sidebar__notification-dot"
@@ -52,7 +56,7 @@ export default function Sidebar() {
         isSidebarPinned && "sidebar--pinned",
         isSidebarPinClosing && "sidebar--pin-closing",
         isHoverOverlay && "sidebar--hover",
-        isExpanded && "sidebar--expanded",
+        isExpanded && "sidebar--expanded"
       )}
       aria-label="Main navigation"
     >
