@@ -4,7 +4,7 @@
 
 @theme inline {
   /* --font-sans: Inter, sans-serif; */
-  --font-sans: 'Source Sans 3', sans-serif;
+  --font-sans: "Source Sans 3", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-border: var(--border);
@@ -79,9 +79,9 @@
   --status-chip-progress-fg: #2563eb;
   --status-chip-progress-border: #bfdbfe;
 
-  --status-chip-submitted-bg: #f5f3ff;
-  --status-chip-submitted-fg: #7c3aed;
-  --status-chip-submitted-border: #ddd6fe;
+  --status-chip-ready-bg: #f5f3ff;
+  --status-chip-ready-fg: #7c3aed;
+  --status-chip-ready-border: #ddd6fe;
 
   --status-chip-failed-bg: #fef2f2;
   --status-chip-failed-fg: #dc2626;

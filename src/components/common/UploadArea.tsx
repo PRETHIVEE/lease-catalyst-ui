@@ -31,6 +31,7 @@ export interface UploadAreaProps {
   setUploadDocuments: Dispatch<SetStateAction<File[]>>;
   supportedFormats: string[];
   maxFiles?: number;
+  isLoading?: boolean;
 }
 
 const normalizeExtensions = (formats: string[]): string[] =>
@@ -94,9 +95,14 @@ const mergeFiles = (
 interface UploadedFileRowProps {
   file: File;
   onRemove: () => void;
+  isLoading?: boolean;
 }
 
-const UploadedFileRow = ({ file, onRemove }: UploadedFileRowProps) => {
+const UploadedFileRow = ({
+  file,
+  onRemove,
+  isLoading = false,
+}: UploadedFileRowProps) => {
   const extension = getFileExtension(file.name);
 
   return (
@@ -124,6 +130,7 @@ const UploadedFileRow = ({ file, onRemove }: UploadedFileRowProps) => {
         onClick={onRemove}
         className="cursor-pointer shrink-0 rounded-sm p-1 text-[#6b7280] transition-colors hover:bg-white hover:text-[#374151]"
         aria-label={`Remove ${file.name}`}
+        disabled={isLoading}
       >
         <Trash2 className="size-4" strokeWidth={1.75} />
       </button>
@@ -136,6 +143,7 @@ const UploadArea = ({
   setUploadDocuments,
   supportedFormats,
   maxFiles,
+  isLoading,
 }: UploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -247,6 +255,7 @@ const UploadArea = ({
               <UploadedFileRow
                 file={file}
                 onRemove={() => handleRemove(index)}
+                isLoading={isLoading}
               />
             </li>
           ))}

@@ -4,16 +4,15 @@ import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const statusChipVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.77rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.72rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
+        new: "border-[var(--status-chip-progress-border)] bg-[var(--status-chip-progress-bg)] text-[var(--status-chip-progress-fg)]",
+        ready:
+          "border-[var(--status-chip-ready-border)] bg-[var(--status-chip-ready-bg)] text-[var(--status-chip-ready-fg)]",
         pending:
           "border-[var(--status-chip-pending-border)] bg-[var(--status-chip-pending-bg)] text-[var(--status-chip-pending-fg)]",
-        progress:
-          "border-[var(--status-chip-progress-border)] bg-[var(--status-chip-progress-bg)] text-[var(--status-chip-progress-fg)]",
-        submitted:
-          "border-[var(--status-chip-submitted-border)] bg-[var(--status-chip-submitted-bg)] text-[var(--status-chip-submitted-fg)]",
         failed:
           "border-[var(--status-chip-failed-border)] bg-[var(--status-chip-failed-bg)] text-[var(--status-chip-failed-fg)]",
         success:
@@ -25,7 +24,7 @@ const statusChipVariants = cva(
     defaultVariants: {
       variant: "pending",
     },
-  },
+  }
 );
 
 // const defaultIcons: Record<
@@ -56,8 +55,8 @@ const StatusChip = ({
   label,
   // icon,
   className,
-  // showIcon = true,
-}: StatusChipProps) => {
+}: // showIcon = true,
+StatusChipProps) => {
   // const Icon = icon ?? defaultIcons[variant ?? "pending"];
 
   return (

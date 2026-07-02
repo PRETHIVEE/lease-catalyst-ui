@@ -84,7 +84,7 @@ const PropertyInfo = ({
             width={"13%"}
           />
           <PropertyField
-            label="Lease Id"
+            label="ID"
             value={property?.lease_id ?? ""}
             width={"13%"}
           />

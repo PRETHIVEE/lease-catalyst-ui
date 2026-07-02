@@ -20,6 +20,7 @@ import EventsPage from "@/apps/events/Pages/EventsPage";
 import UsersPage from "@/apps/users/pages/UsersPage";
 import CompanyPage from "@/apps/company/pages/CompanyPage";
 import CompanyModuleAccess from "@/apps/company/pages/CompanyModuleAccess";
+import CamAuditHomePage from "@/apps/cam-audit/pages/CamAuditHomePage";
 
 export default function AppRouter() {
   return (
@@ -75,6 +76,7 @@ export default function AppRouter() {
             path="/company/module-access"
             element={<CompanyModuleAccess />}
           />
+          <Route path="/cam-reconciliation" element={<CamAuditHomePage />} />
           <Route path="*" element={<CommingSoon />} />
         </Route>
       </Routes>
