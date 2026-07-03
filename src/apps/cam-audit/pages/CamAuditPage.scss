@@ -1,0 +1,21 @@
+.cam-audit-page {
+  //   border: 1px solid red;
+  display: flex;
+  flex-direction: row;
+  .left-area {
+    width: 40%;
+    background-color: #fff;
+    border-right: 1px solid #e2e8f0;
+    height: 90vh;
+
+    .breadcrumbs-sec {
+      padding: 0.24rem 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+  }
+  .right-area {
+    // border: 1px solid green;
+    width: 60%;
+    padding-left: 2rem;
+  }
+}

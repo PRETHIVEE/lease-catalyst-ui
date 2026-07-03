@@ -4,7 +4,7 @@ import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const statusChipVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[0.72rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1.5 rounded-xs border px-2.5 py-1 text-[0.72rem]  leading-none [&_svg]:size-3.25 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

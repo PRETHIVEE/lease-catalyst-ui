@@ -17,13 +17,16 @@ import StatusChip from "@/components/common/StatusChip";
 import { IconButton, Tooltip } from "@mui/material";
 import CreateProperty from "../components/CreateProperty/CreateProperty";
 import CamReconciliationAPI from "@/api/cam-reconciliation";
+import { useNavigate } from "react-router-dom";
 
-const CamAuditHomePage = () => {
+const CamHomePage = () => {
+  const navigate = useNavigate();
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showSnackbar } = useSnackbarStore();
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
+  const [openCreateLease, setOpenCreateLease] = useState(false);
 
   const validationSchema = Yup.object({
     propertyName: Yup.string().required("Property /Lease Name is required"),
@@ -119,7 +122,7 @@ const CamAuditHomePage = () => {
                 <IconButton
                   sx={{ mr: 0.75 }}
                   size="small"
-                  // onClick={handleNavigate(params?.row)}
+                  onClick={() => handleRunCAMAudit(params?.row)}
                 >
                   <Play className="size-4" aria-hidden />
                 </IconButton>
@@ -129,7 +132,7 @@ const CamAuditHomePage = () => {
                 <IconButton
                   sx={{ mr: 0.75 }}
                   size="small"
-                  // onClick={handleNavigate(params?.row)}
+                  onClick={() => handleViewCAMAudit(params?.row)}
                   disabled={status === "New" || status === "In-Progress"}
                 >
                   <FileSearch className="size-4" aria-hidden />
@@ -152,23 +155,15 @@ const CamAuditHomePage = () => {
     },
   ];
 
-  const getPropertyLeasesList = () => {
-    CamReconciliationAPI.getLeases()
-      .then((response) => {
-        if (response.status === 200) {
-          setRows(response?.data || []);
-        }
-      })
-      .catch()
-      .finally(() => {
-        setLoading(false);
-      });
+  const handleRunCAMAudit = (data: any) => {
+    console.log("Run CAM Audit", data);
+    handleViewCAMAudit(data);
   };
 
-  useEffect(() => {
-    getPropertyLeasesList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleViewCAMAudit = (data: any) => {
+    console.log("View CAM Audit", data);
+    navigate(`/cam-reconciliation/cam-audit?lease_id=${data.id}`);
+  };
 
   const onCreateLease = (data: any) => {
     setIsSubmitting(true);
@@ -197,7 +192,6 @@ const CamAuditHomePage = () => {
         setIsSubmitting(false);
       });
   };
-  const [openCreateLease, setOpenCreateLease] = useState(false);
 
   const handleCloseLeaseModal = () => {
     setOpenCreateLease(false);
@@ -206,9 +200,26 @@ const CamAuditHomePage = () => {
   };
 
   useEffect(() => {
-    console.log("uploadDocuments", uploadDocuments);
     formik.setFieldValue("camFiles", uploadDocuments);
   }, [uploadDocuments]);
+
+  const getPropertyLeasesList = () => {
+    CamReconciliationAPI.getLeases()
+      .then((response) => {
+        if (response.status === 200) {
+          setRows(response?.data || []);
+        }
+      })
+      .catch()
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    getPropertyLeasesList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="px-4 py-2">
@@ -260,4 +271,4 @@ const CamAuditHomePage = () => {
   );
 };
 
-export default CamAuditHomePage;
+export default CamHomePage;

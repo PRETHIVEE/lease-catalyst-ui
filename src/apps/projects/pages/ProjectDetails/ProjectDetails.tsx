@@ -148,7 +148,7 @@ const ProjectDetails = () => {
         setProjectDetails(data);
         if (data?.scope_document) {
           getPresignedUrl(data?.scope_document).then((url) =>
-            setScopeDocumentUrl(url)
+            setScopeDocumentUrl(url),
           );
         }
       })
@@ -242,7 +242,7 @@ const ProjectDetails = () => {
 
   console.log("propertiesData", propertiesData);
   console.log("location", location);
-  console.log("projectDetails :", projectDetails);
+  console.log("scopeDocumentUrl :", scopeDocumentUrl);
 
   return (
     <div className="px-4 py-2">
