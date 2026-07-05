@@ -67,4 +67,14 @@
     border-bottom: 1px solid #e2e8f0;
     background-color: #ebf0f6;
   }
+  .tab-sec {
+    width: 100%;
+    overflow: scroll;
+    /* Hide scrollbar for tab-sec */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

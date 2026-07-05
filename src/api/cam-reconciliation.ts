@@ -47,6 +47,30 @@ const CamReconciliationAPI = {
       payload,
     );
   },
+
+  getCamPdfUrl: (auditId: string) => {
+    return axios.get(
+      `${import.meta.env.VITE_CAM_AUDIT_API_URL}/api/v1/audits/${auditId}/documents/cam`,
+    );
+  },
+
+  getLeasePdfUrl: (auditId: string) => {
+    return axios.get(
+      `${import.meta.env.VITE_CAM_AUDIT_API_URL}/api/v1/audits/${auditId}/documents/lease`,
+    );
+  },
+
+  getLeaseOperatingCosts: (auditId: string) => {
+    return axios.get(
+      `${import.meta.env.VITE_CAM_AUDIT_API_URL}/api/v1/audits/${auditId}/lease-operating-costs`,
+    );
+  },
+
+  getCamLineItems: (auditId: string) => {
+    return axios.get(
+      `${import.meta.env.VITE_CAM_AUDIT_API_URL}/api/v1/audits/${auditId}/cam-line-items`,
+    );
+  },
 };
 
 export default CamReconciliationAPI;
