@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import TranslationsAPI from "@/api/translation";
-import IconButton from "@/components/common/IconButton";
 import StatusChip from "@/components/common/StatusChip";
 import UploadArea from "@/components/common/UploadArea";
 import { Button } from "@/components/ui/button";
@@ -30,6 +29,7 @@ import {
   Download,
   Ellipsis,
   Eye,
+  FileSearch,
   Grid2X2,
   Languages,
   LanguagesIcon,
@@ -44,6 +44,8 @@ import {
 } from "../components/languages";
 import { Link, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { IconButton, Tooltip } from "@mui/material";
+import { useLayoutStore } from "@/layout/main-layout/store/layoutStore";
 
 type LanguageOption = {
   language: string;
@@ -66,6 +68,7 @@ const isSameLanguage = (a: LanguageOption, b: LanguageOption) =>
 const TranslationHome = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbarStore();
+  const closeSidebar = useLayoutStore((state) => state.closeSidebar);
   const user_id = localStorage.getItem("user_id") || "";
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +94,10 @@ const TranslationHome = () => {
           <Link
             className="column-cell-link"
             to={`/lease-translate/review?id=${params.row.file_id}`}
+            onClick={() => {
+              closeSidebar();
+              navigate(`/lease-translate/review?id=${params.row.file_id}`);
+            }}
           >
             {params?.row?.file_name}
           </Link>
@@ -100,18 +107,18 @@ const TranslationHome = () => {
     {
       field: "input_lang",
       headerName: "Source Language",
-      width: 170,
+      width: 165,
     },
     {
       field: "output_lang",
       headerName: "Target Language",
-      width: 170,
+      width: 165,
     },
 
     {
       field: "translate_status",
       headerName: "Status",
-      width: 140,
+      width: 130,
       renderCell: (params: GridRenderCellParams) => {
         const { translate_status } = params.row;
         const variant =
@@ -127,17 +134,63 @@ const TranslationHome = () => {
     {
       field: "job_created_at",
       headerName: "Created On",
-      width: 174,
+      width: 165,
       valueFormatter: (value) => formatDateTime(value),
     },
 
     {
       field: "action",
       headerName: "Actions",
-      minWidth: 100,
-      // flex: 1,
+      minWidth: 140,
       renderCell: (params: GridRenderCellParams) => {
         const { translate_status } = params.row;
+
+        return (
+          <span>
+            <Tooltip title={"Review translation"} arrow placement="bottom">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  closeSidebar();
+                  navigate(`/lease-translate/review?id=${params.row.file_id}`);
+                }}
+              >
+                <FileSearch className="size-4" aria-hidden />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title={"Download"}
+              arrow
+              placement="bottom"
+              sx={{ marginInline: 0.75 }}
+            >
+              <IconButton
+                size="small"
+                disabled={translate_status !== "completed"}
+                onClick={() =>
+                  handleDownload(
+                    params.row.translated_file,
+                    params.row.file_name,
+                    params.row.output_lang,
+                  )
+                }
+              >
+                <Download className="size-4" aria-hidden />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title={"Delete"} arrow placement="bottom">
+              <IconButton
+                disabled={translate_status !== "completed"}
+                size="small"
+                onClick={() => deleteTranslation(params.row.file_id)}
+              >
+                <Trash2 className="size-4" aria-hidden />
+              </IconButton>
+            </Tooltip>
+          </span>
+        );
         return (
           <DropdownMenu>
             <DropdownMenuTrigger

@@ -11,6 +11,7 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
   box-sizing: border-box;
+  background-color: #f3fef9;
 }
 
 .auth-layout__brand {
@@ -28,6 +29,8 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 3rem;
+  background-color: #ffffff;
+  height: 100vh;
 }
 
 .auth-layout__content > * {
@@ -146,7 +149,9 @@
   font-size: 0.9rem;
   font-weight: 400;
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 
   &:hover {
     border-color: #d1d5db;
@@ -208,8 +213,8 @@
   color: var(--auth-text-muted);
 }
 
-.login-form-container{
-  .MuiOutlinedInput-input{
+.login-form-container {
+  .MuiOutlinedInput-input {
     padding: 0.65rem 0.75rem;
   }
 }
