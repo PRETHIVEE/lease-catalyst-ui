@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./BreadCrumbs.scss";
+import { ArrowLeftIcon } from "lucide-react";
 
 export type CamBreadcrumbItem = {
   label: string;
@@ -14,9 +15,15 @@ export type BreadCrumbsProps = {
 };
 
 const BreadCrumbs = ({ items }: BreadCrumbsProps) => {
+  const navigate = useNavigate();
+
   return (
     <nav aria-label="Breadcrumb" className="cam-breadcrumbs">
       <ol className="cam-breadcrumbs__trail">
+        <ArrowLeftIcon
+          className="size-4 cursor-pointer mr-2"
+          onClick={() => navigate("/cam-reconciliation")}
+        />
         {items.map((item, index) => (
           <li key={`${item.label}-${index}`} className="cam-breadcrumbs__item">
             {index > 0 && (

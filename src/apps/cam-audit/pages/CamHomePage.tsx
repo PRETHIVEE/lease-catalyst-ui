@@ -19,9 +19,11 @@ import CreateProperty from "../components/CreateProperty/CreateProperty";
 import CamReconciliationAPI from "@/api/cam-reconciliation";
 import { useNavigate } from "react-router-dom";
 import { formatDateTime } from "@/utils/utils";
+import { useLayoutStore } from "@/layout/main-layout/store/layoutStore";
 
 const CamHomePage = () => {
   const navigate = useNavigate();
+  const closeSidebar = useLayoutStore((state) => state.closeSidebar);
   const [Rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -166,6 +168,7 @@ const CamHomePage = () => {
 
   const handleViewCAMAudit = (data: any) => {
     console.log("View CAM Audit", data);
+    closeSidebar();
     navigate(
       `/cam-reconciliation/cam-audit?audit_id=${data.audit_id}&lease_id=${data.lease_id}`,
     );

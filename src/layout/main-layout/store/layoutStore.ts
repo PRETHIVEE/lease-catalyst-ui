@@ -18,29 +18,43 @@ type LayoutState = {
   isSidebarPinClosing: boolean;
   isSidebarHovered: boolean;
   toggleSidebarPinned: () => void;
+  closeSidebar: () => void;
   setSidebarHovered: (hovered: boolean) => void;
 };
 
-export const useLayoutStore = create<LayoutState>((set, get) => ({
-  isSidebarPinned: readSidebarPinnedFromStorage(),
-  isSidebarPinClosing: false,
-  isSidebarHovered: false,
+export const useLayoutStore = create<LayoutState>((set, get) => {
+  const unpinSidebar = () => {
+    localStorage.setItem(SIDEBAR_PINNED_STORAGE_KEY, "false");
+    set({ isSidebarPinClosing: true, isSidebarPinned: false });
+    window.setTimeout(
+      () => set({ isSidebarPinClosing: false }),
+      SIDEBAR_TRANSITION_MS,
+    );
+  };
 
-  toggleSidebarPinned: () => {
-    const { isSidebarPinned } = get();
+  return {
+    isSidebarPinned: readSidebarPinnedFromStorage(),
+    isSidebarPinClosing: false,
+    isSidebarHovered: false,
 
-    if (isSidebarPinned) {
-      localStorage.setItem(SIDEBAR_PINNED_STORAGE_KEY, "false");
-      set({ isSidebarPinClosing: true, isSidebarPinned: false });
-      window.setTimeout(
-        () => set({ isSidebarPinClosing: false }),
-        SIDEBAR_TRANSITION_MS
-      );
-    } else {
-      localStorage.setItem(SIDEBAR_PINNED_STORAGE_KEY, "true");
-      set({ isSidebarPinned: true });
-    }
-  },
+    toggleSidebarPinned: () => {
+      const { isSidebarPinned } = get();
 
-  setSidebarHovered: (hovered) => set({ isSidebarHovered: hovered }),
-}));
+      if (isSidebarPinned) {
+        unpinSidebar();
+      } else {
+        localStorage.setItem(SIDEBAR_PINNED_STORAGE_KEY, "true");
+        set({ isSidebarPinned: true });
+      }
+    },
+
+    closeSidebar: () => {
+      set({ isSidebarHovered: false });
+      if (get().isSidebarPinned) {
+        unpinSidebar();
+      }
+    },
+
+    setSidebarHovered: (hovered) => set({ isSidebarHovered: hovered }),
+  };
+});
