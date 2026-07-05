@@ -22,6 +22,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import CamReconciliationAPI from "@/api/cam-reconciliation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSnackbarStore } from "@/store/snackbar-store";
+import { type PdfHighlight } from "../components/PdfView/PdfViewer";
 
 const CamAuditPage = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const CamAuditPage = () => {
     [],
   );
   const [loadingConsolidatedData, setLoadingConsolidatedData] = useState(false);
+  const [pdfHighlight, setPdfHighlight] = useState<PdfHighlight | null>(null);
 
   const breadcrumbItems = [
     { label: "CAM Audit", url: "/cam-reconciliation" },
@@ -65,6 +67,10 @@ const CamAuditPage = () => {
     getConsolidatedData();
     setTriggerWidgetsFetch(Math.random());
   }, [audit_id]);
+
+  useEffect(() => {
+    setPdfHighlight(null);
+  }, [activeTab]);
 
   const getConsolidatedData = () => {
     setLoadingConsolidatedData(true);
@@ -161,11 +167,19 @@ const CamAuditPage = () => {
 
         {/* Document Section */}
         <div className="document-sec pt-0.25">
-          <DocumentsSection activeTab={activeTab} auditId={audit_id} />
+          <DocumentsSection
+            activeTab={activeTab}
+            auditId={audit_id}
+            highlight={pdfHighlight}
+          />
         </div>
 
         <div className="clauses-sec">
-          <ClausesSection activeTab={activeTab} auditId={audit_id} />
+          <ClausesSection
+            activeTab={activeTab}
+            auditId={audit_id}
+            onHighlight={setPdfHighlight}
+          />
         </div>
       </section>
 

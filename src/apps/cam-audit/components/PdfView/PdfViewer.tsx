@@ -6,15 +6,60 @@ import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+export type PdfHighlight = {
+  page: number;
+  page_width?: number;
+  page_height?: number;
+  x0?: number;
+  y0?: number;
+  x1?: number;
+  y1?: number;
+};
+
 type PdfViewerProps = {
   url: string;
   className?: string;
+  highlight?: PdfHighlight | null;
 };
 
-const PdfViewer = ({ url, className }: PdfViewerProps) => {
+const hasHighlightBox = (highlight: PdfHighlight) =>
+  highlight.page_width != null &&
+  highlight.page_height != null &&
+  highlight.x0 != null &&
+  highlight.y0 != null &&
+  highlight.x1 != null &&
+  highlight.y1 != null;
+
+const getHighlightStyle = (
+  highlight: PdfHighlight,
+  renderedWidth: number,
+): React.CSSProperties => {
+  const { page_width, page_height, x0, y0, x1, y1 } = highlight;
+  const scale = renderedWidth / page_width!;
+  const left = x0! * scale;
+  const top = (page_height! - y1!) * scale;
+  const width = (x1! - x0!) * scale;
+  const height = (y1! - y0!) * scale;
+
+  return {
+    position: "absolute",
+    left,
+    top,
+    width,
+    height,
+    backgroundColor: "rgba(255, 235, 59, 0.4)",
+    border: "2px solid rgba(255, 193, 7, 0.85)",
+    pointerEvents: "none",
+    zIndex: 10,
+    borderRadius: 2,
+  };
+};
+
+const PdfViewer = ({ url, className, highlight }: PdfViewerProps) => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const pageRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const [containerWidth, setContainerWidth] = useState(500);
 
   useEffect(() => {
@@ -34,6 +79,21 @@ const PdfViewer = ({ url, className }: PdfViewerProps) => {
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!highlight?.page || !numPages) return;
+
+    const scrollToHighlight = () => {
+      const pageEl = pageRefs.current.get(highlight.page);
+      if (pageEl) {
+        pageEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    };
+
+    scrollToHighlight();
+    const timer = window.setTimeout(scrollToHighlight, 300);
+    return () => window.clearTimeout(timer);
+  }, [highlight, numPages]);
 
   return (
     <div
@@ -65,16 +125,32 @@ const PdfViewer = ({ url, className }: PdfViewerProps) => {
         onLoadError={() => setIsLoading(false)}
         loading={null}
       >
-        {Array.from(new Array(numPages), (_, index) => (
-          <div key={`page_${index + 1}`} className="mb-4 shadow-sm">
-            <Page
-              pageNumber={index + 1}
-              renderTextLayer
-              renderAnnotationLayer
-              width={containerWidth}
-            />
-          </div>
-        ))}
+        {Array.from(new Array(numPages), (_, index) => {
+          const pageNumber = index + 1;
+          const showHighlight =
+            highlight?.page === pageNumber && hasHighlightBox(highlight);
+
+          return (
+            <div
+              key={`page_${pageNumber}`}
+              ref={(el) => {
+                if (el) pageRefs.current.set(pageNumber, el);
+              }}
+              className="mb-4 shadow-sm"
+              style={{ position: "relative" }}
+            >
+              <Page
+                pageNumber={pageNumber}
+                renderTextLayer
+                renderAnnotationLayer
+                width={containerWidth}
+              />
+              {showHighlight && (
+                <div style={getHighlightStyle(highlight, containerWidth)} />
+              )}
+            </div>
+          );
+        })}
       </Document>
     </div>
   );

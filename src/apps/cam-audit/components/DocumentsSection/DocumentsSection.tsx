@@ -1,12 +1,14 @@
 import { Loader } from "lucide-react";
-import PdfViewer from "../PdfView/PdfViewer";
+import PdfViewer, { type PdfHighlight } from "../PdfView/PdfViewer";
 
 const DocumentsSection = ({
   activeTab,
   auditId,
+  highlight,
 }: {
   activeTab: string;
   auditId: string;
+  highlight?: PdfHighlight | null;
 }) => {
   const showDocument =
     activeTab === "lease-document" || activeTab === "cam-statement"
@@ -32,7 +34,7 @@ const DocumentsSection = ({
         <>
           <div style={{ width: "94%", margin: "0 auto" }}>
             {documentURL ? (
-              <PdfViewer url={documentURL} />
+              <PdfViewer url={documentURL} highlight={highlight} />
             ) : (
               <div className="flex justify-center items-center h-full">
                 <Loader className="size-4 animate-spin" />
