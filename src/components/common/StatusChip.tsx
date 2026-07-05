@@ -24,7 +24,7 @@ const statusChipVariants = cva(
     defaultVariants: {
       variant: "pending",
     },
-  }
+  },
 );
 
 // const defaultIcons: Record<
@@ -60,7 +60,10 @@ StatusChipProps) => {
   // const Icon = icon ?? defaultIcons[variant ?? "pending"];
 
   return (
-    <span className={cn(statusChipVariants({ variant }), className)}>
+    <span
+      className={cn(statusChipVariants({ variant }), className)}
+      style={{ textTransform: "capitalize" }}
+    >
       {/* {showIcon && <Icon aria-hidden />} */}
       {label}
     </span>

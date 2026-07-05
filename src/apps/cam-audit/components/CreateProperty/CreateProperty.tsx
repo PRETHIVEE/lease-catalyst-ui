@@ -25,6 +25,8 @@ interface CreatePropertyProps {
   isSubmitting: boolean;
   uploadDocuments: File[];
   setUploadDocuments: Dispatch<SetStateAction<File[]>>;
+  leaseDocuments: File[];
+  setLeaseDocuments: Dispatch<SetStateAction<File[]>>;
 }
 
 const CreateProperty = (props: CreatePropertyProps) => {
@@ -35,6 +37,8 @@ const CreateProperty = (props: CreatePropertyProps) => {
     isSubmitting,
     uploadDocuments,
     setUploadDocuments,
+    leaseDocuments,
+    setLeaseDocuments,
   } = props;
 
   console.log("formik.errors", formik.errors);
@@ -63,7 +67,7 @@ const CreateProperty = (props: CreatePropertyProps) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 formik?.setFieldValue(
                   "propertyName",
-                  trimLeadingSpace(event.target.value)
+                  trimLeadingSpace(event.target.value),
                 );
               }}
               error={
@@ -77,7 +81,7 @@ const CreateProperty = (props: CreatePropertyProps) => {
           </div>
 
           {/* Property ID */}
-          <div className="mt-2.5">
+          {/* <div className="mt-2.5">
             <InputLabel htmlFor="property-id" label="Property ID" />
             <TextField
               id="property-id"
@@ -95,7 +99,7 @@ const CreateProperty = (props: CreatePropertyProps) => {
               }
               helperText={formik.touched.propertyId && formik.errors.propertyId}
             />
-          </div>
+          </div> */}
 
           {/* Tenant Name */}
           <div className="mt-2.5">
@@ -108,7 +112,7 @@ const CreateProperty = (props: CreatePropertyProps) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 formik?.setFieldValue(
                   "tenantName",
-                  trimLeadingSpace(event.target.value)
+                  trimLeadingSpace(event.target.value),
                 );
               }}
               error={
@@ -129,7 +133,7 @@ const CreateProperty = (props: CreatePropertyProps) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 formik?.setFieldValue(
                   "leaseId",
-                  trimLeadingSpace(event.target.value)
+                  trimLeadingSpace(event.target.value),
                 );
               }}
               error={formik.touched.leaseId && Boolean(formik.errors.leaseId)}
@@ -138,25 +142,39 @@ const CreateProperty = (props: CreatePropertyProps) => {
           </div>
 
           <div className="mt-3">
-            <InputLabel htmlFor="scope-document" label="Scope document" />
+            <InputLabel htmlFor="scope-document" label="CAM document" />
             <UploadArea
               uploadDocuments={uploadDocuments}
               setUploadDocuments={setUploadDocuments}
               isLoading={isSubmitting}
               // supportedFormats={["xls", "xlsx", "pdf"]}
               supportedFormats={["pdf"]}
-              maxFiles={10} // Maximum number of files to upload
+              maxFiles={1} // Maximum number of files to upload
+              hideUploadAreaAfterFileChoosen={true}
             />
             {formik.touched.camFiles && formik.errors.camFiles && (
               <FormHelperText error={true}>
                 {formik.errors.camFiles}
               </FormHelperText>
             )}
-            {/* {formik.touched.camFiles && formik.errors.camFiles && (
-              <p className="text-red-500 text-sm mt-1">
-                {formik.errors.camFiles}
-              </p>
-            )} */}
+          </div>
+
+          <div className="mt-3">
+            <InputLabel htmlFor="scope-document" label="Lease document" />
+            <UploadArea
+              uploadDocuments={leaseDocuments}
+              setUploadDocuments={setLeaseDocuments}
+              isLoading={isSubmitting}
+              // supportedFormats={["xls", "xlsx", "pdf"]}
+              supportedFormats={["pdf"]}
+              maxFiles={1} // Maximum number of files to upload
+              hideUploadAreaAfterFileChoosen={true}
+            />
+            {formik.touched.leaseDocuments && formik.errors.leaseDocuments && (
+              <FormHelperText error={true}>
+                {formik.errors.leaseDocuments}
+              </FormHelperText>
+            )}
           </div>
         </DrawerContentArea>
 

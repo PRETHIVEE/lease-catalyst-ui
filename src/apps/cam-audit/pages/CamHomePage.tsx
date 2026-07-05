@@ -18,6 +18,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import CreateProperty from "../components/CreateProperty/CreateProperty";
 import CamReconciliationAPI from "@/api/cam-reconciliation";
 import { useNavigate } from "react-router-dom";
+import { formatDateTime } from "@/utils/utils";
 
 const CamHomePage = () => {
   const navigate = useNavigate();
@@ -26,16 +27,20 @@ const CamHomePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showSnackbar } = useSnackbarStore();
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
+  const [leaseDocuments, setLeaseDocuments] = useState<File[]>([]);
   const [openCreateLease, setOpenCreateLease] = useState(false);
 
   const validationSchema = Yup.object({
     propertyName: Yup.string().required("Property /Lease Name is required"),
-    propertyId: Yup.string().required("Property ID is required"),
+    // propertyId: Yup.string().required("Property ID is required"),
     leaseId: Yup.string().required("Lease ID is required"),
     tenantName: Yup.string().required("Tenant Name is required"),
     camFiles: Yup.array()
       .min(1, "CAM documents must be selected")
       .required("CAM Files are required"),
+    leaseDocuments: Yup.array()
+      .min(1, "Lease documents must be selected")
+      .required("Lease Files are required"),
   });
 
   const formik = useFormik({
@@ -45,39 +50,38 @@ const CamHomePage = () => {
       leaseId: "",
       tenantName: "",
       camFiles: [],
+      leaseDocuments: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      onCreateLease(values);
+      runCAMAudit(values);
     },
   });
 
   const Columns: GridColDef[] = [
     {
-      field: "property_lease_name",
+      field: "lease_prop_name",
       headerName: "Property / Lease Name",
       width: 280,
     },
-    {
-      field: "property_id",
-      headerName: "Property ID",
-      width: 140,
-    },
 
     {
-      field: "property_lease_id",
+      field: "lease_id",
       headerName: "Lease ID",
       width: 140,
     },
 
     {
-      field: "property_lease_tenant_name",
+      field: "tenant_name",
       headerName: "Tenant Name",
       width: 174,
-      renderCell: (params: GridRenderCellParams) => {
-        return <div>{params?.row?.property_lease_tenant_name}</div>;
-      },
+    },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      width: 174,
+      valueFormatter: (value) => formatDateTime(value),
     },
 
     {
@@ -93,13 +97,13 @@ const CamHomePage = () => {
               variant={
                 status === "New"
                   ? "new"
-                  : status === "In-Progress"
-                  ? "pending"
-                  : status === "Under Review"
-                  ? "ready"
-                  : status === "Completed"
-                  ? "success"
-                  : "failed"
+                  : status === "pending" || status === "running"
+                    ? "pending"
+                    : status === "Under Review"
+                      ? "ready"
+                      : status === "completed"
+                        ? "success"
+                        : "failed"
               }
             />
           </div>
@@ -133,7 +137,7 @@ const CamHomePage = () => {
                   sx={{ mr: 0.75 }}
                   size="small"
                   onClick={() => handleViewCAMAudit(params?.row)}
-                  disabled={status === "New" || status === "In-Progress"}
+                  disabled={status === "New" || status === "running"}
                 >
                   <FileSearch className="size-4" aria-hidden />
                 </IconButton>
@@ -162,21 +166,22 @@ const CamHomePage = () => {
 
   const handleViewCAMAudit = (data: any) => {
     console.log("View CAM Audit", data);
-    navigate(`/cam-reconciliation/cam-audit?lease_id=${data.id}`);
+    navigate(
+      `/cam-reconciliation/cam-audit?audit_id=${data.audit_id}&lease_id=${data.lease_id}`,
+    );
   };
 
-  const onCreateLease = (data: any) => {
+  const runCAMAudit = (data: any) => {
     setIsSubmitting(true);
     const formData = new FormData();
-    formData.append("property_lease_name", data.propertyName);
-    formData.append("property_id", data.propertyId);
-    formData.append("property_lease_id", data.leaseId);
-    formData.append("property_lease_tenant_name", data.tenantName);
-    uploadDocuments.forEach((file) => {
-      formData.append("cam_files", file);
-    });
+    formData.append("lease_prop_name", data.propertyName);
+    formData.append("tenant_name", data.tenantName);
+    formData.append("lease_id", data.leaseId);
 
-    CamReconciliationAPI.createLease(formData)
+    formData.append("lease_pdf", leaseDocuments[0]);
+    formData.append("cam_pdf", uploadDocuments[0]);
+
+    CamReconciliationAPI.runCAMAudit(formData)
       .then((response) => {
         console.log("Create lease response", response);
         if (response.status === 200) {
@@ -197,14 +202,16 @@ const CamHomePage = () => {
     setOpenCreateLease(false);
     formik.resetForm();
     setUploadDocuments([]);
+    setLeaseDocuments([]);
   };
 
   useEffect(() => {
     formik.setFieldValue("camFiles", uploadDocuments);
-  }, [uploadDocuments]);
+    formik.setFieldValue("leaseDocuments", leaseDocuments);
+  }, [uploadDocuments, leaseDocuments]);
 
   const getPropertyLeasesList = () => {
-    CamReconciliationAPI.getLeases()
+    CamReconciliationAPI.getJobs()
       .then((response) => {
         if (response.status === 200) {
           setRows(response?.data || []);
@@ -218,7 +225,10 @@ const CamHomePage = () => {
 
   useEffect(() => {
     getPropertyLeasesList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const interval = setInterval(() => {
+      getPropertyLeasesList();
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -246,6 +256,7 @@ const CamHomePage = () => {
           rows={Rows}
           columns={Columns}
           loading={loading}
+          getRowId={(row) => row.job_id}
           initialState={{
             pagination: {
               paginationModel: {
@@ -266,6 +277,8 @@ const CamHomePage = () => {
         isSubmitting={isSubmitting}
         uploadDocuments={uploadDocuments}
         setUploadDocuments={setUploadDocuments}
+        leaseDocuments={leaseDocuments}
+        setLeaseDocuments={setLeaseDocuments}
       />
     </div>
   );

@@ -13,7 +13,7 @@ export type BreadCrumbsProps = {
   auditorName?: string;
 };
 
-const BreadCrumbs = ({ items, currentPage, auditorName }: BreadCrumbsProps) => {
+const BreadCrumbs = ({ items }: BreadCrumbsProps) => {
   return (
     <nav aria-label="Breadcrumb" className="cam-breadcrumbs">
       <ol className="cam-breadcrumbs__trail">
@@ -34,7 +34,7 @@ const BreadCrumbs = ({ items, currentPage, auditorName }: BreadCrumbsProps) => {
           </li>
         ))}
 
-        {(items.length > 0 || currentPage) && (
+        {/* {(items.length > 0 || currentPage) && (
           <li className="cam-breadcrumbs__item">
             <span className="cam-breadcrumbs__separator" aria-hidden>
               /
@@ -43,14 +43,8 @@ const BreadCrumbs = ({ items, currentPage, auditorName }: BreadCrumbsProps) => {
               {currentPage}
             </span>
           </li>
-        )}
+        )} */}
       </ol>
-
-      {auditorName && (
-        <span className="cam-breadcrumbs__badge">
-          Auditor: <strong>{auditorName}</strong>
-        </span>
-      )}
     </nav>
   );
 };

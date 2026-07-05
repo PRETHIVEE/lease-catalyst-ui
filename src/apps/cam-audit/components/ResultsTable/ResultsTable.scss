@@ -1,0 +1,41 @@
+.results-table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .editable-table__table {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
+  }
+
+  .editable-table__header-cell,
+  .editable-table__cell {
+    white-space: nowrap;
+  }
+
+  .editable-table__cell--right {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .editable-table__cell--center {
+    text-align: center;
+  }
+
+  .editable-table__row.results-table__row--summary {
+    .editable-table__cell,
+    .editable-table__input {
+      font-weight: 600;
+      color: #232323;
+      font-size: 0.85rem;
+    }
+  }
+
+  .editable-table__input {
+    min-width: 10rem;
+  }
+
+  .editable-table__checkbox:disabled {
+    cursor: default;
+  }
+}

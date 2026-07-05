@@ -3,6 +3,7 @@ import { getFileExtension } from "@/utils/utils";
 import { ArrowUp, File, Trash2 } from "lucide-react";
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
   type Dispatch,
@@ -32,6 +33,7 @@ export interface UploadAreaProps {
   supportedFormats: string[];
   maxFiles?: number;
   isLoading?: boolean;
+  hideUploadAreaAfterFileChoosen?: boolean;
 }
 
 const normalizeExtensions = (formats: string[]): string[] =>
@@ -56,7 +58,7 @@ const formatFileSize = (bytes: number): string => {
   const units = ["B", "KB", "MB", "GB"];
   const unitIndex = Math.min(
     Math.floor(Math.log(bytes) / Math.log(1024)),
-    units.length - 1
+    units.length - 1,
   );
   const size = bytes / 1024 ** unitIndex;
   const formatted =
@@ -75,7 +77,7 @@ const mergeFiles = (
   current: File[],
   incoming: File[],
   supportedFormats: string[],
-  maxFiles?: number
+  maxFiles?: number,
 ): File[] => {
   const next = [...current];
   for (const file of incoming) {
@@ -85,7 +87,7 @@ const mergeFiles = (
       (existing) =>
         existing.name === file.name &&
         existing.size === file.size &&
-        existing.lastModified === file.lastModified
+        existing.lastModified === file.lastModified,
     );
     if (!isDuplicate) next.push(file);
   }
@@ -144,6 +146,7 @@ const UploadArea = ({
   supportedFormats,
   maxFiles,
   isLoading,
+  hideUploadAreaAfterFileChoosen = false,
 }: UploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -158,10 +161,10 @@ const UploadArea = ({
       const fileArray = Array.from(files);
       if (fileArray.length === 0) return;
       setUploadDocuments((current) =>
-        mergeFiles(current, fileArray, supportedFormats, maxFiles)
+        mergeFiles(current, fileArray, supportedFormats, maxFiles),
       );
     },
-    [isUploadDisabled, maxFiles, setUploadDocuments, supportedFormats]
+    [isUploadDisabled, maxFiles, setUploadDocuments, supportedFormats],
   );
 
   const handleDragOver = (event: DragEvent<HTMLLabelElement>) => {
@@ -199,54 +202,63 @@ const UploadArea = ({
     setUploadDocuments((current) => current.filter((_, i) => i !== index));
   };
 
+  const hideUploadArea =
+    Boolean(hideUploadAreaAfterFileChoosen) && uploadDocuments.length > 0;
+
   return (
     <div className="w-full">
-      <label
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        aria-disabled={isUploadDisabled}
-        className={cn(
-          "flex flex-col items-center justify-center rounded-sm border border-dashed px-6 py-4 transition-colors",
-          isUploadDisabled
-            ? "cursor-not-allowed border-[#d1d5db] bg-[#f9fafb] opacity-60"
-            : "cursor-pointer border-[#3b82f6] bg-[#f0f7ff]",
-          !isUploadDisabled && isDragging && "border-[#2563eb] bg-[#dbeafe]"
-        )}
-      >
-        <div className="relative mb-4" aria-hidden>
-          <File
-            className="size-10 text-[#cbd5e1]"
-            strokeWidth={1.25}
-            fill="#e2e8f0"
-          />
-          <span className="absolute -bottom-0.5 -right-1 flex size-5 items-center justify-center rounded-full bg-[#2563eb] text-white shadow-sm">
-            <ArrowUp className="size-4" strokeWidth={2.25} />
-          </span>
+      {!hideUploadArea && (
+        <div>
+          <label
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            aria-disabled={isUploadDisabled}
+            className={cn(
+              "flex flex-col items-center justify-center rounded-sm border border-dashed px-6 py-4 transition-colors",
+              isUploadDisabled
+                ? "cursor-not-allowed border-[#d1d5db] bg-[#f9fafb] opacity-60"
+                : "cursor-pointer border-[#3b82f6] bg-[#f0f7ff]",
+              !isUploadDisabled &&
+                isDragging &&
+                "border-[#2563eb] bg-[#dbeafe]",
+            )}
+          >
+            <div className="relative mb-4" aria-hidden>
+              <File
+                className="size-10 text-[#cbd5e1]"
+                strokeWidth={1.25}
+                fill="#e2e8f0"
+              />
+              <span className="absolute -bottom-0.5 -right-1 flex size-5 items-center justify-center rounded-full bg-[#2563eb] text-white shadow-sm">
+                <ArrowUp className="size-4" strokeWidth={2.25} />
+              </span>
+            </div>
+
+            <p className="pointer-events-none text-center text-[0.78rem] text-[#374151]">
+              Drag and Drop file here or{" "}
+              <span className="pointer-events-auto font-medium text-[#2563eb] underline underline-offset-2">
+                Choose file
+              </span>
+            </p>
+
+            <input
+              ref={inputRef}
+              type="file"
+              multiple={maxFiles === undefined || maxFiles > 1}
+              accept={acceptAttribute}
+              className="sr-only"
+              disabled={isUploadDisabled}
+              onChange={handleInputChange}
+            />
+          </label>
+
+          <div className="mt-2 flex items-center justify-between text-[0.74rem] text-[#374151]">
+            <span>Allowed formats: {supportedFormatsLabel}</span>
+            <span>Max. size: 50MB</span>
+          </div>
         </div>
-
-        <p className="pointer-events-none text-center text-[0.78rem] text-[#374151]">
-          Drag and Drop file here or{" "}
-          <span className="pointer-events-auto font-medium text-[#2563eb] underline underline-offset-2">
-            Choose file
-          </span>
-        </p>
-
-        <input
-          ref={inputRef}
-          type="file"
-          multiple={maxFiles === undefined || maxFiles > 1}
-          accept={acceptAttribute}
-          className="sr-only"
-          disabled={isUploadDisabled}
-          onChange={handleInputChange}
-        />
-      </label>
-
-      <div className="mt-2 flex items-center justify-between text-[0.74rem] text-[#374151]">
-        <span>Allowed formats: {supportedFormatsLabel}</span>
-        <span>Max. size: 50MB</span>
-      </div>
+      )}
 
       {uploadDocuments.length > 0 && (
         <ul className="mt-3 flex flex-col gap-2">

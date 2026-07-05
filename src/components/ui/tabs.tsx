@@ -25,7 +25,7 @@ function TabsList({
       data-slot="tabs-list"
       className={cn(
         "inline-flex h-9 w-full items-center justify-start gap-1 border-b border-[#e0e0e0] text-font-color-primary ",
-        className
+        className,
       )}
       {...props}
     />
@@ -45,9 +45,11 @@ function TabsTrigger({
         "hover:text-main-dark1",
         "focus-visible:ring-2 focus-visible:ring-emerald-600/25 focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
-        "data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600",
+        "data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600 data-[state=active]:bg-[#00eb0014] data-[state=active]:rounded-tl-[0.2rem] data-[state=active]:rounded-tr-[0.2rem]",
+
+        // "data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
+        className,
       )}
       {...props}
     />
@@ -63,7 +65,7 @@ function TabsContent({
       data-slot="tabs-content"
       className={cn(
         "mt-2 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/25 focus-visible:ring-offset-2",
-        className
+        className,
       )}
       {...props}
     />
