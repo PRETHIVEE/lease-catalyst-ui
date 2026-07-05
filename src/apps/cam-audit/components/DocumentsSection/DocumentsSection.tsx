@@ -49,6 +49,7 @@ const DocumentsSection = ({
             fontSize: "0.9rem",
             color: "#fff",
             marginTop: "4rem",
+            fontStyle: "italic",
           }}
         >
           No <span style={{ textTransform: "capitalize" }}>{activeTab}</span>{" "}

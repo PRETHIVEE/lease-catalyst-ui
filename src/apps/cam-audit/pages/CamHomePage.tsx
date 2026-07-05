@@ -56,7 +56,6 @@ const CamHomePage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       runCAMAudit(values);
     },
   });
@@ -118,9 +117,8 @@ const CamHomePage = () => {
       headerName: "Actions",
       minWidth: 100,
       renderCell: (params: GridRenderCellParams) => {
-        console.log("dsgsdfsdfsdf", params?.row?.id);
         const { status } = params.row;
-        const isCompleted = status === "Completed";
+        const isCompleted = status === "completed";
         return (
           <span>
             {status === "New" ? (
@@ -146,10 +144,12 @@ const CamHomePage = () => {
               </Tooltip>
             )}
 
-            <Tooltip title={"Download"} arrow placement="bottom">
+            <Tooltip title={"Download as xlsx"} arrow placement="bottom">
               <IconButton
                 size="small"
-                // onClick={handleDownload(params?.row, "CSV")}
+                onClick={() =>
+                  handleDownload(params?.row?.audit_id, params?.row?.lease_id)
+                }
                 disabled={!isCompleted}
               >
                 <Download className="size-3.5" aria-hidden />
@@ -162,16 +162,28 @@ const CamHomePage = () => {
   ];
 
   const handleRunCAMAudit = (data: any) => {
-    console.log("Run CAM Audit", data);
     handleViewCAMAudit(data);
   };
 
   const handleViewCAMAudit = (data: any) => {
-    console.log("View CAM Audit", data);
     closeSidebar();
     navigate(
       `/cam-reconciliation/cam-audit?audit_id=${data.audit_id}&lease_id=${data.lease_id}`,
     );
+  };
+
+  const handleDownload = async (audit_id: string, lease_id: string) => {
+    try {
+      const blob = await CamReconciliationAPI.downloadExcel(audit_id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Lease_Catalyst_CAM_Audit_Grid_${audit_id}-Lease_${lease_id}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const runCAMAudit = (data: any) => {
@@ -186,7 +198,6 @@ const CamHomePage = () => {
 
     CamReconciliationAPI.runCAMAudit(formData)
       .then((response) => {
-        console.log("Create lease response", response);
         if (response.status === 200) {
           getPropertyLeasesList();
           showSnackbar(response.data.message || "Lease created!");

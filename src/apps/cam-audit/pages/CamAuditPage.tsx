@@ -53,13 +53,11 @@ const CamAuditPage = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Unified_CAM_Audit_Grid_${audit_id}-Lease_${lease_id}.xlsx`;
+      a.download = `Lease_Catalyst_CAM_Audit_Grid_${audit_id}-Lease_${lease_id}.xlsx`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error(e);
-    } finally {
-      console.log("Downloaded");
     }
   };
 
