@@ -154,6 +154,7 @@ const TranslationHome = () => {
                   closeSidebar();
                   navigate(`/lease-translate/review?id=${params.row.file_id}`);
                 }}
+                disabled={translate_status !== "completed"}
               >
                 <FileSearch className="size-4" aria-hidden />
               </IconButton>
@@ -191,64 +192,11 @@ const TranslationHome = () => {
             </Tooltip>
           </span>
         );
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              asChild
-              disabled={translate_status !== "completed"}
-            >
-              <IconButton
-                disabled={translate_status !== "completed"}
-                aria-label={`action options`}
-                className="ml-2"
-              >
-                <Ellipsis className="size-4" aria-hidden />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-auto min-w-40 border border-slate-200 bg-white text-[#374151] shadow-none"
-            >
-              <DropdownMenuItem
-                onSelect={() => {
-                  navigate(`/lease-translate/review?id=${params.row.file_id}`);
-                }}
-              >
-                <Eye aria-hidden className="mr-1.5" />
-                Review translation
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onSelect={() => {
-                  handleDownload(
-                    params.row.translated_file,
-                    params.row.file_name,
-                    params.row.output_lang,
-                  );
-                }}
-              >
-                <Download aria-hidden className="mr-1.5" />
-                Download
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                variant="destructive"
-                onSelect={() => {
-                  deleteTranslation(params.row.file_id);
-                }}
-              >
-                <Trash2 aria-hidden className="mr-1.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
       },
     },
   ];
 
   const deleteTranslation = (file_id: number) => {
-    console.log("Delete translation with file_id:", file_id);
     TranslationsAPI.deleteTranslation(file_id.toString())
       .then(() => {
         showSnackbar("Translation deleted", "success");

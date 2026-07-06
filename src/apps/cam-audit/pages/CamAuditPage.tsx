@@ -208,13 +208,16 @@ const CamAuditPage = () => {
               >
                 <TabsList className="h-7.5">
                   <TabsTrigger value="CAM_LINE_ITEMS" className="h-7.5">
-                    CAM LINE ITEMS
+                    {/* CAM LINE ITEMS */}
+                    RECONCILIATION ANALYSIS
                   </TabsTrigger>
                   <TabsTrigger value="AUDIT_CONTROL_METRICS" className="h-7.5">
-                    AUDIT CONTROL METRICS
+                    {/* AUDIT CONTROL METRICS */}
+                    RECOVERY RULES
                   </TabsTrigger>
                   <TabsTrigger value="CAM_RECONCILIATION" className="h-7.5">
-                    CAM RECONCILIATION
+                    {/* CAM RECONCILIATION */}
+                    RECONCILIATION AUDIT SUMMARY
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
