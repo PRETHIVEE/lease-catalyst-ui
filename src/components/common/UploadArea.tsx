@@ -3,7 +3,6 @@ import { getFileExtension } from "@/utils/utils";
 import { ArrowUp, File, Trash2 } from "lucide-react";
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type Dispatch,

@@ -229,7 +229,12 @@ const ProjectDetails = () => {
                 <Eye aria-hidden className="mr-1.5" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => {}}>
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={() => {
+                  handleDeleteProperty(params?.row?.id);
+                }}
+              >
                 <Trash2 aria-hidden className="mr-1.5" />
                 Delete Property
               </DropdownMenuItem>
@@ -240,9 +245,15 @@ const ProjectDetails = () => {
     },
   ];
 
-  console.log("propertiesData", propertiesData);
-  console.log("location", location);
-  console.log("scopeDocumentUrl :", scopeDocumentUrl);
+  const handleDeleteProperty = (propertyId: number) => {
+    ProjectsAPI.deleteProperty(propertyId)
+      .then((response) => {
+        if (response.status === 200) {
+          getProperties();
+        }
+      })
+      .catch(() => {});
+  };
 
   return (
     <div className="px-4 py-2">

@@ -3,6 +3,7 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  ArrowRight,
   Building,
   Building2,
   CloudUpload,
@@ -414,10 +415,31 @@ const PropertyDetails = () => {
                         />
                         <Tooltip
                           title={
-                            <p style={{ fontSize: "0.8rem", fontWeight: 400 }}>
-                              {
-                                "[ Not Initiated -> Document QC -> Abstraction ]"
-                              }
+                            <p
+                              style={{
+                                fontSize: "0.8rem",
+                                fontWeight: 400,
+                                display: "flex",
+                                alignItems: "center",
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              Document QC
+                              <ArrowRight
+                                className="size-3.25 mx-1"
+                                aria-hidden
+                              />
+                              Abstraction
+                              <ArrowRight
+                                className="size-3.25 mx-1"
+                                aria-hidden
+                              />
+                              HITL Review (3 - stages)
+                              <ArrowRight
+                                className="size-3.25 mx-1"
+                                aria-hidden
+                              />
+                              Final Output
                             </p>
                           }
                           arrow

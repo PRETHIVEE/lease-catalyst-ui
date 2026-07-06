@@ -5,12 +5,7 @@ import StatusChip from "@/components/common/StatusChip";
 import UploadArea from "@/components/common/UploadArea";
 import { Button } from "@/components/ui/button";
 import { useSnackbarStore } from "@/store/snackbar-store";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   fileDownloader2,
   formatDateTime,
@@ -27,8 +22,6 @@ import {
 } from "@mui/x-data-grid";
 import {
   Download,
-  Ellipsis,
-  Eye,
   FileSearch,
   Grid2X2,
   Languages,
