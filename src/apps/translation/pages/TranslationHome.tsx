@@ -190,6 +190,8 @@ const TranslationHome = () => {
   ];
 
   const deleteTranslation = (file_id: number) => {
+    setLoading(true);
+
     TranslationsAPI.deleteTranslation(file_id.toString())
       .then(() => {
         showSnackbar("Translation deleted", "success");
@@ -200,6 +202,9 @@ const TranslationHome = () => {
           "Failed to delete translation. Please try again.",
           "error",
         );
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -233,6 +238,9 @@ const TranslationHome = () => {
 
   useEffect(() => {
     getTranslationHistory();
+    const intervalId = setInterval(getTranslationHistory, 6000);
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStartTranslate = (): void => {

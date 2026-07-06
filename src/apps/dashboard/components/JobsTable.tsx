@@ -2,6 +2,7 @@
 import DashboardAPI from "@/api/dashboard";
 import DataGridTitle from "@/components/common/DataGridTitle";
 import StatusChip from "@/components/common/StatusChip";
+import { useLayoutStore } from "@/layout/main-layout/store/layoutStore";
 // import IconButton from "@/components/common/IconButton";
 // import {
 //   DropdownMenu,
@@ -23,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
   const navigate = useNavigate();
+  const closeSidebar = useLayoutStore((state) => state.closeSidebar);
+
   const userEmail = localStorage.getItem("user_email") || "";
   const [loading, setLoading] = useState(true);
   const [Rows, setRows] = useState<any[]>([]);
@@ -68,6 +71,8 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
 
   useEffect(() => {
     getWorkFlow();
+    const intervalId = setInterval(getWorkFlow, 7000);
+    return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -137,7 +142,11 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
         return (
           <span>
             <Tooltip
-              title={workflow_name === "Abstraction" ? "Open HITL" : "View DQC"}
+              title={
+                workflow_name === "Abstraction"
+                  ? "Open HITL Review"
+                  : "View Document QC"
+              }
               arrow
               placement="bottom"
             >
@@ -235,6 +244,7 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
           console.log(error);
         });
     } else {
+      closeSidebar();
       navigate(`/dashboard/document-qc?jobId=${data.job_id}`);
     }
   };

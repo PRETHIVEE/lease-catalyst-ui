@@ -239,10 +239,9 @@ const CamHomePage = () => {
 
   useEffect(() => {
     getPropertyLeasesList();
-    const interval = setInterval(() => {
-      getPropertyLeasesList();
-    }, 3000);
-    return () => clearInterval(interval);
+    const intervalId = setInterval(getPropertyLeasesList, 5000);
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

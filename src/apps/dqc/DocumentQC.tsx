@@ -9,6 +9,7 @@ import UploadFiles from "../projects/components/UploadFiles/UploadFiles";
 import RequestDocuments from "./components/RequestDocuments/RequestDocuments";
 import ProjectsAPI from "@/api/projects";
 import { useSnackbarStore } from "@/store/snackbar-store";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 const BreadcrumbsData = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Document QC", url: "/dashboard/document-qc" },
@@ -47,6 +48,7 @@ const DocumentQC = () => {
     useState(false);
   const [uploadDocuments, setUploadDocuments] = useState<File[]>([]);
   const [isOpenRequestDocs, setIsRequestingDocs] = useState(false);
+  const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
   const [legalDocsList, setLegalDocsList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -130,31 +132,30 @@ const DocumentQC = () => {
   };
 
   const handleCompleteDQC = () => {
-    setisTriggeringAbstractionJob(true);
-    const askConfirmation = window.confirm(
-      "Complete DQC and start the Abstraction workflow?",
-    );
+    setIsOpenConfirmDialog(true);
+  };
 
-    if (askConfirmation) {
-      ProjectsAPI?.triggerAbstractionWorkflow({
-        property_id: propertyInfo?.property_id,
-        legal_docs_list: legalDocsList,
+  const handleConfirmCompleteDQC = () => {
+    setisTriggeringAbstractionJob(true);
+    ProjectsAPI?.triggerAbstractionWorkflow({
+      property_id: propertyInfo?.property_id,
+      legal_docs_list: legalDocsList,
+    })
+      .then((r) => {
+        const resMsg = r?.data?.message;
+        if (resMsg === "Job triggered successfully") {
+          showSnackbar("DQC Completed!, Abstraction workflow Startted!");
+        }
+        navigate("/dashboard");
       })
-        .then((r) => {
-          const resMsg = r?.data?.message;
-          if (resMsg === "Job triggered successfully") {
-            showSnackbar("DQC Completed!, Abstraction workflow Startted!");
-          }
-          navigate("/dashboard");
-        })
-        .catch((e) => {
-          console.error("Error marking DQC as complete:", e);
-          showSnackbar("DQC Completed!, Abstraction workflow triggereds! ");
-        })
-        .finally(() => {
-          setisTriggeringAbstractionJob(false);
-        });
-    }
+      .catch((e) => {
+        console.error("Error marking DQC as complete:", e);
+        showSnackbar("DQC Completed!, Abstraction workflow triggereds! ");
+      })
+      .finally(() => {
+        setisTriggeringAbstractionJob(false);
+        setIsOpenConfirmDialog(false);
+      });
   };
 
   return (
@@ -192,6 +193,16 @@ const DocumentQC = () => {
           onClose={() => setIsRequestingDocs(false)}
           isSubmitting={false}
           propertyName={propertyInfo?.property_name || ""}
+        />
+
+        <ConfirmDialog
+          title="Complete Document QC"
+          open={isOpenConfirmDialog}
+          subtitle="Are you sure you want to complete the DQC and start the Abstraction workflow?"
+          isSubmitting={isTriggeringAbstractionJob}
+          confirmLabel="Complete DQC"
+          handleClose={() => setIsOpenConfirmDialog(false)}
+          handleConfirm={handleConfirmCompleteDQC}
         />
       </>
     </div>
