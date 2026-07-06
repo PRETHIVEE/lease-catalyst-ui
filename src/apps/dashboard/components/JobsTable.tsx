@@ -111,7 +111,9 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
             ? "Completed"
             : output_status === "pending" || output_status === "In Progress"
               ? "In Progress"
-              : output_status;
+              : output_status === "Error"
+                ? "Aborted"
+                : output_status;
         return (
           <div>
             <StatusChip label={statusLabel} variant={variant} />
