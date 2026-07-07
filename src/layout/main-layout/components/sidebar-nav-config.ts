@@ -74,6 +74,11 @@ export const sidebarNavGroups: NavGroup[] = [
     title: "Translation Services",
     items: [
       { label: "Translation", path: "/lease-translate", icon: Languages },
+      {
+        label: "Translation Beta",
+        path: "/lease-translate-beta",
+        icon: Languages,
+      },
     ],
   },
   {

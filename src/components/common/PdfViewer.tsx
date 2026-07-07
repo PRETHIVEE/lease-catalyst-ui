@@ -46,6 +46,7 @@ const PdfViewer = ({ url, className }: PdfViewerProps) => {
         alignItems: "center",
         position: "relative",
         height: "100%",
+        paddingTop: "0.5rem",
       }}
     >
       {isLoading && (

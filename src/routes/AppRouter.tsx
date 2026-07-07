@@ -22,6 +22,7 @@ import CompanyPage from "@/apps/company/pages/CompanyPage";
 import CompanyModuleAccess from "@/apps/company/pages/CompanyModuleAccess";
 import CamHomePage from "@/apps/cam-audit/pages/CamHomePage";
 import CamAuditPage from "@/apps/cam-audit/pages/CamAuditPage";
+import LeaseTranslatorBeta from "@/apps/transaltion-beta/LeaseTranslatorBeta";
 
 export default function AppRouter() {
   return (
@@ -62,7 +63,10 @@ export default function AppRouter() {
           <Route path="/data-category" element={<DataCategory />} />
           <Route path="/data-category/view" element={<ModifyDataCategory />} />
           <Route path="/lease-translate" element={<TranslationHome />} />
-
+          <Route
+            path="/lease-translate-beta"
+            element={<LeaseTranslatorBeta />}
+          />
           <Route path="/events" element={<EventsPage />} />
           <Route
             path="/lease-translate/review"

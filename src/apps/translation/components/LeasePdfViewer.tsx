@@ -13,7 +13,7 @@ export default function LeasePdfViewer({
 }: {
   url: string;
   url2: string;
-}) {  
+}) {
   const [numPages1, setNumPages1] = useState<number | null>(null);
   const [numPages2, setNumPages2] = useState<number | null>(null);
   const [isLoading1, setIsLoading1] = useState(true);
@@ -206,8 +206,12 @@ export default function LeasePdfViewer({
             {Array.from(new Array(numPages1), (_el, index) => (
               <div
                 key={`pdf1_page_${index + 1}`}
-                style={{ marginBottom: "15px" }}
-                className="shadow-sm"
+                style={{
+                  marginBottom: "15px",
+                  boxShadow:
+                    "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+                }}
+                // className="shadow-md"
               >
                 <Page
                   pageNumber={index + 1}
@@ -263,8 +267,11 @@ export default function LeasePdfViewer({
             {Array.from(new Array(numPages2), (_el, index) => (
               <div
                 key={`pdf2_page_${index + 1}`}
-                style={{ marginBottom: "15px" }}
-                className="shadow-sm"
+                style={{
+                  marginBottom: "15px",
+                  boxShadow:
+                    "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+                }}
               >
                 <Page
                   pageNumber={index + 1}
@@ -495,7 +502,11 @@ export default function LeasePdfViewer({
           }}
         >
           <span>Scroll Sync</span>
-          <Switch checked={isSyncScroll} onCheckedChange={setIsSyncScroll} color="primary" />
+          <Switch
+            checked={isSyncScroll}
+            onCheckedChange={setIsSyncScroll}
+            color="primary"
+          />
         </div>
       </div>
     </div>

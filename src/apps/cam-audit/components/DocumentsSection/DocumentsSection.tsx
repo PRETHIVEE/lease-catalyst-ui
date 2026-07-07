@@ -28,7 +28,7 @@ const DocumentsSection = ({
   return (
     <div
       className="h-[50vh] overflow-y-auto"
-      style={{ backgroundColor: "#636363" }}
+      style={{ backgroundColor: "#636363", color: "#fff" }}
     >
       {showDocument ? (
         <>
