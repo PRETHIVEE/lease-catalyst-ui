@@ -109,11 +109,9 @@ const PdfViewer = ({ url, className, highlight }: PdfViewerProps) => {
       }}
     >
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <Loader className="size-4 animate-spin text-white" />
-          <p style={{ fontSize: "0.85rem", color: "#fff" }}>
-            Loading document...
-          </p>
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#636363]">
+          <Loader className="size-8 animate-spin text-white" />
+          <p className="text-sm text-white">Loading document...</p>
         </div>
       )}
       <Document

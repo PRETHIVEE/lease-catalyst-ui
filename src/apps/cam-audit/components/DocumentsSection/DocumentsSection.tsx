@@ -32,12 +32,17 @@ const DocumentsSection = ({
     >
       {showDocument ? (
         <>
-          <div style={{ width: "94%", margin: "0 auto" }}>
+          <div className="h-full" style={{ width: "100%", margin: "0 auto" }}>
             {documentURL ? (
-              <PdfViewer url={documentURL} highlight={highlight} />
+              <PdfViewer
+                url={documentURL}
+                highlight={highlight}
+                className="h-full"
+              />
             ) : (
-              <div className="flex justify-center items-center h-full">
-                <Loader className="size-4 animate-spin" />
+              <div className="flex h-full flex-col items-center justify-center gap-3">
+                <Loader className="size-8 animate-spin text-white" />
+                <p className="text-sm text-white">Loading document...</p>
               </div>
             )}
           </div>
