@@ -102,28 +102,73 @@ export default function JobsTable({ setStatusCount }: { setStatusCount: any }) {
     {
       field: "output_status",
       headerName: "Status",
-      width: 120,
+      width: 130,
       renderCell: (params: GridRenderCellParams) => {
-        const { output_status } = params.row;
-        const variant =
-          output_status === "Completed"
-            ? "success"
-            : output_status === "pending" || output_status === "In Progress"
-              ? "pending"
-              : "failed";
-        const statusLabel =
-          output_status === "Completed"
-            ? "Completed"
-            : output_status === "pending" || output_status === "In Progress"
-              ? "In Progress"
-              : output_status === "Error"
-                ? "Aborted"
-                : output_status;
-        return (
-          <div>
-            <StatusChip label={statusLabel} variant={variant} />
-          </div>
-        );
+        const { output_status, batch_details, workflow_name } = params.row;
+        const batchDetails = batch_details ? JSON.parse(batch_details) : null;
+        console.log("batchDetails", batchDetails);
+
+        if (workflow_name === "DQC") {
+          const variant =
+            output_status === "Completed"
+              ? "success"
+              : output_status === "pending" || output_status === "In Progress"
+                ? "pending"
+                : "failed";
+
+          const statusLabel =
+            output_status === "Completed"
+              ? "Completed"
+              : output_status === "pending" || output_status === "In Progress"
+                ? "In Progress"
+                : output_status === "Error"
+                  ? "Aborted"
+                  : output_status;
+          return <StatusChip label={statusLabel} variant={variant} />;
+        } else if (workflow_name === "Abstraction") {
+          //
+          if (batchDetails?.length === 0 || batchDetails === null) {
+            const variant =
+              output_status === "Completed"
+                ? "success"
+                : output_status === "pending" || output_status === "In Progress"
+                  ? "pending"
+                  : "failed";
+
+            const statusLabel =
+              output_status === "Completed"
+                ? "Completed"
+                : output_status === "pending" || output_status === "In Progress"
+                  ? "In Progress"
+                  : output_status === "Error"
+                    ? "Aborted"
+                    : output_status;
+            return <StatusChip label={statusLabel} variant={variant} />;
+          } else if (output_status === "Completed") {
+            return <StatusChip label={"Completed"} variant={"success"} />;
+          } else if (
+            output_status === "pending" ||
+            output_status === "In Progress"
+          ) {
+            const lastBatchObject = batchDetails[batchDetails.length - 1];
+            const { botname } = lastBatchObject;
+            if (botname === "Production" || botname === "QC") {
+              return (
+                <StatusChip
+                  label={`${botname === "Production" ? "HITL" : "QC"} - ${"In Progress"}`}
+                  variant={"ready"}
+                />
+              );
+            } else {
+              return <StatusChip label={"In Progress"} variant={"pending"} />;
+            }
+            return <StatusChip label={"In Progress"} variant={"pending"} />;
+          } else if (output_status === "Error") {
+            return <StatusChip label={"Aborted"} variant={"failed"} />;
+          } else {
+            return <StatusChip label={output_status} variant={"failed"} />;
+          }
+        }
       },
     },
 
